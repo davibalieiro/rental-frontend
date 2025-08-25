@@ -1,20 +1,17 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.css";
 
-export default function Login() {
+export default function Login({ navigate }) {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
-  const navigate = useNavigate();
 
   function handleLogin(e) {
     e.preventDefault();
 
     // Exemplo simples: login admin ou cliente
     if (email === "admin@clisare.com" && senha === "1234") {
-      navigate("/admin"); // vai para o painel admin
+      navigate("admin"); // vai para o painel admin
     } else if (email === "cliente@clisare.com" && senha === "1234") {
-      navigate("/catalogo"); // vai para catálogo
+      navigate("catalogo"); // vai para catálogo
     } else {
       alert("Credenciais inválidas!");
     }

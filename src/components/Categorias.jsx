@@ -1,4 +1,5 @@
 // src/components/Categories.jsx
+import React from "react";
 const categories = [
   { id: 1, name: "Chácaras", image: "https://picsum.photos/200/150?random=4" },
   { id: 2, name: "Salões", image: "https://picsum.photos/200/150?random=5" },

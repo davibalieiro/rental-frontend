@@ -1,7 +1,7 @@
-import { Link } from "react-router-dom";
-import logo from "../assets/logo.png";
+import React from "react";
+import logo from "../assets/logo_clisare_loca.png";
 
-export default function Header() {
+export default function Header({ navigate }) {
   return (
     <header className="flex justify-between items-center px-8 py-4 shadow-md bg-white">
       <div className="flex items-center gap-3">
@@ -9,18 +9,26 @@ export default function Header() {
       </div>
 
       <nav className="hidden md:flex space-x-6">
-        <Link to="/" className="text-gray-700 hover:text-[#FF4500] font-semibold">Home</Link>
-        <Link to="/empresa" className="text-gray-700 hover:text-[#FF4500]">Empresa</Link>
-        <Link to="/catalogo" className="text-gray-700 hover:text-[#FF4500]">Catálogo</Link>
-        <Link to="/contato" className="text-gray-700 hover:text-[#FF4500]">Contato</Link>
+        <button onClick={() => navigate("home")} className="text-gray-700 hover:text-[#FF4500] font-semibold">
+          Home
+        </button>
+        <button onClick={() => navigate("empresa")} className="text-gray-700 hover:text-[#FF4500]">
+          Empresa
+        </button>
+        <button onClick={() => navigate("catalogo")} className="text-gray-700 hover:text-[#FF4500]">
+          Catálogo
+        </button>
+        <button onClick={() => navigate("contato")} className="text-gray-700 hover:text-[#FF4500]">
+          Contato
+        </button>
       </nav>
 
-      <Link
-        to="/login"
+      <button
+        onClick={() => navigate("login")}
         className="px-5 py-2 bg-[#32CD32] text-white font-semibold rounded-lg hover:bg-green-600 transition"
       >
         Login
-      </Link>
+      </button>
     </header>
   );
 }

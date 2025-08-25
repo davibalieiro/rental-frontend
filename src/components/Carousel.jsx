@@ -1,4 +1,5 @@
 // src/components/Carousel.jsx
+import React from "react";
 export default function Carousel() {
   const slides = [
     { id: 1, image: "https://picsum.photos/1200/400?random=1", title: "Chácara Primavera" },

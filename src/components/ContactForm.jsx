@@ -1,4 +1,5 @@
 // src/components/ContactForm.jsx
+import React from "react";
 export default function ContactForm() {
   return (
     <section id="contato" className="py-16 px-6 text-center">
