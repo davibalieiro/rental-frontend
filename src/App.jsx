@@ -53,7 +53,6 @@ function App() {
         <button onClick={() => navigate("catalogo")}>Catálogo</button>
         <button onClick={() => navigate("contato")}>Contato</button>
         <button onClick={() => navigate("login")}>Login</button>
-        <button onClick={() => navigate("admin")}>Admin</button>
       </nav>
     </div>
   );
