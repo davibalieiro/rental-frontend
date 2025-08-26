@@ -1,0 +1,68 @@
+/* Fundo da página */
+.login-container {
+  max-width: 400px;
+  margin: 80px auto;
+  padding: 32px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Título */
+.login-container h1 {
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Inputs */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: bold;
+  color: #444;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #007bff;
+}
+
+/* Botão */
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button[type="submit"]:hover {
+  background: #0056b3;
+}
+
+/* Erros */
+.error {
+  color: red;
+  margin-bottom: 12px;
+  text-align: center;
+  font-size: 14px;
+}

@@ -1,23 +1,11 @@
 import { useState } from "react";
-import "./login.css";
+import "../css/login.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  async function getProtectedData() {
-    const token = localStorage.getItem("token");
-
-    const response = await fetch("http://localhost:3000/api/protected-route", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const data = await response.json();
-    console.log(data);
-  }
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -38,8 +26,11 @@ export default function Login() {
         return;
       }
 
+      // Salva o token
       localStorage.setItem("token", data.token);
-      window.location.href = "/";
+
+      // Redireciona para Admin
+      window.location.hash = "admin";
     } catch (err) {
       setError("Erro ao conectar com servidor");
     }
