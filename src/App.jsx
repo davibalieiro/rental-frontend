@@ -29,38 +29,29 @@ function App() {
     window.location.hash = to;
   }
 
-  // Verifica login
-  const token = localStorage.getItem("token");
   const isAdmin = page === "admin";
-
-  // Bloqueia Admin se não estiver logado
-  if (isAdmin && !token) {
-    window.location.hash = "login";
-    return null;
-  }
-
-  const PAGES = {
-    home: <Home />,
-    empresa: <Empresa />,
-    catalogo: <Catalogo />,
-    contato: <Contato />,
-    login: <Login />,
-    admin: <Admin />,
-  };
 
   return (
     <div className="font-sans">
       {!isAdmin && <Header navigate={navigate} />}
-      <main>{PAGES[page]}</main>
+      <main>
+        {page === "login" ? (
+          <Login navigate={navigate} />
+        ) : page === "home" ? (
+          <Home />
+        ) : page === "empresa" ? (
+          <Empresa />
+        ) : page === "catalogo" ? (
+          <Catalogo />
+        ) : page === "contato" ? (
+          <Contato />
+        ) : page === "admin" ? (
+          <Admin />
+        ) : (
+          <Home />
+        )}
+      </main>
       {!isAdmin && <Footer />}
-      <nav style={{ margin: 16 }}>
-        <button onClick={() => navigate("home")}>Home</button>
-        <button onClick={() => navigate("empresa")}>Empresa</button>
-        <button onClick={() => navigate("catalogo")}>Catálogo</button>
-        <button onClick={() => navigate("contato")}>Contato</button>
-        <button onClick={() => navigate("login")}>Login</button>
-        <button onClick={() => navigate("admin")}>Admin</button>
-      </nav>
     </div>
   );
 }

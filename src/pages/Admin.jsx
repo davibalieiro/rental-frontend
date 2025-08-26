@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function Admin() {
   const [activeSection, setActiveSection] = useState("dashboard");

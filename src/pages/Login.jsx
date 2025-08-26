@@ -1,7 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import "../css/login.css";
 
-export default function Login() {
+export default function Login({ navigate }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -30,7 +30,7 @@ export default function Login() {
       localStorage.setItem("token", data.token);
 
       // Redireciona para Admin
-      window.location.hash = "admin";
+      navigate("admin");
     } catch (err) {
       setError("Erro ao conectar com servidor");
     }
