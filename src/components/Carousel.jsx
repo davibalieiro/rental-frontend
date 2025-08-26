@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import "./Carousel.css";
 
 export default function Carousel() {
   const slides = [
