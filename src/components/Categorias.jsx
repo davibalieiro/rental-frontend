@@ -8,16 +8,17 @@ const categories = [
 
 export default function Categories() {
   return (
-    <section id="catalogo" className="py-16 px-6 text-center">
-      <h3 className="text-3xl font-bold text-[#FF4500] mb-8">Categorias</h3>
-      <div className="grid md:grid-cols-3 gap-8">
+    <section className="categories">
+      <h3>Categorias</h3>
+      <div className="categories-grid">
         {categories.map((cat) => (
-          <div key={cat.id} className="bg-white shadow-md rounded-lg p-4">
-            <img src={cat.image} alt={cat.name} className="w-full h-40 object-cover rounded-md" />
-            <h4 className="mt-4 text-xl font-semibold text-[#32CD32]">{cat.name}</h4>
+          <div key={cat.id} className="category-card">
+            <img src={cat.image} alt={cat.name} />
+            <h4>{cat.name}</h4>
           </div>
         ))}
       </div>
     </section>
+
   );
 }
