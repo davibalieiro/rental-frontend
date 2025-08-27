@@ -9,14 +9,13 @@ export default function Login({ navigate }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
       const response = await fetch("http://localhost:3000/api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email:email, password:password}),
         credentials: "include" // importante
       });
 
