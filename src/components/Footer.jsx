@@ -1,16 +1,18 @@
 import React from "react";
+import { Link } from "react-router";
 
 export default function Footer() {
+
   return (
     <footer className="footer">
-      <div className="footer-grid"> 
+      <div className="footer-grid">
         {/* Menu */}
         <div>
           <h4>Menu</h4>
           <ul>
-            <li><a href="#empresa">Empresa</a></li>
-            <li><a href="#catalogo">Catálogo</a></li>
-            <li><a href="#contato">Contato</a></li>
+            <li><Link to="/empresa">Empresa</Link></li>
+            <li><Link to="/catalogo">Catálogo</Link></li>
+            <li><Link to="/contato">Contato</Link></li>
           </ul>
         </div>
 
