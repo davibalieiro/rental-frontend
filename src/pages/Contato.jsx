@@ -1,15 +1,74 @@
-export default function Contato() {
+import React, { useState } from "react";
+import "./css/Contato.css";
+
+export default function Contact() {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+  const [status, setStatus] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setStatus("Enviando...");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+
+      if (!response.ok) {
+        setStatus("Erro ao enviar mensagem.");
+        return;
+      }
+
+      setStatus("Mensagem enviada com sucesso!");
+      setName("");
+      setEmail("");
+      setMessage("");
+    } catch (err) {
+      setStatus("Erro ao conectar com servidor.");
+    }
+  };
+
   return (
-    <section className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold text-red-600 mb-6">Fale Conosco</h1>
-      <form className="grid gap-4">
-        <input type="text" placeholder="Seu nome" className="border p-2 rounded"/>
-        <input type="email" placeholder="Seu e-mail" className="border p-2 rounded"/>
-        <textarea placeholder="Sua mensagem" rows="4" className="border p-2 rounded"></textarea>
-        <button className="bg-green-600 text-white py-2 rounded hover:bg-red-600">
-          Enviar
-        </button>
+    <div className="contact-container">
+      <h1>Contato</h1>
+      <form onSubmit={handleSubmit} className="contact-form">
+        <div className="form-group">
+          <label>Nome:</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Email:</label>
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label>Mensagem:</label>
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows="5"
+            required
+          />
+        </div>
+
+        <button type="submit">Enviar</button>
+        {status && <p className="status">{status}</p>}
       </form>
-    </section>
+    </div>
   );
 }

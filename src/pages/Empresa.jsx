@@ -1,12 +1,55 @@
-    export default function Empresa() {
+import React from "react";
+import "./css/Empresa.css";
+
+export default function Empresa() {
   return (
-    <section className="max-w-4xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold text-red-600 mb-6">Nossa Empresa</h1>
-      <p className="text-gray-700 leading-relaxed">
-        A Clisare Locações é especializada em oferecer soluções completas para 
-        eventos e locações de equipamentos, garantindo qualidade, pontualidade 
-        e confiança aos nossos clientes.
-      </p>
-    </section>
+    <div className="empresa-container">
+      <h1>Sobre a Empresa</h1>
+
+      <section className="empresa-section">
+        <h2>Quem Somos</h2>
+        <p>
+          Somos uma empresa comprometida em oferecer produtos e serviços de
+          qualidade, sempre buscando inovação e excelência no atendimento ao
+          cliente. Nosso objetivo é criar soluções que facilitem o dia a dia
+          das pessoas.
+        </p>
+      </section>
+
+      <section className="empresa-section">
+        <h2>Missão</h2>
+        <p>
+          Proporcionar aos nossos clientes a melhor experiência, garantindo
+          qualidade, preço justo e atendimento diferenciado.
+        </p>
+      </section>
+
+      <section className="empresa-section">
+        <h2>Visão</h2>
+        <p>
+          Ser referência no mercado nacional, expandindo nossas soluções para
+          alcançar cada vez mais pessoas.
+        </p>
+      </section>
+
+      <section className="empresa-section">
+        <h2>Valores</h2>
+        <ul>
+          <li>✔ Ética e Transparência</li>
+          <li>✔ Inovação</li>
+          <li>✔ Compromisso com o Cliente</li>
+          <li>✔ Sustentabilidade</li>
+        </ul>
+      </section>
+
+      <section className="empresa-section">
+        <h2>Onde Estamos</h2>
+        <p>
+          Rua Exemplo, 123 - Centro <br />
+          São Paulo - SP <br />
+          Telefone: (11) 99999-9999
+        </p>
+      </section>
+    </div>
   );
 }

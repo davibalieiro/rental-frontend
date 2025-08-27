@@ -1,15 +1,84 @@
-export default function Catalogo() {
+import React, { useState, useEffect } from "react";
+import "./css/Catalogo.css";
+
+export default function Catalog({ navigate }) {
+  const [products, setProducts] = useState([]);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/product/all", {
+          credentials: "include"
+        });
+        const json = await res.json();
+        setProducts(json.data || []);
+      } catch (err) {
+        console.error("Erro ao carregar produtos:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
+  const filteredProducts = products.filter((p) => {
+    return (
+      p.name.toLowerCase().includes(search.toLowerCase()) &&
+      (category ? p.category === category : true)
+    );
+  });
+
   return (
-    <section className="max-w-6xl mx-auto py-12 px-4">
-      <h1 className="text-3xl font-bold text-red-600 mb-6">Catálogo de Produtos</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Exemplo de item */}
-        <div className="border rounded-xl shadow-md p-4 hover:shadow-lg transition">
-          <img src="https://via.placeholder.com/300" alt="Produto" className="rounded mb-3"/>
-          <h2 className="font-bold text-lg">Cadeira de Evento</h2>
-          <p className="text-gray-600">Confortável e prática para qualquer ocasião.</p>
-        </div>
+    <div className="catalog-container">
+      <h1>Catálogo</h1>
+
+      {/* FILTROS */}
+      <div className="catalog-filters">
+        <input
+          type="text"
+          placeholder="🔍 Buscar produto..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+        >
+          <option value="">Todas as categorias</option>
+          <option value="eletronicos">Eletrônicos</option>
+          <option value="roupas">Roupas</option>
+          <option value="acessorios">Acessórios</option>
+        </select>
       </div>
-    </section>
+
+      {/* LISTAGEM */}
+      {loading ? (
+        <p>Carregando produtos...</p>
+      ) : (
+        <div className="catalog-grid">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <div key={product.id} className="product-card">
+                <img src={product.image || "https://via.placeholder.com/300x200"} alt={product.name} />
+                <h4>{product.name}</h4>
+                <p className="price">R$ {product.price?.toFixed(2)}</p>
+                <button
+                  className="buy-btn"
+                  onClick={() => navigate(`product/${product.id}`)}
+                >
+                  Ver detalhes
+                </button>
+              </div>
+            ))
+          ) : (
+            <p>Nenhum produto encontrado</p>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
