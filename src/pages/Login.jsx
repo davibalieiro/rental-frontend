@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "./css/Login.css";
+import { useNavigate } from "react-router";
 
-export default function Login({ navigate }) {
+export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -31,7 +33,7 @@ export default function Login({ navigate }) {
       localStorage.setItem("token", data.token);
 
       // Redireciona para Admin
-      navigate("admin");
+      navigate("/admin");
     } catch (err) {
       setError("Erro ao conectar com servidor");
     }

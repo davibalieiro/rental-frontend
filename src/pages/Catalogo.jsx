@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import "./css/Catalogo.css";
+import { useNavigate } from "react-router";
 
-export default function Catalog({ navigate }) {
+export default function Catalog() {
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProducts = async () => {
