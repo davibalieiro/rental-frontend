@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../css/login.css";
+import "./css/Login.css";
 
 export default function Login({ navigate }) {
   const [email, setEmail] = useState("");
@@ -17,6 +17,7 @@ export default function Login({ navigate }) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ email, password }),
+        credentials: "include" // importante
       });
 
       const data = await response.json();

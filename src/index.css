@@ -354,6 +354,21 @@ header .login-btn:hover {
 .contact-form button:hover {
   background: #28a428; /* verde mais escuro no hover */
 }
+.user-info {
+  background: #e6f7f5;
+  padding: 15px 20px;
+  margin: 20px auto;
+  border-radius: 8px;
+  max-width: 600px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.user-info p {
+  margin: 5px 0;
+  font-size: 15px;
+  color: #333;
+}
+
 /* ================= FOOTER ================= */
 .footer {
   background: #2b2b2b; /* cinza escuro elegante */
