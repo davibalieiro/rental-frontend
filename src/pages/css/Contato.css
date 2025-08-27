@@ -59,3 +59,64 @@
   font-size: 14px;
   color: #333;
 }
+/* ================= RESPONSIVIDADE - CONTATO ================= */
+
+/* Tablets médios (até 1024px) */
+@media (max-width: 1024px) {
+  .contact-container {
+    padding: 30px 15px;
+  }
+
+  .contact-container h1 {
+    font-size: 1.8rem;
+  }
+}
+
+/* Tablets pequenos e celulares grandes (até 768px) */
+@media (max-width: 768px) {
+  .contact-container {
+    max-width: 500px;
+  }
+
+  .contact-container h1 {
+    font-size: 1.6rem;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 0.95rem;
+    padding: 10px 12px;
+  }
+
+  .contact-form button {
+    font-size: 15px;
+    padding: 10px;
+  }
+}
+
+/* Celulares pequenos (até 480px) */
+@media (max-width: 480px) {
+  .contact-container {
+    padding: 20px 10px;
+  }
+
+  .contact-container h1 {
+    font-size: 1.4rem;
+  }
+
+  .contact-form {
+    gap: 12px;
+  }
+
+  .contact-form input,
+  .contact-form textarea {
+    font-size: 0.9rem;
+    padding: 9px 10px;
+  }
+
+  .contact-form button {
+    width: 100%; /* ocupa toda a largura no mobile */
+    font-size: 1rem;
+    padding: 12px;
+  }
+}

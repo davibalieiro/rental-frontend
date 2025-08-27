@@ -79,3 +79,81 @@
 .buy-btn:hover {
   background: #cc3700;
 }
+/* ================= RESPONSIVIDADE - CATÁLOGO ================= */
+
+/* Tablets médios (até 1024px) */
+@media (max-width: 1024px) {
+  .catalog-container {
+    padding: 30px 15px;
+  }
+
+  .catalog-filters {
+    gap: 10px;
+  }
+
+  .catalog-filters input,
+  .catalog-filters select {
+    min-width: 160px;
+    padding: 10px 12px;
+  }
+
+  .product-card img {
+    height: 160px;
+  }
+}
+
+/* Tablets pequenos e celulares grandes (até 768px) */
+@media (max-width: 768px) {
+  .catalog-container h1 {
+    font-size: 1.8rem;
+  }
+
+  .catalog-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .catalog-filters input,
+  .catalog-filters select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .catalog-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+  }
+
+  .product-card img {
+    height: 150px;
+  }
+}
+
+/* Celulares pequenos (até 480px) */
+@media (max-width: 480px) {
+  .catalog-container {
+    padding: 20px 10px;
+  }
+
+  .catalog-container h1 {
+    font-size: 1.5rem;
+  }
+
+  .catalog-grid {
+    grid-template-columns: 1fr; /* uma coluna só */
+  }
+
+  .product-card {
+    padding: 12px;
+  }
+
+  .product-card img {
+    height: 140px;
+  }
+
+  .buy-btn {
+    width: 100%;
+    padding: 12px;
+    font-size: 1rem;
+  }
+}

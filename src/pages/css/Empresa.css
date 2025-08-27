@@ -38,3 +38,70 @@
   color: #333;
   font-weight: 500;
 }
+/* ================= RESPONSIVIDADE - EMPRESA ================= */
+
+/* Tablets médios (até 1024px) */
+@media (max-width: 1024px) {
+  .empresa-container {
+    padding: 30px 15px;
+  }
+
+  .empresa-container h1 {
+    font-size: 2rem;
+  }
+
+  .empresa-section {
+    padding: 18px;
+  }
+}
+
+/* Tablets pequenos e celulares grandes (até 768px) */
+@media (max-width: 768px) {
+  .empresa-container {
+    max-width: 700px;
+  }
+
+  .empresa-container h1 {
+    font-size: 1.8rem;
+  }
+
+  .empresa-section h2 {
+    font-size: 1.3rem;
+  }
+
+  .empresa-section p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .empresa-section li {
+    font-size: 0.95rem;
+  }
+}
+
+/* Celulares pequenos (até 480px) */
+@media (max-width: 480px) {
+  .empresa-container {
+    padding: 20px 10px;
+  }
+
+  .empresa-container h1 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+
+  .empresa-section {
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+
+  .empresa-section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+
+  .empresa-section p,
+  .empresa-section li {
+    font-size: 0.9rem;
+  }
+}

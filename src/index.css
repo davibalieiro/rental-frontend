@@ -439,3 +439,102 @@ header .login-btn:hover {
   font-size: 13px;
   color: #aaa;
 }
+/* ================= RESPONSIVIDADE ================= */
+
+/* Telas até 1024px (tablet) */
+@media (max-width: 1024px) {
+  header {
+    padding: 15px 20px;
+  }
+
+  .carousel {
+    height: 300px;
+  }
+
+  .categories-grid,
+  .highlights-grid,
+  .footer-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+/* Telas até 768px (tablet pequeno/celular grande) */
+@media (max-width: 768px) {
+  header nav {
+    display: none; /* esconde menu normal */
+  }
+
+  header {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  header img.logo {
+    height: 40px;
+  }
+
+  .carousel {
+    height: 250px;
+  }
+
+  .categories h3,
+  .highlights h3,
+  .newsletter h3,
+  .contact-section h3 {
+    font-size: 1.6rem;
+  }
+
+  .newsletter-form {
+    flex-direction: column;
+  }
+
+  .newsletter-form input,
+  .newsletter-form button {
+    border-radius: 6px;
+    width: 100%;
+  }
+
+  .contact-form {
+    padding: 0 10px;
+  }
+}
+
+/* Telas até 480px (celulares pequenos) */
+@media (max-width: 480px) {
+  header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  header .login-btn {
+    width: 100%;
+  }
+
+  .carousel {
+    height: 200px;
+  }
+
+  .carousel-overlay h2 {
+    font-size: 1.2rem;
+    padding: 0 10px;
+    text-align: center;
+  }
+
+  .categories h3,
+  .highlights h3,
+  .newsletter h3,
+  .contact-section h3 {
+    font-size: 1.4rem;
+  }
+
+  .category-card img,
+  .highlight-card img {
+    height: 140px;
+  }
+
+  .footer-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}
