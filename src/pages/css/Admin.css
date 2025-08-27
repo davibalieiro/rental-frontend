@@ -1,60 +1,60 @@
-.admin-panel {
-  padding: 2rem;
-}
-
-.admin-nav {
-  margin-bottom: 1.5rem;
-}
-
-.admin-nav button {
-  margin-right: 1rem;
-  padding: 0.5rem 1rem;
-  border: 1px solid #ccc;
-  background: #f2f2f2;
-  cursor: pointer;
-}
-
-.admin-nav button:hover {
-  background: #ddd;
-}
-
-.admin-form {
-  margin-bottom: 2rem;
+/* Layout principal */
+.admin-layout {
   display: flex;
-  gap: 1rem;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
 }
 
-.admin-form input {
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-.admin-form button {
-  padding: 0.5rem 1rem;
-  background: #0077cc;
+/* Sidebar */
+.admin-sidebar {
+  width: 220px;
+  background: #ff4500;
   color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-sidebar h2 {
+  margin-bottom: 30px;
+  text-align: center;
+  font-size: 22px;
+}
+
+.admin-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.admin-sidebar button {
+  padding: 12px;
   border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
   border-radius: 6px;
   cursor: pointer;
+  font-size: 16px;
+  transition: background 0.3s;
 }
 
-.admin-form button:hover {
-  background: #005fa3;
+.admin-sidebar button:hover {
+  background: rgba(255, 255, 255, 0.3);
 }
 
-.admin-table {
-  width: 100%;
-  border-collapse: collapse;
+.admin-sidebar button.active {
+  background: #32cd32; /* verde ativo */
+  font-weight: bold;
 }
 
-.admin-table th,
-.admin-table td {
-  border: 1px solid #ddd;
-  padding: 0.75rem;
-  text-align: left;
-}
-
-.admin-table th {
+/* Conteúdo */
+.admin-content {
+  flex: 1;
+  padding: 30px;
   background: #f9f9f9;
+}
+
+.admin-content h1 {
+  color: #ff4500;
+  margin-bottom: 20px;
 }

@@ -7,7 +7,7 @@ import Empresa from "./pages/Empresa";
 import Catalogo from "./pages/Catalogo";
 import Contato from "./pages/Contato";
 import Login from "./pages/Login";
-import Admin from "./pages/Admin";
+import Admin from "./pages/admin/AdminPainel";
 
 function getPageFromHash() {
   const hash = window.location.hash.replace("#", "");

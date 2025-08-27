@@ -2,27 +2,46 @@
 import React, { useState } from "react";
 import Products from "./Products";
 import Categories from "./Categories";
-import Materials from "./Materials";
-import "./Admin.css";
+import Materials from "./Materias";
+import "../css/Admin.css";
 
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState("products");
 
   return (
-    <section className="admin-panel">
-      <h1>Painel Administrativo</h1>
+    <div className="admin-layout">
+      {/* Sidebar */}
+      <aside className="admin-sidebar">
+        <h2>Admin</h2>
+        <nav>
+          <button
+            className={activeTab === "products" ? "active" : ""}
+            onClick={() => setActiveTab("products")}
+          >
+            Produtos
+          </button>
+          <button
+            className={activeTab === "categories" ? "active" : ""}
+            onClick={() => setActiveTab("categories")}
+          >
+            Categorias
+          </button>
+          <button
+            className={activeTab === "materials" ? "active" : ""}
+            onClick={() => setActiveTab("materials")}
+          >
+            Materiais
+          </button>
+        </nav>
+      </aside>
 
-      <nav className="admin-nav">
-        <button onClick={() => setActiveTab("products")}>Produtos</button>
-        <button onClick={() => setActiveTab("categories")}>Categorias</button>
-        <button onClick={() => setActiveTab("materials")}>Materiais</button>
-      </nav>
-
-      <div className="admin-content">
+      {/* Conteúdo */}
+      <main className="admin-content">
+        <h1>Painel Administrativo</h1>
         {activeTab === "products" && <Products />}
         {activeTab === "categories" && <Categories />}
         {activeTab === "materials" && <Materials />}
-      </div>
-    </section>
+      </main>
+    </div>
   );
 }
