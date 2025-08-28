@@ -6,6 +6,7 @@ import Newsletter from "../components/Newsletter";
 import ContactForm from "../components/ContactForm";
 import UserInfo from "../components/UserInfo"; // <-- novo
 
+
 export default function Home() {
   return (
     <main>
