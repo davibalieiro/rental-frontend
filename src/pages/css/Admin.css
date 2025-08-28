@@ -1,60 +1,167 @@
-/* Layout principal */
+/* Layout geral */
 .admin-layout {
   display: flex;
   min-height: 100vh;
   font-family: "Segoe UI", sans-serif;
+  background: #f2f2f2;
+  color: #333;
+  transition: background 0.3s, color 0.3s;
+}
+
+.admin-layout.dark {
+  background: #1a1a1a;
+  color: #eee;
 }
 
 /* Sidebar */
 .admin-sidebar {
-  width: 220px;
-  background: #ff4500;
-  color: white;
+  background: #228b22;
+  color: #fff;
+  width: 240px;
+  min-height: 100vh;
   padding: 20px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  transition: width 0.3s ease;
 }
 
-.admin-sidebar h2 {
-  margin-bottom: 30px;
-  text-align: center;
-  font-size: 22px;
+.admin-sidebar.collapsed {
+  width: 70px;
+  padding: 20px 10px;
 }
 
-.admin-sidebar nav {
+.sidebar-header {
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
 }
 
-.admin-sidebar button {
-  padding: 12px;
-  border: none;
-  background: rgba(255, 255, 255, 0.15);
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s;
-}
-
-.admin-sidebar button:hover {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-.admin-sidebar button.active {
-  background: #32cd32; /* verde ativo */
+.sidebar-header h2 {
+  font-size: 20px;
   font-weight: bold;
 }
 
-/* Conteúdo */
-.admin-content {
-  flex: 1;
-  padding: 30px;
-  background: #f9f9f9;
+.toggle-menu {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-size: 20px;
 }
 
-.admin-content h1 {
-  color: #ff4500;
-  margin-bottom: 20px;
+/* Botões da sidebar */
+.admin-sidebar nav button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  color: #e6e6e6;
+  padding: 14px 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.3s, color 0.3s;
+  font-size: 15px;
+}
+
+.admin-sidebar nav button:hover,
+.admin-sidebar nav button.active {
+  background: #32cd32;
+  color: #fff;
+}
+
+/* Rodapé da sidebar */
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-footer button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #ff4500;
+  border: none;
+  color: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.sidebar-footer button:hover {
+  background: #cc3700;
+}
+
+/* Área principal */
+.admin-content {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  background: #f9f9f9;
+  color: #333;
+  border-radius: 12px 0 0 12px;
+}
+
+.admin-layout.dark .admin-content {
+  background: #222;
+  color: #eee;
+}
+
+/* Dashboard */
+.dashboard h2 {
+  margin-bottom: 25px;
+  font-size: 26px;
+  color: #228b22;
+}
+
+.admin-layout.dark .dashboard h2 {
+  color: #32cd32;
+}
+
+/* Cards */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+.card {
+  background: #fff;
+  color: #333;
+  padding: 24px;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  border: 1px solid #ddd;
+  transition: transform 0.2s, border-color 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: #32cd32;
+}
+
+.card svg {
+  font-size: 32px;
+  margin-bottom: 12px;
+  color: #228b22;
+}
+
+/* Páginas genéricas (produtos, categorias, materiais) */
+.page-content {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.admin-layout.dark .page-content {
+  background: #2b2b2b;
+  color: #eee;
 }

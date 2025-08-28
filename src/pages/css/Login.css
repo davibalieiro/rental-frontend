@@ -1,68 +1,146 @@
-/* Fundo da página */
-.login-container {
-  max-width: 400px;
-  margin: 80px auto;
-  padding: 32px;
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+
+  /* Fundo degrade só com verdes */
+  background: linear-gradient(135deg, #006400, #228b22, #32cd32, #90ee90);
+  background-size: 300% 300%;
+  animation: gradientMove 12s ease infinite;
+
+  font-family: Arial, sans-serif;
+}
+
+/* Animação suave do fundo */
+@keyframes gradientMove {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.auth-card {
+  display: flex;
+  width: 800px;
+  height: 500px;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  font-family: "Segoe UI", sans-serif;
+  border-radius: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transition: transform 0.6s ease-in-out;
 }
 
-/* Título */
-.login-container h1 {
+/* Painel lateral */
+.auth-panel {
+  width: 40%;
+  background: linear-gradient(to bottom right, #006400, #228b22, #32cd32);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
   text-align: center;
-  margin-bottom: 24px;
-  font-size: 24px;
-  color: #ff4500; /* Laranja padrão */
 }
 
-/* Inputs */
-.form-group {
+.auth-panel h2 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.auth-panel p {
   margin-bottom: 20px;
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
+.auth-panel button {
+  padding: 10px 20px;
+  background: linear-gradient(to right, #228b22, #32cd32);
+  color: white;
+  border: none;
+  border-radius: 25px;
   font-weight: bold;
-  color: #444;
+  cursor: pointer;
+  transition: all 0.4s ease;
 }
 
-.form-group input {
+.auth-panel button:hover {
+  background: linear-gradient(to right, #32cd32, #228b22);
+  transform: scale(1.05);
+}
+
+/* Área do formulário */
+.auth-form {
+  width: 60%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+}
+
+.auth-form form {
   width: 100%;
-  padding: 10px 14px;
-  border: 1px solid #ccc;
+  max-width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-form h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #006400;
+}
+
+.auth-form input {
+  margin-bottom: 15px;
+  padding: 12px;
+  border: 1px solid #ddd;
   border-radius: 8px;
   outline: none;
-  transition: border 0.2s;
+  transition: border 0.3s;
 }
 
-.form-group input:focus {
-  border-color: #32cd32; /* Verde padrão */
+.auth-form input:focus {
+  border: 1px solid #228b22;
 }
 
-/* Botão */
-button[type="submit"] {
-  width: 100%;
+.auth-form button {
   padding: 12px;
-  background: #32cd32; /* Verde padrão */
+  background: linear-gradient(to right, #228b22, #32cd32);
   color: white;
   border: none;
   border-radius: 8px;
-  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.4s ease;
 }
 
-button[type="submit"]:hover {
-  background: #28a428; /* Verde mais escuro */
+.auth-form button:hover {
+  background: linear-gradient(to right, #32cd32, #228b22);
+  transform: scale(1.05);
 }
 
-/* Erros */
 .error {
-  color: #ff4500; /* Erros em laranja padrão */
-  margin-bottom: 12px;
-  text-align: center;
+  color: red;
   font-size: 14px;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .auth-card {
+    flex-direction: column;
+    width: 95%;
+    height: auto;
+  }
+
+  .auth-panel {
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+  }
+
+  .auth-form {
+    width: 100%;
+    padding: 20px;
+  }
 }

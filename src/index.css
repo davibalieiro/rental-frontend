@@ -300,73 +300,106 @@ header .login-btn:hover {
 .newsletter-form button:hover {
   background: #228b22;
 }
-
-/* ================= CONTACT ================= */
-/* === Contact Form === */
+/* ================= CONTACT OPTIONS ================= */
 .contact-section {
   padding: 60px 20px;
   text-align: center;
-  background: #f8f8f8; /* fundo suave */
+  background: #f8f8f8;
 }
 
 .contact-section h3 {
   font-size: 26px;
   font-weight: bold;
   color: #ff4500; /* título laranja */
-  margin-bottom: 25px;
+  margin-bottom: 40px;
 }
 
-.contact-form {
-  max-width: 600px;
-  margin: 0 auto;
+.contact-options {
   display: grid;
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-.contact-form input,
-.contact-form textarea {
-  width: 100%;
-  padding: 12px 15px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+.contact-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 25px 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  transition: transform 0.3s, border 0.3s;
+}
+
+.contact-card:hover {
+  transform: translateY(-5px);
+  border-color: #32cd32; /* verde no hover */
+}
+
+.contact-card h4 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #32cd32; /* verde nos subtítulos */
+  margin: 15px 0 10px;
+}
+
+.contact-card p, 
+.contact-card a, 
+.contact-card span, 
+.contact-card strong {
   font-size: 15px;
-  outline: none;
-  transition: border 0.3s;
+  color: #444;
+  display: block;
+  margin-top: 5px;
+  text-decoration: none;
 }
 
-.contact-form input:focus,
-.contact-form textarea:focus {
-  border-color: #32cd32; /* verde no foco */
-}
-
-.contact-form button {
-  background: #32cd32; /* botão verde */
-  color: white;
-  font-size: 16px;
-  font-weight: 600;
-  padding: 12px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.contact-form button:hover {
-  background: #28a428; /* verde mais escuro no hover */
-}
+/* ===== USERINFO ===== */
 .user-info {
-  background: #e6f7f5;
-  padding: 15px 20px;
+  background: linear-gradient(135deg, #e6f7f5, #d1f0eb);
+  padding: 20px;
   margin: 20px auto;
-  border-radius: 8px;
+  border-radius: 12px;
   max-width: 600px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.user-info p {
-  margin: 5px 0;
+.user-title {
+  font-size: 18px;
+  margin-bottom: 12px;
+  color: #2a4d4c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.user-details {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.user-details li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
   font-size: 15px;
   color: #333;
+}
+
+.user-details li svg {
+  color: #008c7a;
+}
+
+.admin {
+  color: #00704a;
+  font-weight: 600;
+}
+
+.common {
+  color: #555;
 }
 
 /* ================= FOOTER ================= */

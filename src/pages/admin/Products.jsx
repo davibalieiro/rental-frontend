@@ -1,6 +1,6 @@
 // src/components/admin/Products.jsx
 import React, { useEffect, useState } from "react";
-
+import '../css/Products.css'
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [form, setForm] = useState({ name: "", quantity: 0 });
@@ -8,9 +8,8 @@ export default function Products() {
   async function fetchProducts() {
     try {
       const res = await fetch("http://localhost:3000/api/product/all", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        method: "GET",
+        credentials : 'include',
       });
       const json = await res.json();
       setProducts(json.data || []);
@@ -23,11 +22,8 @@ export default function Products() {
     e.preventDefault();
     try {
       await fetch("http://localhost:3000/api/product", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        method: "GET",
+        credentials : 'include',
         body: JSON.stringify(form),
       });
       setForm({ name: "", quantity: 0 });
