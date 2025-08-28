@@ -8,7 +8,11 @@ import Catalogo from "./pages/Catalogo";
 import Contato from "./pages/Contato";
 import Login from "./pages/Login";
 import Admin from "./pages/admin/AdminPainel";
-import InfoPage from "./components/InfoCard";
+import InfoCard from "./components/InfoCard";
+import Termos from "./components/Termo_de_uso";
+import Privacidade from "./components/Privacidade";
+import FAQ from "./components/FAQ";
+import Regulamento from "./components/Regulamento";
 
 function App() {
   return (
@@ -17,16 +21,23 @@ function App() {
         <Header />
         <main>
           <Routes>
+            {/* Home */}
             <Route path="/" element={<Home />} />
+            <Route path="/home" element={<Home />} />
+
+            {/* Páginas principais */}
             <Route path="/empresa" element={<Empresa />} />
             <Route path="/catalogo" element={<Catalogo />} />
             <Route path="/contato" element={<Contato />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<Admin />} />
-            <Route path="/termos" element={<InfoPage title="Termos de Uso" />} />
-            <Route path="/privacidade" element={<InfoPage title="Política de Privacidade" />} />
-            <Route path="/faq" element={<InfoPage title="FAQ" />} />
-            <Route path="/regulamento" element={<InfoPage title="Regulamento" />} />
+
+            {/* Extras */}
+            <Route path="/InfoCard" element={<InfoCard />} />
+            <Route path="/termos" element={<Termos />} />
+            <Route path="/privacidade" element={<Privacidade />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/regulamento" element={<Regulamento />} />
           </Routes>
         </main>
         <Footer />

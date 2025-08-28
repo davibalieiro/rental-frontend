@@ -1,29 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom"; // SPA navigation
+import { Link } from "react-router-dom";
 import "../index.css";
 
 export default function InfoCards() {
   const infos = [
-    {
-      title: "Termos de Uso",
-      desc: "Confira nossos termos de uso e saiba como funcionam nossas regras.",
-      link: "/termos",
-    },
-    {
-      title: "Política de Privacidade",
-      desc: "Entenda como cuidamos dos seus dados e garantimos sua segurança.",
-      link: "/privacidade",
-    },
-    {
-      title: "FAQ",
-      desc: "Veja as perguntas mais frequentes e encontre respostas rápidas.",
-      link: "/faq",
-    },
-    {
-      title: "Regulamento",
-      desc: "Leia o regulamento completo dos nossos serviços e promoções.",
-      link: "/regulamento",
-    },
+    { title: "Termos de Uso", desc: "Confira nossos termos de uso...", link: "/termos" },
+    { title: "Política de Privacidade", desc: "Entenda como cuidamos dos seus dados...", link: "/privacidade" },
+    { title: "FAQ", desc: "Veja as perguntas mais frequentes...", link: "/faq" },
+    { title: "Regulamento", desc: "Leia o regulamento completo...", link: "/regulamento" },
   ];
 
   return (

@@ -4,7 +4,7 @@ import Categories from "../components/Categorias";
 import Highlights from "../components/Highlights";
 import Newsletter from "../components/Newsletter";
 import UserInfo from "../components/UserInfo"; 
-import InfoCards from "../components/InfoCard";
+import InfoCard from "../components/InfoCard";
 
 export default function Home() {
   return (
@@ -25,7 +25,7 @@ export default function Home() {
       <Newsletter />
       
       {/* InfoCard */}
-      <InfoCards />
+      <InfoCard />
     </main>
   );
 }
