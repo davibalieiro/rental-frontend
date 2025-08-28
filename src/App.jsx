@@ -8,6 +8,7 @@ import Catalogo from "./pages/Catalogo";
 import Contato from "./pages/Contato";
 import Login from "./pages/Login";
 import Admin from "./pages/admin/AdminPainel";
+import InfoPage from "./components/InfoCard";
 
 function App() {
   return (
@@ -22,6 +23,10 @@ function App() {
             <Route path="/contato" element={<Contato />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<Admin />} />
+            <Route path="/termos" element={<InfoPage title="Termos de Uso" />} />
+            <Route path="/privacidade" element={<InfoPage title="Política de Privacidade" />} />
+            <Route path="/faq" element={<InfoPage title="FAQ" />} />
+            <Route path="/regulamento" element={<InfoPage title="Regulamento" />} />
           </Routes>
         </main>
         <Footer />

@@ -3,9 +3,8 @@ import Carousel from "../components/Carousel";
 import Categories from "../components/Categorias";
 import Highlights from "../components/Highlights";
 import Newsletter from "../components/Newsletter";
-import ContactForm from "../components/ContactForm";
-import UserInfo from "../components/UserInfo"; // <-- novo
-
+import UserInfo from "../components/UserInfo"; 
+import InfoCards from "../components/InfoCard";
 
 export default function Home() {
   return (
@@ -24,9 +23,9 @@ export default function Home() {
 
       {/* Newsletter */}
       <Newsletter />
-
-      {/* Contato */}
-      <ContactForm />
+      
+      {/* InfoCard */}
+      <InfoCards />
     </main>
   );
 }
