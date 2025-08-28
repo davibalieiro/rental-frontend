@@ -1,4 +1,6 @@
-/* Layout geral */
+/* =========================
+   Layout Geral
+========================= */
 .admin-layout {
   display: flex;
   min-height: 100vh;
@@ -13,9 +15,11 @@
   color: #eee;
 }
 
-/* Sidebar */
+/* =========================
+   Sidebar
+========================= */
 .admin-sidebar {
-  background: #228b22;
+  background: #228b22; /* verde */
   color: #fff;
   width: 240px;
   min-height: 100vh;
@@ -23,7 +27,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, background 0.3s;
 }
 
 .admin-sidebar.collapsed {
@@ -74,6 +78,19 @@
   color: #fff;
 }
 
+/* Tema escuro - Sidebar */
+.admin-layout.dark .admin-sidebar {
+  background: #145214;
+}
+.admin-layout.dark .admin-sidebar nav button {
+  color: #ccc;
+}
+.admin-layout.dark .admin-sidebar nav button:hover,
+.admin-layout.dark .admin-sidebar nav button.active {
+  background: #32cd32;
+  color: #fff;
+}
+
 /* Rodapé da sidebar */
 .sidebar-footer {
   display: flex;
@@ -98,7 +115,9 @@
   background: #cc3700;
 }
 
-/* Área principal */
+/* =========================
+   Área principal
+========================= */
 .admin-content {
   flex: 1;
   padding: 40px;
@@ -106,6 +125,7 @@
   background: #f9f9f9;
   color: #333;
   border-radius: 12px 0 0 12px;
+  transition: background 0.3s, color 0.3s;
 }
 
 .admin-layout.dark .admin-content {
@@ -113,7 +133,9 @@
   color: #eee;
 }
 
-/* Dashboard */
+/* =========================
+   Dashboard
+========================= */
 .dashboard h2 {
   margin-bottom: 25px;
   font-size: 26px;
@@ -139,7 +161,7 @@
   text-align: center;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
   border: 1px solid #ddd;
-  transition: transform 0.2s, border-color 0.3s;
+  transition: transform 0.2s, border-color 0.3s, background 0.3s;
 }
 
 .card:hover {
@@ -153,12 +175,25 @@
   color: #228b22;
 }
 
-/* Páginas genéricas (produtos, categorias, materiais) */
+/* Tema escuro - Cards */
+.admin-layout.dark .card {
+  background: #2b2b2b;
+  color: #eee;
+  border: 1px solid #444;
+}
+.admin-layout.dark .card svg {
+  color: #32cd32;
+}
+
+/* =========================
+   Páginas internas
+========================= */
 .page-content {
   background: #fff;
   padding: 30px;
   border-radius: 12px;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  transition: background 0.3s, color 0.3s;
 }
 
 .admin-layout.dark .page-content {

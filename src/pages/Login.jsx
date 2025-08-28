@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom"; // corrigi para router-dom
 import "./css/Login.css";
 
 export default function Auth() {
@@ -19,7 +19,9 @@ export default function Auth() {
         ? "http://localhost:3000/api/login"
         : "http://localhost:3000/api/register";
 
-      const body = isLogin ? { email, password } : { name, email, password };
+      const body = isLogin
+        ? { email, password }
+        : { name, email, password };
 
       const response = await fetch(url, {
         method: "POST",
@@ -36,7 +38,7 @@ export default function Auth() {
       }
 
       if (isLogin) {
-        navigate("/admin");
+        navigate("/admin"); // redireciona se login OK
       } else {
         alert("Cadastro realizado com sucesso! Faça login.");
         setIsLogin(true);
@@ -48,8 +50,8 @@ export default function Auth() {
       setError("Erro ao conectar com servidor");
     }
   };
-
-  return (
+  
+return (
     <div className="auth-container">
       <div className={`auth-card ${isLogin ? "" : "active"}`}>
         {/* Painel lateral */}
