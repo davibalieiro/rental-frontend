@@ -1,6 +1,6 @@
 // src/components/admin/Products.jsx
 import React, { useEffect, useState } from "react";
-
+import '../css/Products.css'
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [form, setForm] = useState({ name: "", quantity: 0 });

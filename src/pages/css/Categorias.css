@@ -1,0 +1,132 @@
+/* Container geral */
+.page-content {
+  background: #f5f5f5;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+/* Título */
+.page-content h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #228b22;
+  font-weight: 600;
+}
+
+/* Formulário */
+.admin-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.admin-form input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 2px solid #32cd32;
+  border-radius: 8px;
+  outline: none;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.admin-form input:focus {
+  border-color: #228b22;
+  box-shadow: 0 0 6px rgba(34, 139, 34, 0.4);
+}
+
+/* Botões principais */
+.admin-form button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.admin-form button[type="submit"] {
+  background: #32cd32;
+  color: #fff;
+}
+
+.admin-form button[type="submit"]:hover {
+  background: #228b22;
+  transform: translateY(-2px);
+}
+
+.admin-form button[type="button"] {
+  background: #ff4500;
+  color: #fff;
+}
+
+.admin-form button[type="button"]:hover {
+  background: #cc3700;
+  transform: translateY(-2px);
+}
+
+/* Lista de materiais */
+.admin-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.list-item {
+  background: #fff;
+  border: 1px solid #ddd;
+  padding: 12px 16px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: 0.2s;
+}
+
+.list-item:hover {
+  border-color: #32cd32;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+/* Nome do material */
+.list-item span {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Botões de ação */
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.actions button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.actions button:first-child {
+  background: #32cd32;
+  color: #fff;
+}
+
+.actions button:first-child:hover {
+  background: #228b22;
+}
+
+.actions button:last-child {
+  background: #ff4500;
+  color: #fff;
+}
+
+.actions button:last-child:hover {
+  background: #cc3700;
+}

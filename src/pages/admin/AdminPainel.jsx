@@ -1,6 +1,15 @@
-// src/components/admin/AdminPanel.jsx
 import React, { useState } from "react";
-import { FaBox, FaList, FaCubes, FaUsers, FaChartBar, FaMoon, FaSun, FaSignOutAlt } from "react-icons/fa";
+import {
+  FaBox,
+  FaList,
+  FaCubes,
+  FaUsers,
+  FaChartBar,
+  FaMoon,
+  FaSun,
+  FaSignOutAlt,
+  FaBars
+} from "react-icons/fa";
 import Products from "./Products";
 import Categories from "./Categories";
 import Materials from "./Materials";
@@ -9,6 +18,7 @@ import "../css/Admin.css";
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [darkMode, setDarkMode] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(true);
 
   const renderContent = () => {
     switch (activeTab) {
@@ -19,7 +29,12 @@ export default function AdminPanel() {
       case "materials":
         return <Materials />;
       case "users":
-        return <div><h2>Gerenciar Usuários</h2><p>Função futura: lista, edição e exclusão de usuários.</p></div>;
+        return (
+          <div className="page-content">
+            <h2>Gerenciar Usuários</h2>
+            <p>Função futura: lista, edição e exclusão de usuários.</p>
+          </div>
+        );
       default:
         return (
           <div className="dashboard">
@@ -38,46 +53,56 @@ export default function AdminPanel() {
   return (
     <div className={`admin-layout ${darkMode ? "dark" : ""}`}>
       {/* Sidebar */}
-      <aside className="admin-sidebar">
-        <h2>Painel</h2>
+      <aside className={`admin-sidebar ${menuOpen ? "" : "collapsed"}`}>
+        <div className="sidebar-header">
+          <h2>{menuOpen ? "Painel" : " "}</h2>
+          <button
+            className="toggle-menu"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <FaBars />
+          </button>
+        </div>
+
         <nav>
           <button
             className={activeTab === "dashboard" ? "active" : ""}
             onClick={() => setActiveTab("dashboard")}
           >
-            <FaChartBar /> Dashboard
+            <FaChartBar /> {menuOpen && "Dashboard"}
           </button>
           <button
             className={activeTab === "products" ? "active" : ""}
             onClick={() => setActiveTab("products")}
           >
-            <FaBox /> Produtos
+            <FaBox /> {menuOpen && "Produtos"}
           </button>
           <button
             className={activeTab === "categories" ? "active" : ""}
             onClick={() => setActiveTab("categories")}
           >
-            <FaList /> Categorias
+            <FaList /> {menuOpen && "Categorias"}
           </button>
           <button
             className={activeTab === "materials" ? "active" : ""}
             onClick={() => setActiveTab("materials")}
           >
-            <FaCubes /> Materiais
+            <FaCubes /> {menuOpen && "Materiais"}
           </button>
           <button
             className={activeTab === "users" ? "active" : ""}
             onClick={() => setActiveTab("users")}
           >
-            <FaUsers /> Usuários
+            <FaUsers /> {menuOpen && "Usuários"}
           </button>
         </nav>
+
         <div className="sidebar-footer">
           <button onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? <FaSun /> : <FaMoon />} {darkMode ? "Claro" : "Escuro"}
+            {darkMode ? <FaSun /> : <FaMoon />} {menuOpen && (darkMode ? "Claro" : "Escuro")}
           </button>
           <button className="logout">
-            <FaSignOutAlt /> Sair
+            <FaSignOutAlt /> {menuOpen && "Sair"}
           </button>
         </div>
       </aside>
