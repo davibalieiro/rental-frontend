@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { FaUser, FaEnvelope, FaIdBadge, FaUserShield, FaUserAlt } from "react-icons/fa";
+import "../index.css";
 
 export default function UserInfo() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/me", {
-      credentials: "include", // envia cookie HttpOnly
+      credentials: "include",
     })
       .then((res) => {
         if (!res.ok) throw new Error("Não autenticado");
@@ -15,20 +17,23 @@ export default function UserInfo() {
       .catch(() => setUser(null));
   }, []);
 
-  if (!user) {
-    return null; // não mostra nada se não estiver logado
-  }
+  if (!user) return null;
 
   return (
     <div className="user-info">
-      <p>
-        Bem-vindo, <strong>{user.name}</strong> 👋
-      </p>
-      <p>Email: {user.email}</p>
-      <p>ID: {user.id}</p>
-      <p>
-        {user.is_admin ? "Você é administrador ✅" : "Usuário comum"}
-      </p>
+      <h3 className="user-title">
+        <FaUser /> Bem-vindo, <strong>{user.name}</strong> 
+      </h3>
+      <ul className="user-details">
+        <li><FaEnvelope /> {user.email}</li>
+        <li>
+          {user.is_admin ? (
+            <span className="admin"><FaUserShield /> Administrador </span>
+          ) : (
+            <span className="common"><FaUserAlt /> Usuário comum</span>
+          )}
+        </li>
+      </ul>
     </div>
   );
 }

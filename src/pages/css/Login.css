@@ -1,68 +1,134 @@
-/* Fundo da página */
-.login-container {
-  max-width: 400px;
-  margin: 80px auto;
-  padding: 32px;
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-  font-family: "Segoe UI", sans-serif;
-}
-
-/* Título */
-.login-container h1 {
-  text-align: center;
-  margin-bottom: 24px;
-  font-size: 24px;
-  color: #ff4500; /* Laranja padrão */
-}
-
-/* Inputs */
-.form-group {
-  margin-bottom: 20px;
-}
-
-.form-group label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: bold;
-  color: #444;
-}
-
-.form-group input {
+/* Container principal */
+.container {
+  position: relative;
   width: 100%;
-  padding: 10px 14px;
+  min-height: 100vh;
+  background: #f6f5f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Forms */
+.forms-container {
+  position: absolute;
+  width: 50%;
+  transition: all 0.6s ease-in-out;
+}
+
+.signin-signup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+form {
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 3rem;
+  height: 100%;
+  text-align: center;
+}
+
+form .title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.input-field {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.input-field input {
+  width: 100%;
+  padding: 12px 15px;
   border: 1px solid #ccc;
   border-radius: 8px;
-  outline: none;
-  transition: border 0.2s;
 }
 
-.form-group input:focus {
-  border-color: #32cd32; /* Verde padrão */
-}
-
-/* Botão */
-button[type="submit"] {
-  width: 100%;
-  padding: 12px;
-  background: #32cd32; /* Verde padrão */
-  color: white;
+/* Botões */
+.btn {
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  outline: none;
+  height: 45px;
+  width: 140px;
+  background-color: #ff4b2b;
+  color: #fff;
+  text-transform: uppercase;
+  border-radius: 25px;
   cursor: pointer;
-  transition: background 0.3s;
+  margin-top: 15px;
+  transition: 0.3s;
 }
 
-button[type="submit"]:hover {
-  background: #28a428; /* Verde mais escuro */
+.btn:hover {
+  background-color: #ff3a1a;
+}
+
+.btn.transparent {
+  background: transparent;
+  border: 2px solid #fff;
+}
+
+/* Painéis laterais */
+.panels-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+}
+
+.panel {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 3rem;
+  text-align: center;
+  color: #fff;
+  transition: all 0.6s ease-in-out;
+}
+
+.left-panel {
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+}
+
+.right-panel {
+  background: linear-gradient(135deg, #32cd32, #28a428);
+}
+
+/* Alternando login/cadastro */
+.container.sign-up-mode .forms-container {
+  left: 50%;
+}
+
+.sign-in-form {
+  display: block;
+}
+
+.sign-up-form {
+  display: none;
+}
+
+.container.sign-up-mode .sign-in-form {
+  display: none;
+}
+
+.container.sign-up-mode .sign-up-form {
+  display: block;
 }
 
 /* Erros */
 .error {
-  color: #ff4500; /* Erros em laranja padrão */
-  margin-bottom: 12px;
-  text-align: center;
+  color: red;
   font-size: 14px;
+  margin-top: 10px;
 }
