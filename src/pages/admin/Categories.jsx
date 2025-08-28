@@ -8,9 +8,8 @@ export default function Categories() {
   async function fetchCategories() {
     try {
       const res = await fetch("http://localhost:3000/api/categories", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        method: "GET",
+        credentials : 'include',
       });
       const json = await res.json();
       setCategories(json.data || []);
@@ -23,11 +22,8 @@ export default function Categories() {
     e.preventDefault();
     try {
       await fetch("http://localhost:3000/api/category", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+        method: "GET",
+        credentials : 'include',
         body: JSON.stringify(form),
       });
       setForm({ name: "" });
