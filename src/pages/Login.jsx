@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "./css/Login.css";
 import { useNavigate } from "react-router";
+import "./css/Login.css";
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -50,96 +50,51 @@ export default function Auth() {
   };
 
   return (
-    <div className={`container ${isLogin ? "" : "sign-up-mode"}`}>
-      <div className="forms-container">
-        <div className="signin-signup">
-          {/* LOGIN */}
-          <form onSubmit={handleSubmit} className="sign-in-form">
-            <h2 className="title">Sign in</h2>
-            <div className="input-field">
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="input-field">
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {error && <p className="error">{error}</p>}
-            <button type="submit" className="btn solid">Login</button>
-          </form>
+    <div className="auth-container">
+      <div className={`auth-card ${isLogin ? "" : "active"}`}>
+        {/* Painel lateral */}
+        <div className="auth-panel">
+          <h2>{isLogin ? "Novo por aqui?" : "Já tem conta?"}</h2>
+          <p>{isLogin ? "Crie uma conta e entre na comunidade!" : "Entre na sua conta para continuar."}</p>
+          <button onClick={() => setIsLogin(!isLogin)}>
+            {isLogin ? "Registrar" : "Login"}
+          </button>
+        </div>
 
-          {/* CADASTRO */}
-          <form onSubmit={handleSubmit} className="sign-up-form">
-            <h2 className="title">Sign up</h2>
-            <div className="input-field">
+        {/* Área do formulário */}
+        <div className="auth-form">
+          <form onSubmit={handleSubmit}>
+            <h2>{isLogin ? "Login" : "Registrar"}</h2>
+            {error && <p className="error">{error}</p>}
+
+            {!isLogin && (
               <input
                 type="text"
-                placeholder="Name"
+                placeholder="Nome"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
               />
-            </div>
-            <div className="input-field">
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div className="input-field">
-              <input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-              />
-            </div>
-            {error && <p className="error">{error}</p>}
-            <button type="submit" className="btn">Cadastrar</button>
+            )}
+
+            <input
+              type="email"
+              placeholder="E-mail"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+
+            <input
+              type="password"
+              placeholder="Senha"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+
+            <button type="submit">{isLogin ? "Entrar" : "Registrar"}</button>
           </form>
-        </div>
-      </div>
-
-      {/* Painéis laterais */}
-      <div className="panels-container">
-        <div className="panel left-panel">
-          <div className="content">
-            <h3>New here?</h3>
-            <p>Enter your personal details and start your journey with us</p>
-            <button
-              className="btn transparent"
-              onClick={() => setIsLogin(false)}
-            >
-              Sign up
-            </button>
-          </div>
-        </div>
-
-        <div className="panel right-panel">
-          <div className="content">
-            <h3>One of us?</h3>
-            <p>To keep connected with us please login with your personal info</p>
-            <button
-              className="btn transparent"
-              onClick={() => setIsLogin(true)}
-            >
-              Sign in
-            </button>
-          </div>
         </div>
       </div>
     </div>
