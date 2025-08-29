@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../index.css";
+import "../pages/css/InfoCard.css";
 
 export default function InfoCards() {
   const infos = [

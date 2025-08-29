@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // corrigi para router-dom
+import { useNavigate } from "react-router-dom";
 import "./css/Login.css";
 
 export default function Auth() {
@@ -7,6 +7,7 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -21,7 +22,7 @@ export default function Auth() {
 
       const body = isLogin
         ? { email, password }
-        : { name, email, password };
+        : { name, email, phone, password };
 
       const response = await fetch(url, {
         method: "POST",
@@ -32,51 +33,62 @@ export default function Auth() {
 
       const data = await response.json();
 
-      if (!response.ok) {
+      if (!response.status !== 201) {
         setError(data.message || "Erro na operação");
         return;
       }
 
-      if (isLogin) {
-        navigate("/admin"); // redireciona se login OK
+
+      
+        console.log(data)
+      if (data.user.id_admin === "admin") {
+        navigate("/admin");
+        console.log('chegou acáa')
       } else {
-        alert("Cadastro realizado com sucesso! Faça login.");
-        setIsLogin(true);
-        setName("");
-        setEmail("");
-        setPassword("");
+        navigate("/dashboard");
       }
     } catch (err) {
       setError("Erro ao conectar com servidor");
     }
   };
-  
-return (
+
+  return (
     <div className="auth-container">
       <div className={`auth-card ${isLogin ? "" : "active"}`}>
-        {/* Painel lateral */}
         <div className="auth-panel">
           <h2>{isLogin ? "Novo por aqui?" : "Já tem conta?"}</h2>
-          <p>{isLogin ? "Crie uma conta e entre na comunidade!" : "Entre na sua conta para continuar."}</p>
-          <button onClick={() => setIsLogin(!isLogin)}>
+          <p>
+            {isLogin
+              ? "Crie uma conta e entre na comunidade!"
+              : "Entre na sua conta para continuar."}
+          </p>
+          <button type="button" onClick={() => setIsLogin(!isLogin)}>
             {isLogin ? "Registrar" : "Login"}
           </button>
         </div>
 
-        {/* Área do formulário */}
         <div className="auth-form">
           <form onSubmit={handleSubmit}>
             <h2>{isLogin ? "Login" : "Registrar"}</h2>
             {error && <p className="error">{error}</p>}
 
             {!isLogin && (
-              <input
-                type="text"
-                placeholder="Nome"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-              />
+              <>
+                <input
+                  type="text"
+                  placeholder="Nome"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="Telefone"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  required
+                />
+              </>
             )}
 
             <input

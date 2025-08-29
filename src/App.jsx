@@ -13,7 +13,6 @@ import Termos from "./components/Termo_de_uso";
 import Privacidade from "./components/Privacidade";
 import FAQ from "./components/FAQ";
 import Regulamento from "./components/Regulamento";
-
 function App() {
   return (
     <Router>

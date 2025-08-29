@@ -25,13 +25,16 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import NotFound from "../NotFound";
 import "../css/Admin.css";
-
+import { useAuth } from "~/hooks/useAuth";
 export default function AdminPanel() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [darkMode, setDarkMode] = useState(false);
   const [menuOpen, setMenuOpen] = useState(true);
-  const navigate = useNavigate();
+  
+
+
 
   // Dados fictícios de acessos
   const [trafficData, setTrafficData] = useState([
@@ -43,6 +46,12 @@ export default function AdminPanel() {
     { day: "Sab", users: 260, newUsers: 100 },
     { day: "Dom", users: 300, newUsers: 120 },
   ]);
+
+  
+  const navigate = useNavigate();
+    const {user, loading} = useAuth();
+    if (loading) return <p>Carregando...</p>;
+    if (!user || !user.is_admin) return <NotFound/>
 
   const handleLogout = async () => {
     try {
