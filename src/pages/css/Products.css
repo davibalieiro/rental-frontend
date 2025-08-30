@@ -1,105 +1,139 @@
+/* ===== Página do Produto ===== */
 .product-page {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3rem;
-  padding: 3rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  padding: 2rem;
   max-width: 1200px;
   margin: auto;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  color: #333;
 }
 
-/* IMAGEM */
+/* ===== Breadcrumb ===== */
+.breadcrumb {
+  grid-column: span 2;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+.breadcrumb a {
+  color: #0077cc;
+  text-decoration: none;
+}
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Imagem principal ===== */
 .product-image {
-  flex: 1;
-  min-width: 320px;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-}
-
-.product-image img {
-  width: 100%;
-  max-width: 450px;
-  border-radius: 16px;
-  object-fit: cover;
-  box-shadow: 0px 6px 16px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-.product-image img:hover {
-  transform: scale(1.03);
-}
-
-/* DETALHES */
-.product-details {
-  flex: 2;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  padding-top: 1rem;
+  align-items: center;
+}
+.product-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.thumbnail-list {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.thumbnail-list img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: border 0.3s;
+}
+.thumbnail-list img:hover {
+  border-color: #0077cc;
 }
 
+/* ===== Detalhes ===== */
 .product-details h1 {
-  font-size: 2.2rem;
-  margin-bottom: 0.8rem;
-  color: #222;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
 }
-
-.price {
-  font-size: 1.8rem;
-  font-weight: bold;
-  color: #2e7d32; /* verde bonito */
-  margin-bottom: 1.5rem;
+.rating {
+  font-size: 1rem;
+  color: #f39c12;
+  margin-bottom: 1rem;
 }
-
 .short-description {
-  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.long-description {
+  font-size: 0.95rem;
   color: #555;
   margin-bottom: 1rem;
 }
-
-.long-description {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #444;
-  margin-bottom: 2rem;
+.product-details p {
+  margin: 0.3rem 0;
 }
 
-/* BOTÃO */
+/* ===== Botões ===== */
+.actions {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+}
 .buy-btn {
-  background: linear-gradient(135deg, #ff6600, #ff8533);
+  background: #0077cc;
   color: white;
+  padding: 0.8rem 1.5rem;
   border: none;
-  padding: 14px 28px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 12px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: 0.3s;
-  width: fit-content;
-  box-shadow: 0 4px 12px rgba(255,102,0,0.3);
+  font-weight: 600;
+  transition: background 0.3s;
 }
-
 .buy-btn:hover {
-  background: linear-gradient(135deg, #e65c00, #ff751a);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(255,102,0,0.4);
+  background: #005fa3;
+}
+.wishlist-btn {
+  background: #eee;
+  color: #333;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.wishlist-btn.active {
+  background: #ff4d6d;
+  color: white;
+}
+.wishlist-btn:hover {
+  background: #ddd;
 }
 
-/* RESPONSIVO */
-@media (max-width: 768px) {
+/* ===== Compartilhar ===== */
+.share {
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+}
+.share a {
+  color: #0077cc;
+  text-decoration: none;
+  margin: 0 0.3rem;
+}
+.share a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Responsividade ===== */
+@media (max-width: 900px) {
   .product-page {
-    flex-direction: column;
-    padding: 2rem 1rem;
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
-
-  .product-details h1 {
-    font-size: 1.8rem;
-  }
-
-  .price {
-    font-size: 1.4rem;
+  .breadcrumb {
+    grid-column: span 1;
   }
 }
