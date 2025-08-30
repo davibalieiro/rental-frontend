@@ -91,6 +91,9 @@ export default function CartPage() {
                       <div className="cart-info">
                         <h4>{item.name}</h4>
                         <p>{item.short_description}</p>
+                        {/* NOVO: Mostrar quantidade pedida */}
+                        <p><strong>Quantidade:</strong> {item.selectedQuantity || 1}</p>
+
 
                         {/* BOTÃO VER PRODUTO */}
                         <button

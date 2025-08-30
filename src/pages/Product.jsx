@@ -139,12 +139,6 @@ export default function ProductPage() {
           <button className="buy-btn" onClick={handleAddToCart}>
             Fazer Orçamento
           </button>
-          <button
-            className={`wishlist-btn ${isFavorite ? "active" : ""}`}
-            onClick={handleWishlist}
-          >
-            {isFavorite ? "❤️ Favorito" : "🤍 Adicionar aos Favoritos"}
-          </button>
         </div>
 
         {/* Notificação */}

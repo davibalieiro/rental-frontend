@@ -123,6 +123,9 @@
 .view-product-btn:hover {
   background: #228b22;
 }
+.cart-info p strong {
+  color: #333;
+}
 
 /* TEXTAREA */
 .cart-notes {
