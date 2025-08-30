@@ -33,19 +33,28 @@ export default function Auth() {
 
       const data = await response.json();
 
-      // Checar se status é sucesso
       if (response.status !== 201) {
         setError(data.message || "Erro na operação");
         return;
       }
 
-      // Redirecionar baseado no tipo de usuário
-      if (data.user.is_admin) {
-        navigate("/admin");
+      if (isLogin) {
+        // login feito, backend define sessão
+        // admin verá botão admin automaticamente via useAuth
+        if (data.is_admin) {
+          navigate("/"); // admin fica na home, botão admin aparece no Header
+        } else {
+          navigate("/"); // usuário comum vai pra home
+        }
       } else {
-        navigate("/home"); 
+        // registro feito
+        alert("✅ Usuário criado com sucesso! Faça login para continuar.");
+        setIsLogin(true); // volta para tela de login
+        setName(""); 
+        setPhone(""); 
+        setEmail(""); 
+        setPassword("");
       }
-
     } catch (err) {
       setError("Erro ao conectar com servidor");
     }

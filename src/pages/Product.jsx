@@ -8,6 +8,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [wishlist, setWishlist] = useState([]);
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -38,7 +39,12 @@ export default function ProductPage() {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
     cart.push(product);
     localStorage.setItem("cart", JSON.stringify(cart));
-    navigate("/cartpage");
+    // navigate("/cartpage");
+    // cria uma notificação temporaria dizendo que foi adicionada
+    setNotification("✅ Produto adicionado ao carrinho!");
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
   };
 
   const handleWishlist = () => {
@@ -56,14 +62,7 @@ export default function ProductPage() {
 
   return (
     <div className="product-page">
-      {/* Breadcrumb */}
-      <nav className="breadcrumb">
-        <Link to="/">Home</Link> &gt; 
-        <Link to={`/categoria/${product.category?.slug}`}>
-          {product.category?.name}
-        </Link> &gt; 
-        <span>{product.name}</span>
-      </nav>
+      
 
       {/* Galeria de imagens */}
       <div className="product-image">
@@ -82,16 +81,40 @@ export default function ProductPage() {
       <div className="product-details">
         <h1>{product.name}</h1>
 
-        {/* Avaliações */}
-        <div className="rating">
-          ⭐⭐⭐⭐☆ <span>(23 avaliações)</span>
-        </div>
-
         <p className="short-description">{product.short_description}</p>
         <p className="long-description">{product.long_description}</p>
 
         <p><strong>Estoque:</strong> {product.quantity} unidades</p>
         <p><strong>Dimensão:</strong> {product.dimension}</p>
+         
+        <p><i>Montagem {product.is_included_montage ? 'inclusa' : 'Não inclusa'}</i></p>
+        
+
+        {/* Categorias */}
+        {product.categories?.length > 0 && (
+          <div className="product-categories">
+            <strong>Categorias:</strong>{" "}
+            {product.categories.map((cat, i) => (
+              <span key={cat.id || i}>
+                <Link to={`/categoria/${cat.slug}`}>{cat.name}</Link>
+                {i < product.categories.length - 1 && ", "}
+              </span>
+            ))}
+          </div>
+        )}
+
+        {/* Materiais */}
+        {product.materials?.length > 0 && (
+          <div className="product-materials">
+            <strong>Materiais:</strong>{" "}
+            {product.materials.map((mat, i) => (
+              <span key={mat.id || i}>
+                {mat.name}
+                {i < product.materials.length - 1 && ", "}
+              </span>
+            ))}
+          </div>
+        )}
 
         {/* Botões */}
         <div className="actions">
@@ -105,14 +128,12 @@ export default function ProductPage() {
             {isFavorite ? "❤️ Favorito" : "🤍 Adicionar aos Favoritos"}
           </button>
         </div>
-
-        {/* Compartilhar */}
-        <div className="share">
-          <span>Compartilhar:</span>
-          <a href={`https://wa.me/?text=Olha este produto: ${window.location.href}`} target="_blank" rel="noreferrer">WhatsApp</a> | 
-          <a href={`https://www.facebook.com/sharer/sharer.php?u=${window.location.href}`} target="_blank" rel="noreferrer">Facebook</a> | 
-          <a href={`https://www.instagram.com/?url=${window.location.href}`} target="_blank" rel="noreferrer">Instagram</a>
+        {/* Notificação */}
+      {notification && (
+        <div className="notification">
+          {notification}
         </div>
+      )}
       </div>
     </div>
   );
