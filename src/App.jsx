@@ -1,5 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Home from "./pages/Home";
@@ -7,7 +7,7 @@ import Empresa from "./pages/Empresa";
 import Catalogo from "./pages/Catalogo";
 import Contato from "./pages/Contato";
 import Login from "./pages/Login";
-import Admin from "./pages/admin/AdminPainel";
+import AdminPainel from "./pages/admin/AdminPainel";
 import InfoCard from "./components/InfoCard";
 import Termos from "./components/Termo_de_uso";
 import Privacidade from "./components/Privacidade";
@@ -32,7 +32,7 @@ function App() {
             <Route path="/catalogo" element={<Catalogo />} />
             <Route path="/contato" element={<Contato />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route path="/admin" element={<AdminPainel />} />
 
             {/* Extras */}
             <Route path="/InfoCard" element={<InfoCard />} />

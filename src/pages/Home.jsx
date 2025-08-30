@@ -3,7 +3,7 @@ import Carousel from "../components/Carousel";
 import Categories from "../components/Categorias";
 import Highlights from "../components/Highlights";
 import Newsletter from "../components/Newsletter";
-import UserInfo from "../components/UserInfo"; 
+import UserInfo from "../components/UserInfo";
 import InfoCard from "../components/InfoCard";
 
 export default function Home() {
@@ -15,15 +15,15 @@ export default function Home() {
       {/* Hero / Carousel */}
       <Carousel />
 
+      {/* Destaques */}
+      <Highlights />
+      
       {/* Categorias */}
       <Categories />
 
-      {/* Destaques */}
-      <Highlights />
-
       {/* Newsletter */}
       <Newsletter />
-      
+
       {/* InfoCard */}
       <InfoCard />
     </main>

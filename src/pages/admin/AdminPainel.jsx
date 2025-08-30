@@ -28,12 +28,10 @@ import {
 import NotFound from "../NotFound";
 import "../css/Admin.css";
 import { useAuth } from "~/hooks/useAuth";
-export default function AdminPanel() {
+export default function AdminPainel() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [darkMode, setDarkMode] = useState(false);
   const [menuOpen, setMenuOpen] = useState(true);
-  
-
 
 
   // Dados fictícios de acessos

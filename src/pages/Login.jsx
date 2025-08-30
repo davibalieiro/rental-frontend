@@ -33,20 +33,19 @@ export default function Auth() {
 
       const data = await response.json();
 
-      if (!response.status !== 201) {
+      // Checar se status é sucesso
+      if (response.status !== 201) {
         setError(data.message || "Erro na operação");
         return;
       }
 
-
-      
-        console.log(data)
-      if (data.user.id_admin === "admin") {
+      // Redirecionar baseado no tipo de usuário
+      if (data.user.is_admin) {
         navigate("/admin");
-        console.log('chegou acáa')
       } else {
-        navigate("/dashboard");
+        navigate("/home"); 
       }
+
     } catch (err) {
       setError("Erro ao conectar com servidor");
     }
