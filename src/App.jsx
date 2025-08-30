@@ -13,6 +13,9 @@ import Termos from "./components/Termo_de_uso";
 import Privacidade from "./components/Privacidade";
 import FAQ from "./components/FAQ";
 import Regulamento from "./components/Regulamento";
+import Produto from './pages/Product'
+import CartPage from "./pages/CartPage";
+
 function App() {
   return (
     <Router>
@@ -37,6 +40,10 @@ function App() {
             <Route path="/privacidade" element={<Privacidade />} />
             <Route path="/faq" element={<FAQ />} />
             <Route path="/regulamento" element={<Regulamento />} />
+
+            <Route path="/cartpage" element={<CartPage />} />
+            <Route path="/produto/:slug" element={<Produto />} />
+                    
           </Routes>
         </main>
         <Footer />

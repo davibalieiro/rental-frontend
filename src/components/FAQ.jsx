@@ -1,5 +1,5 @@
 import React from "react";
-
+import '../pages/css/Termos.css'
 export default function FAQ() {
   const faqs = [
     {

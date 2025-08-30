@@ -70,7 +70,7 @@ export default function Catalog() {
                 <p className="price">R$ {product.price?.toFixed(2)}</p>
                 <button
                   className="buy-btn"
-                  onClick={() => navigate(`product/${product.id}`)}
+                  onClick={() => navigate(`/produto/${product.slug}`)}
                 >
                   Ver detalhes
                 </button>
