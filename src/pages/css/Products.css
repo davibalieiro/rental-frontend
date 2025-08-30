@@ -65,8 +65,9 @@
   margin-bottom: 1rem;
 }
 .short-description {
-  font-weight: 500;
+  font-weight: 700;
   margin-bottom: 0.5rem;
+  font-size: 20px;
 }
 .long-description {
   font-size: 0.95rem;
@@ -111,6 +112,20 @@
 }
 .wishlist-btn:hover {
   background: #ddd;
+}
+.quantity-field {
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantity-field input {
+  width: 70px;
+  padding: 0.4rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  text-align: center;
 }
 
 /* ===== Compartilhar ===== */

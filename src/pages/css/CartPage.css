@@ -108,6 +108,21 @@
 .checkout-btn:hover {
   background: #e65c00;
 }
+.view-product-btn {
+  background: #32cd32; /* verde do site */
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+  transition: 0.3s;
+}
+
+.view-product-btn:hover {
+  background: #228b22;
+}
 
 /* TEXTAREA */
 .cart-notes {

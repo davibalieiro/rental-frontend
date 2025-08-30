@@ -91,14 +91,14 @@ export default function CartPage() {
                       <div className="cart-info">
                         <h4>{item.name}</h4>
                         <p>{item.short_description}</p>
-                        <div className="dates">
-                          <span>
-                            <strong>Retirada:</strong> {item.startDate || "—"}
-                          </span>
-                          <span>
-                            <strong>Devolução:</strong> {item.endDate || "—"}
-                          </span>
-                        </div>
+
+                        {/* BOTÃO VER PRODUTO */}
+                        <button
+                          className="view-product-btn"
+                          onClick={() => navigate(`/produto/${item.slug}`)}
+                        >
+                          Ver Produto
+                        </button>
                       </div>
                       <button
                         className="remove-btn"
@@ -109,6 +109,7 @@ export default function CartPage() {
                     </li>
                   ))}
                 </ul>
+
               )}
             </div>
           </div>

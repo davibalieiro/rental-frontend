@@ -9,6 +9,7 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [wishlist, setWishlist] = useState([]);
   const [notification, setNotification] = useState(null);
+  const [selectedQuantity, setSelectedQuantity] = useState(1); // 🔹 Novo estado
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -37,11 +38,16 @@ export default function ProductPage() {
 
   const handleAddToCart = () => {
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push(product);
+
+    // 🔹 Adiciona quantidade ao carrinho
+    cart.push({
+      ...product,
+      selectedQuantity,
+    });
+
     localStorage.setItem("cart", JSON.stringify(cart));
-    // navigate("/cartpage");
-    // cria uma notificação temporaria dizendo que foi adicionada
-    setNotification("✅ Produto adicionado ao carrinho!");
+
+    setNotification(`✅ ${selectedQuantity}x ${product.name} adicionado ao carrinho!`);
     setTimeout(() => {
       setNotification(null);
     }, 3000);
@@ -62,9 +68,7 @@ export default function ProductPage() {
 
   return (
     <div className="product-page">
-      
-
-      {/* Galeria de imagens */}
+      {/* Galeria */}
       <div className="product-image">
         <img
           src={product.image || "https://via.placeholder.com/400x400"}
@@ -80,15 +84,29 @@ export default function ProductPage() {
       {/* Detalhes */}
       <div className="product-details">
         <h1>{product.name}</h1>
-
         <p className="short-description">{product.short_description}</p>
         <p className="long-description">{product.long_description}</p>
 
         <p><strong>Estoque:</strong> {product.quantity} unidades</p>
         <p><strong>Dimensão:</strong> {product.dimension}</p>
-         
         <p><i>Montagem {product.is_included_montage ? 'inclusa' : 'Não inclusa'}</i></p>
-        
+
+        {/* 🔹 Campo de quantidade */}
+        <div className="quantity-field">
+          <label>Quantidade: </label>
+          <input
+            type="number"
+            min="1"
+            max={product.quantity}
+            value={selectedQuantity}
+            onChange={(e) => {
+              let val = Number(e.target.value);
+              if (val > product.quantity) val = product.quantity;
+              if (val < 1) val = 1;
+              setSelectedQuantity(val);
+            }}
+          />
+        </div>
 
         {/* Categorias */}
         {product.categories?.length > 0 && (
@@ -128,12 +146,9 @@ export default function ProductPage() {
             {isFavorite ? "❤️ Favorito" : "🤍 Adicionar aos Favoritos"}
           </button>
         </div>
+
         {/* Notificação */}
-      {notification && (
-        <div className="notification">
-          {notification}
-        </div>
-      )}
+        {notification && <div className="notification">{notification}</div>}
       </div>
     </div>
   );
