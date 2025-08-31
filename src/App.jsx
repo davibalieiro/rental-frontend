@@ -15,6 +15,8 @@ import FAQ from "./components/FAQ";
 import Regulamento from "./components/Regulamento";
 import Produto from './pages/Product'
 import CartPage from "./pages/CartPage";
+import Perfil from "./pages/Perfil";
+
 
 function App() {
   return (
@@ -32,6 +34,7 @@ function App() {
             <Route path="/catalogo" element={<Catalogo />} />
             <Route path="/contato" element={<Contato />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/perfil" element={<Perfil />} />
             <Route path="/admin" element={<AdminPainel />} />
 
             {/* Extras */}
@@ -43,7 +46,7 @@ function App() {
 
             <Route path="/cartpage" element={<CartPage />} />
             <Route path="/produto/:slug" element={<Produto />} />
-                    
+
           </Routes>
         </main>
         <Footer />

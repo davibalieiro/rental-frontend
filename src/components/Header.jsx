@@ -1,13 +1,14 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth"; // seu hook
+import { useAuth } from "../hooks/useAuth";
 import logo from "../assets/logo_clisare_loca.png";
+import { FaUserCircle } from "react-icons/fa"; // ícone perfil
 
 export default function Header() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
 
-  if (loading) return null; // evita mostrar nada até o fetch terminar
+  if (loading) return null;
 
   const handleLogout = async () => {
     try {
@@ -15,9 +16,17 @@ export default function Header() {
         method: "POST",
         credentials: "include",
       });
-      window.location.reload(); // força atualização para limpar estado
+      window.location.reload();
     } catch (err) {
       console.error("Erro ao sair:", err);
+    }
+  };
+
+  const handleProfileClick = () => {
+    if (!user) {
+      navigate("/login"); // se não estiver logado -> login
+    } else {
+      navigate("/perfil"); // se estiver logado -> perfil
     }
   };
 
@@ -30,13 +39,18 @@ export default function Header() {
         <button onClick={() => navigate("/empresa")}>Empresa</button>
         <button onClick={() => navigate("/catalogo")}>Catálogo</button>
         <button onClick={() => navigate("/contato")}>Contato</button>
-
-        {/* Carrinho sempre */}
         <button onClick={() => navigate("/cartpage")}>Carrinho</button>
 
-        {/* Painel Admin só aparece se o usuário logado for admin */}
+        {/* Painel Admin só para admin */}
         {user?.is_admin && (
           <button onClick={() => navigate("/admin")}>Painel Admin</button>
+        )}
+
+        {/* Ícone perfil -> só para usuários comuns */}
+        {user && !user.is_admin && (
+          <button onClick={handleProfileClick} className="profile-btn">
+            <FaUserCircle size={24} />
+          </button>
         )}
 
         {/* Login / Logout */}

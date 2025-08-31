@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth"; // assumindo que você tem hook de autenticação
 import "./css/Products.css";
 
 export default function ProductPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const { user, loading } = useAuth(); // pega o usuário logado
   const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [wishlist, setWishlist] = useState([]);
   const [notification, setNotification] = useState(null);
-  const [selectedQuantity, setSelectedQuantity] = useState(1); // 🔹 Novo estado
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
+  const [loadingProduct, setLoadingProduct] = useState(true);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -22,7 +24,7 @@ export default function ProductPage() {
       } catch (err) {
         console.error("Erro ao carregar produto:", err);
       } finally {
-        setLoading(false);
+        setLoadingProduct(false);
       }
     };
     fetchProduct();
@@ -33,24 +35,22 @@ export default function ProductPage() {
     setWishlist(savedWishlist);
   }, []);
 
-  if (loading) return <p>Carregando produto...</p>;
+  if (loadingProduct) return <p>Carregando produto...</p>;
   if (!product) return <p>Produto não encontrado</p>;
 
   const handleAddToCart = () => {
+    if (!user) {
+      alert("Você precisa estar logado para fazer um orçamento!");
+      navigate("/login");
+      return;
+    }
+
     let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    // 🔹 Adiciona quantidade ao carrinho
-    cart.push({
-      ...product,
-      selectedQuantity,
-    });
-
+    cart.push({ ...product, selectedQuantity });
     localStorage.setItem("cart", JSON.stringify(cart));
 
     setNotification(`✅ ${selectedQuantity}x ${product.name} adicionado ao carrinho!`);
-    setTimeout(() => {
-      setNotification(null);
-    }, 3000);
+    setTimeout(() => setNotification(null), 3000);
   };
 
   const handleWishlist = () => {
@@ -68,12 +68,8 @@ export default function ProductPage() {
 
   return (
     <div className="product-page">
-      {/* Galeria */}
       <div className="product-image">
-        <img
-          src={product.image || "https://via.placeholder.com/400x400"}
-          alt={product.name}
-        />
+        <img src={product.image || "https://via.placeholder.com/400x400"} alt={product.name} />
         <div className="thumbnail-list">
           {(product.gallery || [product.image]).map((img, i) => (
             <img key={i} src={img} alt={`thumb-${i}`} />
@@ -81,17 +77,14 @@ export default function ProductPage() {
         </div>
       </div>
 
-      {/* Detalhes */}
       <div className="product-details">
         <h1>{product.name}</h1>
         <p className="short-description">{product.short_description}</p>
         <p className="long-description">{product.long_description}</p>
-
         <p><strong>Estoque:</strong> {product.quantity} unidades</p>
         <p><strong>Dimensão:</strong> {product.dimension}</p>
-        <p><i>Montagem {product.is_included_montage ? 'inclusa' : 'Não inclusa'}</i></p>
+        <p><i>Montagem {product.is_included_montage ? "inclusa" : "Não inclusa"}</i></p>
 
-        {/* 🔹 Campo de quantidade */}
         <div className="quantity-field">
           <label>Quantidade: </label>
           <input
@@ -108,7 +101,6 @@ export default function ProductPage() {
           />
         </div>
 
-        {/* Categorias */}
         {product.categories?.length > 0 && (
           <div className="product-categories">
             <strong>Categorias:</strong>{" "}
@@ -121,7 +113,6 @@ export default function ProductPage() {
           </div>
         )}
 
-        {/* Materiais */}
         {product.materials?.length > 0 && (
           <div className="product-materials">
             <strong>Materiais:</strong>{" "}
@@ -134,14 +125,19 @@ export default function ProductPage() {
           </div>
         )}
 
-        {/* Botões */}
         <div className="actions">
           <button className="buy-btn" onClick={handleAddToCart}>
             Fazer Orçamento
           </button>
+
+          <button
+            className={`wishlist-btn ${isFavorite ? "active" : ""}`}
+            onClick={handleWishlist}
+          >
+            {isFavorite ? "Remover dos Favoritos" : "Adicionar aos Favoritos"}
+          </button>
         </div>
 
-        {/* Notificação */}
         {notification && <div className="notification">{notification}</div>}
       </div>
     </div>
