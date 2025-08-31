@@ -1,5 +1,21 @@
 import React, { useState } from "react";
 import {
+  FaBox,
+  FaList,
+  FaCubes,
+  FaUsers,
+  FaChartBar,
+  FaMoon,
+  FaSun,
+  FaSignOutAlt,
+  FaBars,
+} from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import Products from "./Products";
+import Categories from "./Categories";
+import Materials from "./Materials";
+import NotFound from "../NotFound";
+import {
   PieChart,
   Pie,
   Cell,
@@ -7,25 +23,23 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
-import {
-  FaBox,
-  FaUsers,
-  FaClipboardList,
-  FaSignOutAlt,
-  FaBars,
-  FaMoon,
-  FaSun,
-} from "react-icons/fa";
 import "../css/Admin.css";
+import { useAuth } from "~/hooks/useAuth";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
 
 export default function AdminPainel() {
-  const [darkMode, setDarkMode] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [darkMode, setDarkMode] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(true);
 
-  // Dados simulados (depois você pode puxar da API)
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+
+  if (loading) return <p>Carregando...</p>;
+  if (!user || !user.is_admin) return <NotFound />;
+
+  // Dados de exemplo
   const productsData = [
     { name: "Disponíveis", value: 120 },
     { name: "Indisponíveis", value: 30 },
@@ -42,7 +56,19 @@ export default function AdminPainel() {
     { name: "Cancelados", value: 10 },
   ];
 
-  // Renderiza cada gráfico de pizza
+  const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:3000/api/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (err) {
+      console.error("Erro no logout", err);
+    } finally {
+      navigate("/login");
+    }
+  };
+
   const renderPieChart = (title, data) => (
     <div className="chart-card">
       <h3>{title}</h3>
@@ -52,12 +78,9 @@ export default function AdminPainel() {
             data={data}
             cx="50%"
             cy="50%"
-            outerRadius={90}
-            fill="#8884d8"
+            outerRadius={80}
             dataKey="value"
-            label={({ name, percent }) =>
-              `${name} ${(percent * 100).toFixed(0)}%`
-            }
+            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
           >
             {data.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -72,27 +95,29 @@ export default function AdminPainel() {
 
   const renderContent = () => {
     switch (activeTab) {
-      case "dashboard":
+      case "products":
+        return <Products />;
+      case "categories":
+        return <Categories />;
+      case "materials":
+        return <Materials />;
+      case "users":
+        return (
+          <div className="page-content">
+            <h2>Gerenciar Usuários</h2>
+            <p>Função futura: lista, edição e exclusão de usuários.</p>
+          </div>
+        );
+      default:
         return (
           <div className="dashboard">
-            <h2>Dashboard</h2>
+            <h2>Visão Geral</h2>
 
             <div className="cards">
-              <div className="card">
-                <FaBox />
-                <h4>Produtos</h4>
-                <p>150</p>
-              </div>
-              <div className="card">
-                <FaUsers />
-                <h4>Usuários</h4>
-                <p>70</p>
-              </div>
-              <div className="card">
-                <FaClipboardList />
-                <h4>Pedidos</h4>
-                <p>115</p>
-              </div>
+              <div className="card"><FaBox /><h3>120 Produtos</h3></div>
+              <div className="card"><FaList /><h3>15 Categorias</h3></div>
+              <div className="card"><FaCubes /><h3>30 Materiais</h3></div>
+              <div className="card"><FaUsers /><h3>50 Usuários</h3></div>
             </div>
 
             <div className="charts">
@@ -102,110 +127,47 @@ export default function AdminPainel() {
             </div>
           </div>
         );
-
-      case "produtos":
-        return (
-          <div className="page-content">
-            <h2>Gerenciar Produtos</h2>
-            <p>Aqui você poderá visualizar, adicionar e editar produtos.</p>
-          </div>
-        );
-
-      case "categorias":
-        return (
-          <div className="page-content">
-            <h2>Categorias</h2>
-            <p>Aqui você pode gerenciar as categorias de produtos.</p>
-          </div>
-        );
-
-      case "materiais":
-        return (
-          <div className="page-content">
-            <h2>Materiais</h2>
-            <p>Aqui você pode gerenciar os materiais dos produtos.</p>
-          </div>
-        );
-
-      case "usuarios":
-        return (
-          <div className="page-content">
-            <h2>Usuários</h2>
-            <p>Lista e gerenciamento de usuários cadastrados.</p>
-          </div>
-        );
-
-      default:
-        return (
-          <div className="page-content">
-            <h2>Bem-vindo ao Painel Administrativo</h2>
-          </div>
-        );
     }
   };
 
   return (
     <div className={`admin-layout ${darkMode ? "dark" : ""}`}>
-      {/* Sidebar */}
-      <aside className={`admin-sidebar ${collapsed ? "collapsed" : ""}`}>
-        <div>
-          <div className="sidebar-header">
-            {!collapsed && <h2>Admin</h2>}
-            <button
-              className="toggle-menu"
-              onClick={() => setCollapsed(!collapsed)}
-            >
-              <FaBars />
-            </button>
-          </div>
-
-          <nav>
-            <button
-              className={activeTab === "dashboard" ? "active" : ""}
-              onClick={() => setActiveTab("dashboard")}
-            >
-              📊 {!collapsed && "Dashboard"}
-            </button>
-            <button
-              className={activeTab === "produtos" ? "active" : ""}
-              onClick={() => setActiveTab("produtos")}
-            >
-              📦 {!collapsed && "Produtos"}
-            </button>
-            <button
-              className={activeTab === "categorias" ? "active" : ""}
-              onClick={() => setActiveTab("categorias")}
-            >
-              🗂️ {!collapsed && "Categorias"}
-            </button>
-            <button
-              className={activeTab === "materiais" ? "active" : ""}
-              onClick={() => setActiveTab("materiais")}
-            >
-              🛠️ {!collapsed && "Materiais"}
-            </button>
-            <button
-              className={activeTab === "usuarios" ? "active" : ""}
-              onClick={() => setActiveTab("usuarios")}
-            >
-              👤 {!collapsed && "Usuários"}
-            </button>
-          </nav>
+      <aside className={`admin-sidebar ${menuOpen ? "" : "collapsed"}`}>
+        <div className="sidebar-header">
+          <h2>{menuOpen ? "Painel" : ""}</h2>
+          <button className="toggle-menu" onClick={() => setMenuOpen(!menuOpen)}>
+            <FaBars />
+          </button>
         </div>
+
+        <nav>
+          <button className={activeTab === "dashboard" ? "active" : ""} onClick={() => setActiveTab("dashboard")}>
+            <FaChartBar /> {menuOpen && "Dashboard"}
+          </button>
+          <button className={activeTab === "products" ? "active" : ""} onClick={() => setActiveTab("products")}>
+            <FaBox /> {menuOpen && "Produtos"}
+          </button>
+          <button className={activeTab === "categories" ? "active" : ""} onClick={() => setActiveTab("categories")}>
+            <FaList /> {menuOpen && "Categorias"}
+          </button>
+          <button className={activeTab === "materials" ? "active" : ""} onClick={() => setActiveTab("materials")}>
+            <FaCubes /> {menuOpen && "Materiais"}
+          </button>
+          <button className={activeTab === "users" ? "active" : ""} onClick={() => setActiveTab("users")}>
+            <FaUsers /> {menuOpen && "Usuários"}
+          </button>
+        </nav>
 
         <div className="sidebar-footer">
           <button onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? <FaSun /> : <FaMoon />}
-            {!collapsed && (darkMode ? "Modo Claro" : "Modo Escuro")}
+            {darkMode ? <FaSun /> : <FaMoon />} {menuOpen && (darkMode ? "Claro" : "Escuro")}
           </button>
-          <button>
-            <FaSignOutAlt />
-            {!collapsed && "Sair"}
+          <button className="logout" onClick={handleLogout}>
+            <FaSignOutAlt /> {menuOpen && "Sair"}
           </button>
         </div>
       </aside>
 
-      {/* Conteúdo */}
       <main className="admin-content">{renderContent()}</main>
     </div>
   );
