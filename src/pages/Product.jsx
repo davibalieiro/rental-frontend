@@ -81,26 +81,8 @@ export default function ProductPage() {
         <h1>{product.name}</h1>
         <p className="short-description">{product.short_description}</p>
         <p className="long-description">{product.long_description}</p>
-        <p><strong>Estoque:</strong> {product.quantity} unidades</p>
         <p><strong>Dimensão:</strong> {product.dimension}</p>
-        <p><i>Montagem {product.is_included_montage ? "inclusa" : "Não inclusa"}</i></p>
-
-        <div className="quantity-field">
-          <label>Quantidade: </label>
-          <input
-            type="number"
-            min="1"
-            max={product.quantity}
-            value={selectedQuantity}
-            onChange={(e) => {
-              let val = Number(e.target.value);
-              if (val > product.quantity) val = product.quantity;
-              if (val < 1) val = 1;
-              setSelectedQuantity(val);
-            }}
-          />
-        </div>
-
+        
         {product.categories?.length > 0 && (
           <div className="product-categories">
             <strong>Categorias:</strong>{" "}
