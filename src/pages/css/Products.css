@@ -1,174 +1,130 @@
-/* ===== Página do Produto ===== */
-.product-page {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  padding: 2rem;
-  max-width: 1200px;
-  margin: auto;
-  font-family: "Segoe UI", Roboto, sans-serif;
-  color: #333;
+.products-page {
+  padding: 20px;
 }
 
-/* ===== Breadcrumb ===== */
-.breadcrumb {
-  grid-column: span 2;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-}
-.breadcrumb a {
-  color: #0077cc;
-  text-decoration: none;
-}
-.breadcrumb a:hover {
-  text-decoration: underline;
+.products-page h2 {
+  font-size: 28px;
+  color: #1a5e20;
+  margin-bottom: 20px;
 }
 
-/* ===== Imagem principal ===== */
-.product-image {
+.admin-form {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  gap: 12px;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
 }
-.product-image img {
-  max-width: 100%;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-.thumbnail-list {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-.thumbnail-list img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
+
+.admin-form input {
+  padding: 12px;
   border-radius: 8px;
-  border: 2px solid transparent;
-  cursor: pointer;
+  border: 1px solid #ccc;
+  flex: 1 1 200px;
   transition: border 0.3s;
 }
-.thumbnail-list img:hover {
-  border-color: #0077cc;
+
+.admin-form input:focus {
+  border-color: #32cd32;
+  outline: none;
 }
 
-/* ===== Detalhes ===== */
-.product-details h1 {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;
-}
-.rating {
-  font-size: 1rem;
-  color: #f39c12;
-  margin-bottom: 1rem;
-}
-.short-description {
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  font-size: 20px;
-}
-.long-description {
-  font-size: 0.95rem;
-  color: #555;
-  margin-bottom: 1rem;
-}
-.product-details p {
-  margin: 0.3rem 0;
-}
-
-/* ===== Botões ===== */
-.actions {
-  margin-top: 1.5rem;
-  display: flex;
-  gap: 1rem;
-}
-.buy-btn {
-  background: #0077cc;
-  color: white;
-  padding: 0.8rem 1.5rem;
+.admin-form button {
+  padding: 12px 22px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
+  font-weight: bold;
+  background: #32cd32;
+  color: #fff;
   transition: background 0.3s;
 }
-.buy-btn:hover {
-  background: #005fa3;
-}
-.wishlist-btn {
-  background: #eee;
-  color: #333;
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s;
-}
-.wishlist-btn.active {
-  background: #ff4d6d;
-  color: white;
-}
-.wishlist-btn:hover {
-  background: #ddd;
-}
-.quantity-field {
-  margin: 1rem 0;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+
+.admin-form button:hover {
+  background: #228b22;
 }
 
-.quantity-field input {
-  width: 70px;
-  padding: 0.4rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 25px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 15px;
+  padding: 20px;
   text-align: center;
-}
-/* ===== Botão Favoritos ===== */
-.wishlist-btn {
-  background: #228b22; /* verde do site */
-  color: white;
-  padding: 0.8rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   transition: all 0.3s;
+  border-left: 6px solid #32cd32;
+  cursor: pointer;
 }
 
-.wishlist-btn.active {
-  background: #32cd32; /* verde claro ao ativar */
-  color: white;
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
 
-.wishlist-btn:hover {
-  background: #32cd32;
+.product-image {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
 }
 
-/* ===== Compartilhar ===== */
-.share {
-  margin-top: 1.5rem;
-  font-size: 0.9rem;
-}
-.share a {
-  color: #0077cc;
-  text-decoration: none;
-  margin: 0 0.3rem;
-}
-.share a:hover {
-  text-decoration: underline;
+.placeholder-icon {
+  font-size: 36px;
+  color: #1a5e20;
+  margin-bottom: 12px;
 }
 
-/* ===== Responsividade ===== */
+.card h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+  color: #1a5e20;
+}
+
+.card p {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Dark Mode */
+.admin-layout.dark .products-page h2,
+.admin-layout.dark .card h3 {
+  color: #32cd32;
+}
+
+.admin-layout.dark .card {
+  background: #2b2b2b;
+  color: #eee;
+  border-left: 6px solid #32cd32;
+}
+
+.admin-layout.dark .placeholder-icon {
+  color: #32cd32;
+}
+
+.admin-layout.dark .card p {
+  color: #ccc;
+}
+
+/* Responsivo */
 @media (max-width: 900px) {
-  .product-page {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  .cards-container {
+    grid-template-columns: 1fr 1fr;
   }
-  .breadcrumb {
-    grid-column: span 1;
+  .admin-form {
+    flex-direction: column;
+  }
+  .admin-form input, .admin-form button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 500px) {
+  .cards-container {
+    grid-template-columns: 1fr;
   }
 }
