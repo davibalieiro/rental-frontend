@@ -1,6 +1,20 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./css/Login.css"; // Seu CSS
+import "./css/Login.css";
+
+// Modal de sucesso com um console.log para depuração
+function SuccessModal({ message }) {
+  // LOG 2: Este log nos dirá se o componente do modal está sendo renderizado
+  console.log("Renderizando SuccessModal com a mensagem:", message);
+
+  if (!message) return null;
+
+  return (
+    <div className="success-modal">
+      {message}
+    </div>
+  );
+}
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -10,12 +24,17 @@ export default function Auth() {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [loginSuccessModal, setLoginSuccessModal] = useState("");
   const navigate = useNavigate();
+
+  // NOVO: Estado para controlar o carregamento e desabilitar o botão
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccessMessage("");
+    setIsLoading(true);
 
     try {
       const url = isLogin
@@ -35,15 +54,24 @@ export default function Auth() {
 
       const data = await response.json();
 
-      if (response.status !== 201) {
+      if (!response.ok) {
         setError(data.message || "Erro na operação");
+        setIsLoading(false);
         return;
       }
 
       if (isLogin) {
-        navigate("/");
+        console.log("SUCESSO NO LOGIN! Ativando o modal...");
+
+        setLoginSuccessModal("Login bem-sucedido! Redirecionando...");
+
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+
       } else {
         setSuccessMessage("Conta criada com sucesso! Agora faça login.");
+        setIsLoading(false);
         setIsLogin(true);
         setName("");
         setPhone("");
@@ -52,11 +80,14 @@ export default function Auth() {
       }
     } catch (err) {
       setError("Erro ao conectar com servidor");
+      setIsLoading(false);
     }
   };
 
   return (
     <div className="auth-container">
+      <SuccessModal message={loginSuccessModal} />
+
       <div className="auth-card">
         <h2>{isLogin ? "Login" : "Registrar"}</h2>
 
@@ -64,6 +95,7 @@ export default function Auth() {
         {successMessage && <div className="success-message">{successMessage}</div>}
 
         <form onSubmit={handleSubmit} className="auth-form">
+          {/* ... campos do formulário ... */}
           <div className={`register-fields ${!isLogin ? "visible" : ""}`}>
             <label htmlFor="name">Nome</label>
             <input
@@ -74,7 +106,6 @@ export default function Auth() {
               onChange={(e) => setName(e.target.value)}
               required={!isLogin}
             />
-
             <label htmlFor="phone">Telefone</label>
             <input
               type="tel"
@@ -85,7 +116,6 @@ export default function Auth() {
               required={!isLogin}
             />
           </div>
-
           <label htmlFor="email">Email</label>
           <input
             type="email"
@@ -95,7 +125,6 @@ export default function Auth() {
             onChange={(e) => setEmail(e.target.value)}
             required
           />
-
           <label htmlFor="password">Senha</label>
           <input
             type="password"
@@ -106,8 +135,9 @@ export default function Auth() {
             required
           />
 
-          <button type="submit" className="btn-submit">
-            {isLogin ? "Entrar" : "Registrar"}
+          {/* Botão agora usa o estado isLoading */}
+          <button type="submit" className="btn-submit" disabled={isLoading}>
+            {isLoading ? "Aguarde..." : (isLogin ? "Entrar" : "Registrar")}
           </button>
         </form>
 

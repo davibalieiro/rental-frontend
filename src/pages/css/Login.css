@@ -11,7 +11,7 @@
   max-width: 100%;
   height: 100vh;
   padding: 20px;
-  background-color: #32cd32a1;
+  background: linear-gradient(135deg, #32cd32, #228b22);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -168,4 +168,43 @@
   max-height: 300px;
   opacity: 1;
   pointer-events: auto;
+}
+
+.success-modal {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2e7d32;
+  /* Verde sucesso */
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  font-weight: 600;
+  animation: fade-in-out 2.5s ease-in-out forwards;
+}
+
+/* Animação para o modal aparecer e desaparecer */
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+    top: 0;
+  }
+
+  20% {
+    opacity: 1;
+    top: 20px;
+  }
+
+  80% {
+    opacity: 1;
+    top: 20px;
+  }
+
+  100% {
+    opacity: 0;
+    top: 0;
+  }
 }
