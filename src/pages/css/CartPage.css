@@ -126,6 +126,58 @@
 .cart-info p strong {
   color: #333;
 }
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 0.5rem;
+}
+
+.quantity-control input {
+  width: 60px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 4px;
+}
+
+.quantity-control button {
+  background: #ddd;
+  border: none;
+  padding: 4px 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.quantity-control button:hover {
+  background: #ccc;
+}
+
+.clear-cart-btn {
+  background: #999;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.clear-cart-btn:hover {
+  background: #777;
+}
+
+.feedback-msg {
+  color: green;
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+
+.total {
+  font-size: 1.1rem;
+  margin-top: 1rem;
+}
 
 /* TEXTAREA */
 .cart-notes {
