@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaBox,
   FaList,
@@ -9,6 +9,7 @@ import {
   FaSun,
   FaSignOutAlt,
   FaBars,
+  FaHeart,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Products from "./Products";
@@ -21,40 +22,67 @@ import {
   Cell,
   Tooltip,
   ResponsiveContainer,
-  Legend,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
 } from "recharts";
 import "../css/Admin.css";
 import { useAuth } from "~/hooks/useAuth";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
+const COLORS = ["#32cd32", "#ff4500", "#ffd700", "#006400", "#ff8c00"];
 
 export default function AdminPainel() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [darkMode, setDarkMode] = useState(false);
   const [menuOpen, setMenuOpen] = useState(true);
 
+  const [usersData, setUsersData] = useState([]);
+  const [ordersData, setOrdersData] = useState([]);
+  const [favoritesData, setFavoritesData] = useState([]);
+
   const { user, loading } = useAuth();
   const navigate = useNavigate();
 
-  if (loading) return <p>Carregando...</p>;
-  if (!user || !user.is_admin) return <NotFound />;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [usersRes, ordersRes, favRes] = await Promise.all([
+          fetch("http://localhost:3000/api/user/all", { credentials: "include" }),
+          fetch("http://localhost:3000/api/order/all", { credentials: "include" }),
+          fetch("http://localhost:3000/api/products/stats", { credentials: "include" }),
+        ]);
 
-  // Dados de exemplo
-  const productsData = [
-    { name: "Disponíveis", value: 120 },
-    { name: "Indisponíveis", value: 30 },
-  ];
+        const usersJson = await usersRes.json();
+        const ordersJson = await ordersRes.json();
+        const favJson = await favRes.json();
 
-  const usersData = [
-    { name: "Ativos", value: 50 },
-    { name: "Inativos", value: 20 },
-  ];
+        const users = usersJson.map((u) => ({
+          name: u.name,
+          ativo: u.is_active ? 1 : 0,
+          inativo: u.is_active ? 0 : 1,
+        }));
+        setUsersData(users);
 
-  const ordersData = [
-    { name: "Concluídos", value: 80 },
-    { name: "Pendentes", value: 25 },
-    { name: "Cancelados", value: 10 },
-  ];
+        const orders = [
+          { name: "Concluídos", value: ordersJson.data.filter((o) => o.status === "concluido").length },
+          { name: "Pendentes", value: ordersJson.data.filter((o) => o.status === "pendente").length },
+          { name: "Cancelados", value: ordersJson.data.filter((o) => o.status === "cancelado").length },
+        ];
+        setOrdersData(orders);
+
+        const fav = [
+          { name: "Mais Favoritados", value: favJson.data.topFavorites || 0 },
+          { name: "Menos Favoritados", value: favJson.data.lowFavorites || 0 },
+        ];
+        setFavoritesData(fav);
+      } catch (err) {
+        console.error("Erro ao buscar dados:", err);
+      }
+    };
+    fetchData();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -69,6 +97,24 @@ export default function AdminPainel() {
     }
   };
 
+  const renderLineChart = (title, data) => (
+    <div className="chart-card">
+      <h3>{title}</h3>
+      <ResponsiveContainer width="100%" height={250}>
+        <LineChart data={data}>
+          <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+          <XAxis dataKey="name" stroke="#8884d8" />
+          <YAxis stroke="#8884d8" />
+          <Tooltip 
+            contentStyle={{ backgroundColor: darkMode ? "#2b2b2b" : "#fff", borderRadius: "8px" }}
+          />
+          <Line type="monotone" dataKey="ativo" stroke="#32cd32" strokeWidth={3} dot={{ r: 4 }} />
+          <Line type="monotone" dataKey="inativo" stroke="#ff4500" strokeWidth={3} dot={{ r: 4 }} />
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  );
+
   const renderPieChart = (title, data) => (
     <div className="chart-card">
       <h3>{title}</h3>
@@ -76,18 +122,25 @@ export default function AdminPainel() {
         <PieChart>
           <Pie
             data={data}
-            cx="50%"
-            cy="50%"
-            outerRadius={80}
             dataKey="value"
-            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+            innerRadius={60}
+            outerRadius={90}
+            paddingAngle={3}
+            cornerRadius={10}
+            label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
           >
             {data.map((entry, index) => (
-              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+              <Cell
+                key={`cell-${index}`}
+                fill={COLORS[index % COLORS.length]}
+                stroke={darkMode ? "#2b2b2b" : "#fff"}
+                strokeWidth={2}
+              />
             ))}
           </Pie>
-          <Tooltip />
-          <Legend />
+          <Tooltip 
+            contentStyle={{ backgroundColor: darkMode ? "#2b2b2b" : "#fff", borderRadius: "8px" }}
+          />
         </PieChart>
       </ResponsiveContainer>
     </div>
@@ -114,21 +167,25 @@ export default function AdminPainel() {
             <h2>Visão Geral</h2>
 
             <div className="cards">
-              <div className="card"><FaBox /><h3>120 Produtos</h3></div>
-              <div className="card"><FaList /><h3>15 Categorias</h3></div>
-              <div className="card"><FaCubes /><h3>30 Materiais</h3></div>
-              <div className="card"><FaUsers /><h3>50 Usuários</h3></div>
+              <div className="card"><FaBox /><h3>Produtos</h3></div>
+              <div className="card"><FaList /><h3>Categorias</h3></div>
+              <div className="card"><FaCubes /><h3>Materiais</h3></div>
+              <div className="card"><FaUsers /><h3>Usuários</h3></div>
+              <div className="card"><FaHeart /><h3>Favoritos</h3></div>
             </div>
 
             <div className="charts">
-              {renderPieChart("Produtos", productsData)}
-              {renderPieChart("Usuários", usersData)}
+              {renderLineChart("Usuários Ativos/Inativos", usersData)}
               {renderPieChart("Pedidos", ordersData)}
+              {renderPieChart("Favoritos", favoritesData)}
             </div>
           </div>
         );
     }
   };
+
+  if (loading) return <p>Carregando...</p>;
+  if (!user || !user.is_admin) return <NotFound />;
 
   return (
     <div className={`admin-layout ${darkMode ? "dark" : ""}`}>
