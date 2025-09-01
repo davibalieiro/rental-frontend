@@ -5,13 +5,13 @@
   display: flex;
   min-height: 100vh;
   font-family: "Segoe UI", sans-serif;
-  background: #f2f2f2;
+  background: #f0f2f5;
   color: #333;
   transition: background 0.3s, color 0.3s;
 }
 
 .admin-layout.dark {
-  background: #1a1a1a;
+  background: #121212;
   color: #eee;
 }
 
@@ -19,31 +19,32 @@
    Sidebar
 ========================= */
 .admin-sidebar {
-  background: #228b22; /* verde principal */
+  background: #1a5e20; /* verde principal */
   color: #fff;
   width: 240px;
   min-height: 100vh;
-  padding: 20px;
+  padding: 20px 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transition: width 0.3s ease, background 0.3s;
+  box-shadow: 2px 0 6px rgba(0,0,0,0.1);
 }
 
 .admin-sidebar.collapsed {
   width: 70px;
-  padding: 20px 10px;
+  padding: 25px 10px;
 }
 
 .sidebar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 }
 
 .sidebar-header h2 {
-  font-size: 20px;
+  font-size: 22px;
   font-weight: bold;
 }
 
@@ -67,15 +68,16 @@
   padding: 14px 12px;
   margin-bottom: 12px;
   cursor: pointer;
-  border-radius: 8px;
-  transition: background 0.3s, color 0.3s;
+  border-radius: 10px;
   font-size: 15px;
+  transition: all 0.3s;
 }
 
 .admin-sidebar nav button:hover,
 .admin-sidebar nav button.active {
   background: #32cd32;
   color: #fff;
+  transform: scale(1.03);
 }
 
 /* Tema escuro - Sidebar */
@@ -106,9 +108,10 @@
   border: none;
   color: #fff;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.3s;
+  font-weight: bold;
+  transition: all 0.3s;
 }
 
 .sidebar-footer button:hover {
@@ -120,7 +123,7 @@
 ========================= */
 .admin-content {
   flex: 1;
-  padding: 40px;
+  padding: 20px 40px 40px 40px; /* top menor (20px) */
   overflow-y: auto;
   background: #f9f9f9;
   color: #333;
@@ -129,7 +132,7 @@
 }
 
 .admin-layout.dark .admin-content {
-  background: #222;
+  background: #1e1e1e;
   color: #eee;
 }
 
@@ -137,9 +140,10 @@
    Dashboard
 ========================= */
 .dashboard h2 {
-  margin-bottom: 25px;
-  font-size: 26px;
-  color: #228b22;
+  margin-bottom: 15px; /* reduz o espaço abaixo do título */
+  font-size: 28px;
+  color: #1a5e20;
+  font-weight: bold;
 }
 
 .admin-layout.dark .dashboard h2 {
@@ -149,40 +153,78 @@
 /* Cards */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 25px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px; /* reduz o gap entre os cards */
+  margin-bottom: 30px; /* reduz o espaço abaixo dos cards */
 }
-
 .card {
   background: #fff;
   color: #333;
-  padding: 24px;
-  border-radius: 12px;
+  padding: 25px;
+  border-radius: 15px;
   text-align: center;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  border: 1px solid #ddd;
-  transition: transform 0.2s, border-color 0.3s, background 0.3s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-left: 6px solid #32cd32;
+  transition: all 0.3s;
+  cursor: default;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  border-color: #32cd32;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
 }
 
 .card svg {
-  font-size: 32px;
-  margin-bottom: 12px;
-  color: #228b22;
+  font-size: 36px;
+  margin-bottom: 15px;
+  color: #1a5e20;
 }
 
 /* Tema escuro - Cards */
 .admin-layout.dark .card {
   background: #2b2b2b;
   color: #eee;
-  border: 1px solid #444;
+  border-left: 6px solid #32cd32;
 }
 .admin-layout.dark .card svg {
   color: #32cd32;
+}
+.chart-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  transition: all 0.3s;
+}
+
+.admin-layout.dark .chart-card {
+  background: #2b2b2b;
+  color: #eee;
+}
+
+.chart-card h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #1a5e20;
+  font-weight: 600;
+}
+
+.admin-layout.dark .chart-card h3 {
+  color: #32cd32;
+}
+
+.chart-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.recharts-tooltip-wrapper {
+  font-size: 14px !important;
+  color: #333 !important;
+}
+
+.admin-layout.dark .recharts-tooltip-wrapper {
+  color: #eee !important;
 }
 
 /* =========================
@@ -192,7 +234,7 @@
   background: #fff;
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   transition: background 0.3s, color 0.3s;
 }
 
@@ -210,8 +252,8 @@
 }
 
 .admin-form input {
-  padding: 10px;
-  border-radius: 6px;
+  padding: 12px;
+  border-radius: 8px;
   border: 1px solid #ccc;
   flex: 1 1 200px;
   transition: border 0.3s;
@@ -223,24 +265,16 @@
 }
 
 .admin-form button {
-  padding: 10px 20px;
+  padding: 12px 22px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
+  font-weight: bold;
   transition: background 0.3s;
 }
 
 .admin-form button:hover {
   background: #32cd32;
-  color: #fff;
-}
-
-.admin-form .cancel {
-  background: #ccc;
-}
-
-.admin-form .cancel:hover {
-  background: #999;
   color: #fff;
 }
 
@@ -274,6 +308,7 @@
   background: #3a3a3a;
 }
 
+/* Botões */
 .btn-primary {
   background: #32cd32;
   color: #fff;
@@ -313,6 +348,9 @@
     padding: 20px;
   }
   .cards {
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+  .charts {
+    grid-template-columns: 1fr;
   }
 }
