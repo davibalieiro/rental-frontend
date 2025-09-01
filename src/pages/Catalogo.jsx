@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 
 export default function Catalog() {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
   const [loading, setLoading] = useState(true);
@@ -50,10 +51,29 @@ export default function Catalog() {
     fetchProducts();
   }, []);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/category/all", {
+          credentials: "include"
+        });
+        const json = await res.json();
+        setCategories(json.data || []);
+      } catch (err) {
+        console.error("Erro ao carregar categorias:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, []);
+
   const filteredProducts = products.filter((p) => {
     return (
       p.name.toLowerCase().includes(search.toLowerCase()) &&
-      (category ? p.category === category : true)
+      (category
+        ? p.categories.some((c) => c.name === category)
+        : true)
     );
   });
 
@@ -75,10 +95,13 @@ export default function Catalog() {
           onChange={(e) => setCategory(e.target.value)}
         >
           <option value="">Todas as categorias</option>
-          <option value="eletronicos">Eletrônicos</option>
-          <option value="roupas">Roupas</option>
-          <option value="acessorios">Acessórios</option>
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.name}>
+              {cat.name.charAt(0).toUpperCase() + cat.name.slice(1)}
+            </option>
+          ))}
         </select>
+
       </div>
 
       {/* LISTAGEM */}
