@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./css/Login.css";
+import "./css/Login.css"; // Seu CSS
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
@@ -9,11 +9,13 @@ export default function Auth() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccessMessage("");
 
     try {
       const url = isLogin
@@ -39,20 +41,13 @@ export default function Auth() {
       }
 
       if (isLogin) {
-        // login feito, backend define sessão
-        // admin verá botão admin automaticamente via useAuth
-        if (data.is_admin) {
-          navigate("/"); // admin fica na home, botão admin aparece no Header
-        } else {
-          navigate("/"); // usuário comum vai pra home
-        }
+        navigate("/");
       } else {
-        // registro feito
-        alert("✅ Usuário criado com sucesso! Faça login para continuar.");
-        setIsLogin(true); // volta para tela de login
-        setName(""); 
-        setPhone(""); 
-        setEmail(""); 
+        setSuccessMessage("Conta criada com sucesso! Agora faça login.");
+        setIsLogin(true);
+        setName("");
+        setPhone("");
+        setEmail("");
         setPassword("");
       }
     } catch (err) {
@@ -62,61 +57,92 @@ export default function Auth() {
 
   return (
     <div className="auth-container">
-      <div className={`auth-card ${isLogin ? "" : "active"}`}>
-        <div className="auth-panel">
-          <h2>{isLogin ? "Novo por aqui?" : "Já tem conta?"}</h2>
-          <p>
-            {isLogin
-              ? "Crie uma conta e entre na comunidade!"
-              : "Entre na sua conta para continuar."}
-          </p>
-          <button type="button" onClick={() => setIsLogin(!isLogin)}>
-            {isLogin ? "Registrar" : "Login"}
+      <div className="auth-card">
+        <h2>{isLogin ? "Login" : "Registrar"}</h2>
+
+        {error && <div className="error-message">{error}</div>}
+        {successMessage && <div className="success-message">{successMessage}</div>}
+
+        <form onSubmit={handleSubmit} className="auth-form">
+          <div className={`register-fields ${!isLogin ? "visible" : ""}`}>
+            <label htmlFor="name">Nome</label>
+            <input
+              type="text"
+              id="name"
+              placeholder="Seu nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required={!isLogin}
+            />
+
+            <label htmlFor="phone">Telefone</label>
+            <input
+              type="tel"
+              id="phone"
+              placeholder="(xx) xxxx-xxxx"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              required={!isLogin}
+            />
+          </div>
+
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="seu@email.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <label htmlFor="password">Senha</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="********"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <button type="submit" className="btn-submit">
+            {isLogin ? "Entrar" : "Registrar"}
           </button>
-        </div>
+        </form>
 
-        <div className="auth-form">
-          <form onSubmit={handleSubmit}>
-            <h2>{isLogin ? "Login" : "Registrar"}</h2>
-            {error && <p className="error">{error}</p>}
-
-            {!isLogin && (
-              <>
-                <input
-                  type="text"
-                  placeholder="Nome"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  required
-                />
-                <input
-                  type="text"
-                  placeholder="Telefone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  required
-                />
-              </>
-            )}
-
-            <input
-              type="email"
-              placeholder="E-mail"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-
-            <input
-              type="password"
-              placeholder="Senha"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-
-            <button type="submit">{isLogin ? "Entrar" : "Registrar"}</button>
-          </form>
+        <div className="toggle-auth">
+          {isLogin ? (
+            <>
+              Não tem uma conta?{" "}
+              <button
+                type="button"
+                className="btn-toggle"
+                onClick={() => {
+                  setIsLogin(false);
+                  setError("");
+                  setSuccessMessage("");
+                }}
+              >
+                Registre-se
+              </button>
+            </>
+          ) : (
+            <>
+              Já tem uma conta?{" "}
+              <button
+                type="button"
+                className="btn-toggle"
+                onClick={() => {
+                  setIsLogin(true);
+                  setError("");
+                  setSuccessMessage("");
+                }}
+              >
+                Faça login
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>
