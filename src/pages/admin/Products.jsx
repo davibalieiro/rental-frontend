@@ -5,51 +5,98 @@ import '../css/Products.css';
 
 export default function Products() {
   const [products, setProducts] = useState([]);
-  const [form, setForm] = useState({ name: "", quantity: 0 });
+  const [categories, setCategories] = useState([]);
+  const [materials, setMaterials] = useState([]);
+  const [form, setForm] = useState({
+    name: "",
+    short_description: "",
+    long_description: "",
+    dimension: "",
+    is_included_montage: false,
+    categoryIds: [],
+    materialIds: []
+  });
+  const [imageFile, setImageFile] = useState(null);
 
+  // Buscar produtos
   async function fetchProducts() {
     try {
       const res = await fetch("http://localhost:3000/api/product/all", {
-        method: "GET",
-        credentials: 'include',
+        credentials: 'include'
       });
       const json = await res.json();
       setProducts(json.data || []);
     } catch (err) {
-      console.error("Erro ao listar produtos", err);
+      console.error(err);
     }
   }
 
+  // Buscar categories e materials
+  useEffect(() => {
+    async function fetchOptions() {
+      try {
+        const catRes = await fetch("http://localhost:3000/api/category/all");
+        const matRes = await fetch("http://localhost:3000/api/material/all");
+        const catData = await catRes.json();
+        const matData = await matRes.json();
+        setCategories(catData.data || []);
+        setMaterials(matData.data || []);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    fetchOptions();
+    fetchProducts();
+  }, []);
+
+  // Submit do formulário
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      await fetch("http://localhost:3000/api/product", {
+      // 1️⃣ Criar produto
+      const res = await fetch("http://localhost:3000/api/product", {
         method: "POST",
         credentials: 'include',
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      setForm({ name: "", quantity: 0 });
+      const json = await res.json();
+      const productId = json.data.id;
+
+      // 2️⃣ Upload de imagem (se houver)
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("image", imageFile);
+
+        await fetch(`http://localhost:3000/api/upload-image/${productId}`, {
+          method: "POST",
+          body: formData,
+          credentials: 'include'
+        });
+      }
+
+      // Reset formulário
+      setForm({
+        name: "",
+        short_description: "",
+        long_description: "",
+        dimension: "",
+        is_included_montage: false,
+        categoryIds: [],
+        materialIds: []
+      });
+      setImageFile(null);
       fetchProducts();
     } catch (err) {
-      console.error("Erro ao criar produto", err);
+      console.error(err);
     }
   }
 
-  async function getProductImage(id) {
-    try {
-      const res = await fetch(`http://localhost:3000/api/product/${id}/image`);
-      if (!res.ok) return null;
-      const data = await res.json();
-      return data?.url || null;
-    } catch {
-      return null;
-    }
+  // Atualiza seleção de múltiplos itens
+  function handleMultiSelect(e, field) {
+    const options = Array.from(e.target.selectedOptions, option => option.value);
+    setForm({ ...form, [field]: options });
   }
-
-  useEffect(() => {
-    fetchProducts();
-  }, []);
 
   return (
     <div className="products-page">
@@ -64,13 +111,65 @@ export default function Products() {
           required
         />
         <input
-          type="number"
-          placeholder="Quantidade"
-          value={form.quantity}
-          onChange={(e) => setForm({ ...form, quantity: e.target.value })}
+          type="text"
+          placeholder="Short description"
+          value={form.short_description}
+          onChange={(e) => setForm({ ...form, short_description: e.target.value })}
           required
         />
-        <button type="submit" className="btn-primary">Adicionar</button>
+        <input
+          type="text"
+          placeholder="Long description"
+          value={form.long_description}
+          onChange={(e) => setForm({ ...form, long_description: e.target.value })}
+          required
+        />
+        <input
+          type="text"
+          placeholder="Dimension (ex: 120x60x60)"
+          value={form.dimension}
+          onChange={(e) => setForm({ ...form, dimension: e.target.value })}
+          required
+        />
+        <label>
+          <input
+            type="checkbox"
+            checked={form.is_included_montage}
+            onChange={(e) => setForm({ ...form, is_included_montage: e.target.checked })}
+          />
+          Montagem incluída
+        </label>
+
+        <label>Categories</label>
+        <select
+          multiple
+          value={form.categoryIds}
+          onChange={(e) => handleMultiSelect(e, "categoryIds")}
+        >
+          {categories.map(c => (
+            <option key={c.id} value={c.id}>{c.name}</option>
+          ))}
+        </select>
+
+        <label>Materials</label>
+        <select
+          multiple
+          value={form.materialIds}
+          onChange={(e) => handleMultiSelect(e, "materialIds")}
+        >
+          {materials.map(m => (
+            <option key={m.id} value={m.id}>{m.name}</option>
+          ))}
+        </select>
+
+        <label>Imagem do produto</label>
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImageFile(e.target.files[0])}
+        />
+
+        <button type="submit" className="btn-primary">Adicionar Produto</button>
       </form>
 
       <div className="cards-container">
@@ -87,6 +186,7 @@ export default function Products() {
             )}
             <h3>{p.name}</h3>
             <p>Quantidade: {p.quantity}</p>
+            <p>Dimensão: {p.dimension}</p>
           </div>
         ))}
       </div>

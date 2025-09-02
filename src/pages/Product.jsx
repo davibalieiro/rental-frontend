@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth"; // assumindo que você tem hook de autenticação
+import { useAuth } from "../hooks/useAuth";
+import { FaHeart, FaShareAlt, FaStar } from "react-icons/fa";
 import "./css/Products.css";
 
 export default function ProductPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { user, loading } = useAuth(); // pega o usuário logado
+  const { user, loading } = useAuth();
   const [product, setProduct] = useState(null);
   const [wishlist, setWishlist] = useState([]);
   const [notification, setNotification] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [loadingProduct, setLoadingProduct] = useState(true);
+  const [relatedProducts, setRelatedProducts] = useState([]);
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -21,6 +23,16 @@ export default function ProductPage() {
         });
         const json = await res.json();
         setProduct(json.data);
+
+        // 🔗 carrega produtos relacionados pela categoria principal
+        if (json.data?.categories?.length > 0) {
+          const categorySlug = json.data.categories[0].slug;
+          const relRes = await fetch(
+            `http://localhost:3000/api/category/${categorySlug}/products`
+          );
+          const relJson = await relRes.json();
+          setRelatedProducts(relJson.data || []);
+        }
       } catch (err) {
         console.error("Erro ao carregar produto:", err);
       } finally {
@@ -64,6 +76,12 @@ export default function ProductPage() {
     localStorage.setItem("wishlist", JSON.stringify(newWishlist));
   };
 
+  const handleShare = () => {
+    navigator.clipboard.writeText(window.location.href);
+    setNotification("🔗 Link do produto copiado para área de transferência!");
+    setTimeout(() => setNotification(null), 3000);
+  };
+
   const isFavorite = wishlist.some((item) => item.slug === product.slug);
 
   return (
@@ -75,14 +93,36 @@ export default function ProductPage() {
             <img key={i} src={img} alt={`thumb-${i}`} />
           ))}
         </div>
+
+        {/* ❤️ botão de favoritos e compartilhar */}
+        <div className="image-actions">
+          <button
+            className={`wishlist-icon ${isFavorite ? "active" : ""}`}
+            onClick={handleWishlist}
+          >
+            <FaHeart />
+          </button>
+          <button className="share-icon" onClick={handleShare}>
+            <FaShareAlt />
+          </button>
+        </div>
       </div>
 
       <div className="product-details">
         <h1>{product.name}</h1>
+
+        {/* ⭐ Avaliação fake (depois pode vir do backend) */}
+        <div className="rating">
+          {[...Array(5)].map((_, i) => (
+            <FaStar key={i} className={i < 4 ? "star filled" : "star"} />
+          ))}
+          <span>(35 avaliações)</span>
+        </div>
+
         <p className="short-description">{product.short_description}</p>
         <p className="long-description">{product.long_description}</p>
         <p><strong>Dimensão:</strong> {product.dimension}</p>
-        
+
         {product.categories?.length > 0 && (
           <div className="product-categories">
             <strong>Categorias:</strong>{" "}
@@ -111,17 +151,27 @@ export default function ProductPage() {
           <button className="buy-btn" onClick={handleAddToCart}>
             Fazer Orçamento
           </button>
-
-          <button
-            className={`wishlist-btn ${isFavorite ? "active" : ""}`}
-            onClick={handleWishlist}
-          >
-            {isFavorite ? "Remover dos Favoritos" : "Adicionar aos Favoritos"}
-          </button>
         </div>
 
         {notification && <div className="notification">{notification}</div>}
       </div>
+
+      {/* 🔗 Produtos relacionados */}
+      {relatedProducts.length > 0 && (
+        <div className="related-products">
+          <h2>Produtos Relacionados</h2>
+          <div className="related-list">
+            {relatedProducts.slice(0, 4).map((p) => (
+              <div key={p.id} className="related-card">
+                <Link to={`/produto/${p.slug}`}>
+                  <img src={p.image || "https://via.placeholder.com/200"} alt={p.name} />
+                  <p>{p.name}</p>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
