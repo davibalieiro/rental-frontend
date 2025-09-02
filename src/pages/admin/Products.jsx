@@ -174,18 +174,26 @@ export default function Products() {
         {products.map((p) => (
           <div className="card" key={p.id}>
             {p.img_blob_name ? (
-              <img
-                src={`http://localhost:3000/api/product/${p.id}/image`}
-                alt={p.name}
-                className="product-image"
-              />
+              <img src={`http://localhost:3000/api/product/${p.id}/image`} alt={p.name} />
             ) : (
               <FaBox className="placeholder-icon" />
             )}
+
+            <div className="overlay">
+              <button>Editar</button>
+              <button>Deletar</button>
+            </div>
+
             <h3>{p.name}</h3>
             <p>{p.short_description}</p>
             <p><strong>Dimensão:</strong> {p.dimension}</p>
-            <p><strong>Quantidade:</strong> {p.quantity}</p>
+
+            <div className="categories">
+              {p.categories?.map((c) => <span key={c.id}>{c.name}</span>)}
+            </div>
+            <div className="materials">
+              {p.materials?.map((m) => <span key={m.id}>{m.name}</span>)}
+            </div>
           </div>
         ))}
       </div>

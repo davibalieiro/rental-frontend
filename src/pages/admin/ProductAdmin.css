@@ -1,108 +1,215 @@
 .products-page {
   padding: 30px;
-  font-family: "Segoe UI", sans-serif;
-  background: #f5f6fa;
+  font-family: "Segoe UI", "Roboto", sans-serif;
+  background: #f0f2f5;
   min-height: 100vh;
 }
 
 .products-page h2 {
-  margin-bottom: 20px;
-  font-size: 28px;
+  margin-bottom: 25px;
+  font-size: 30px;
   color: #2d3436;
+  font-weight: 700;
 }
 
+/* =========================
+   Formulário
+========================= */
 .admin-form {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  padding: 20px;
+  gap: 15px;
+  padding: 25px;
   background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  margin-bottom: 30px;
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  margin-bottom: 40px;
+  transition: box-shadow 0.3s ease;
+}
+
+.admin-form:hover {
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
 }
 
 .admin-form input,
 .admin-form textarea,
 .admin-form select {
-  padding: 12px;
+  padding: 14px;
   border: 1px solid #dcdde1;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 15px;
   outline: none;
-  transition: border 0.2s;
+  transition: border 0.2s, box-shadow 0.2s;
 }
 
 .admin-form input:focus,
 .admin-form textarea:focus,
 .admin-form select:focus {
   border: 1px solid #0984e3;
+  box-shadow: 0 0 8px rgba(9, 132, 227, 0.2);
 }
 
 .admin-form textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 100px;
 }
 
 .btn-primary {
-  padding: 12px;
+  padding: 14px;
   background: #0984e3;
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  transition: all 0.3s ease;
 }
 
 .btn-primary:hover {
   background: #0652dd;
   transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
 }
 
-/* Cards de produtos */
+/* =========================
+   Cards de produtos premium
+========================= */
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
 }
 
 .card {
-  background: #fff;
-  border-radius: 12px;
+  background: #ffffff;
+  border-radius: 20px;
   padding: 16px;
   text-align: center;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+  position: relative;
+  overflow: hidden;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-10px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
 }
 
 .card img {
   width: 100%;
-  height: 150px;
+  height: 220px;
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  transition: transform 0.3s;
+}
+
+.card:hover img {
+  transform: scale(1.05);
 }
 
 .placeholder-icon {
-  font-size: 60px;
+  font-size: 80px;
   color: #b2bec3;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .card h3 {
-  font-size: 18px;
+  font-size: 20px;
   margin-bottom: 6px;
   color: #2d3436;
+  font-weight: 700;
 }
 
 .card p {
   font-size: 14px;
   color: #636e72;
-  margin: 3px 0;
+  margin: 4px 0;
+}
+
+.card strong {
+  color: #2d3436;
+}
+
+/* Linha superior gradient animada */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 6px;
+  background: linear-gradient(90deg, #32cd32, #1e90ff, #ff8c00, #ff4500);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s ease;
+}
+
+.card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Badges de materiais e categorias (pequenas) */
+.card .categories,
+.card .materials {
+  font-size: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.card .categories span,
+.card .materials span {
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #fff;
+  background: linear-gradient(120deg, #32cd32, #1e90ff);
+  transition: transform 0.2s;
+}
+
+.card .categories span:hover,
+.card .materials span:hover {
+  transform: scale(1.1);
+}
+
+/* Overlay com botões de ação (opcional) */
+.card .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 220px;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.card:hover .overlay {
+  opacity: 1;
+}
+
+.overlay button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: #ffffffaa;
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.overlay button:hover {
+  background: #ffffff;
+  transform: translateY(-2px);
 }
