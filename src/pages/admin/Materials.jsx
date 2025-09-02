@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../css/Materials.css";
+import "./Materials.css";
 
 export default function Materials() {
   const [materials, setMaterials] = useState([]);

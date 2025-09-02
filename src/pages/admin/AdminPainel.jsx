@@ -29,7 +29,7 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
-import "../css/Admin.css";
+import "./Admin.css";
 import { useAuth } from "~/hooks/useAuth";
 
 const COLORS = ["#32cd32", "#ff4500", "#ffd700", "#006400", "#ff8c00"];
@@ -50,9 +50,9 @@ export default function AdminPainel() {
     const fetchData = async () => {
       try {
         const [usersRes, ordersRes, favRes] = await Promise.all([
-          fetch("http://localhost:3000/api/user/all", { credentials: "include" }),
-          fetch("http://localhost:3000/api/order/all", { credentials: "include" }),
-          fetch("http://localhost:3000/api/products/stats", { credentials: "include" }),
+          fetch("http://localhost:3000/api/admin/user/all", { credentials: "include" }),
+          fetch("http://localhost:3000/api/admin/order/all", { credentials: "include" }),
+          fetch("http://localhost:3000/api/admin/products/stats", { credentials: "include" }),
         ]);
 
         const usersJson = await usersRes.json();

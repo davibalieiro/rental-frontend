@@ -1,6 +1,6 @@
 // src/components/admin/Categories.jsx
 import React, { useEffect, useState } from "react";
-import "../css/Categorias.css";
+import "./Categorias.css";
 
 export default function Categories() {
   const [categories, setCategories] = useState([]);
