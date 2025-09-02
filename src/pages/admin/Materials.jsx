@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./Materials.css";
 
 export default function Materials() {
@@ -43,7 +46,7 @@ export default function Materials() {
 
       if (!res.ok) throw new Error("Erro ao salvar material");
 
-      alert(`Material ${editing ? "atualizado" : "adicionado"} com sucesso!`);
+      toast.success(`Material ${editing ? "atualizado" : "adicionado"} com sucesso!`);
       setForm({ name: "" });
       setEditing(null);
       fetchMaterials();
@@ -137,7 +140,20 @@ export default function Materials() {
             ))}
           </tbody>
         </table>
+
       )}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
   );
 }
