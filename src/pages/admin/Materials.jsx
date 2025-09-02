@@ -11,7 +11,7 @@ export default function Materials() {
   async function fetchMaterials() {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/api/materials/all", {
+      const res = await fetch("http://localhost:3000/api/material/all", {
         method: "GET",
         credentials: "include",
       });

@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import Products from "./Products";
 import Categories from "./Categories";
 import Materials from "./Materials";
+import Users from "./Users";
 import NotFound from "../NotFound";
 import {
   PieChart,
@@ -155,12 +156,7 @@ export default function AdminPainel() {
       case "materials":
         return <Materials />;
       case "users":
-        return (
-          <div className="page-content">
-            <h2>Gerenciar Usuários</h2>
-            <p>Função futura: lista, edição e exclusão de usuários.</p>
-          </div>
-        );
+      return <Users />;
       default:
         return (
           <div className="dashboard">
