@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 import Products from "./Products";
 import Categories from "./Categories";
 import Materials from "./Materials";
-
 import NotFound from "../NotFound";
 import {
   PieChart,
