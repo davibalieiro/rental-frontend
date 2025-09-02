@@ -1,195 +1,153 @@
+/* Página geral */
 .products-page {
-  padding: 30px;
-  font-family: "Segoe UI", "Roboto", sans-serif;
-  background: #f0f2f5;
+  padding: 2rem;
+  font-family: "Segoe UI", sans-serif;
+  background: #f4f6f9;
+  color: #333;
   min-height: 100vh;
 }
 
 .products-page h2 {
-  margin-bottom: 25px;
-  font-size: 30px;
-  color: #2d3436;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #222;
 }
 
-/* =========================
-   Formulário
-========================= */
+/* Formulário */
 .admin-form {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  padding: 25px;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  margin-bottom: 40px;
-  transition: box-shadow 0.3s ease;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.admin-form:hover {
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .admin-form input,
-.admin-form textarea,
-.admin-form select {
-  padding: 14px;
-  border: 1px solid #dcdde1;
-  border-radius: 10px;
-  font-size: 15px;
-  outline: none;
+.admin-form textarea {
+  padding: 0.75rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 0.6rem;
+  font-size: 1rem;
+  background: #fafafa;
   transition: border 0.2s, box-shadow 0.2s;
 }
 
 .admin-form input:focus,
-.admin-form textarea:focus,
-.admin-form select:focus {
-  border: 1px solid #0984e3;
-  box-shadow: 0 0 8px rgba(9, 132, 227, 0.2);
+.admin-form textarea:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+  outline: none;
 }
 
-.admin-form textarea {
-  resize: vertical;
-  min-height: 100px;
+.checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  padding: 0.3rem 0;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  background: #eef3ff;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.checkbox-item input {
+  margin: 0;
+}
+
+.checkbox-item:hover {
+  background: #d7e1ff;
 }
 
 .btn-primary {
-  padding: 14px;
-  background: #0984e3;
+  padding: 0.9rem;
+  background: #4a90e2;
   color: #fff;
+  font-weight: bold;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 0.6rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s;
 }
 
 .btn-primary:hover {
-  background: #0652dd;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  background: #357abd;
 }
 
-/* =========================
-   Cards de produtos premium
-========================= */
+/* Cards */
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 30px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
 }
 
 .card {
-  background: #ffffff;
-  border-radius: 20px;
-  padding: 16px;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
-  position: relative;
+  background: #fff;
+  border-radius: 1rem;
   overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
 }
 
 .card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
 }
 
-.card img {
+.card-image {
+  position: relative;
+  height: 180px;
+  overflow: hidden;
+  border-bottom: 1px solid #eee;
+}
+
+.card-image img,
+.card-image .placeholder-icon {
   width: 100%;
-  height: 220px;
+  height: 100%;
   object-fit: cover;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  transition: transform 0.3s;
+  background: #f0f0f0;
+  transition: transform 0.4s;
 }
 
-.card:hover img {
+.card:hover .card-image img {
   transform: scale(1.05);
 }
 
 .placeholder-icon {
-  font-size: 80px;
-  color: #b2bec3;
-  margin-bottom: 12px;
-}
-
-.card h3 {
-  font-size: 20px;
-  margin-bottom: 6px;
-  color: #2d3436;
-  font-weight: 700;
-}
-
-.card p {
-  font-size: 14px;
-  color: #636e72;
-  margin: 4px 0;
-}
-
-.card strong {
-  color: #2d3436;
-}
-
-/* Linha superior gradient animada */
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -50%;
-  width: 200%;
-  height: 6px;
-  background: linear-gradient(90deg, #32cd32, #1e90ff, #ff8c00, #ff4500);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.5s ease;
-}
-
-.card:hover::before {
-  transform: scaleX(1);
-}
-
-/* Badges de materiais e categorias (pequenas) */
-.card .categories,
-.card .materials {
-  font-size: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 6px;
-}
-
-.card .categories span,
-.card .materials span {
-  padding: 4px 8px;
-  border-radius: 8px;
-  font-weight: 500;
-  color: #fff;
-  background: linear-gradient(120deg, #32cd32, #1e90ff);
-  transition: transform 0.2s;
-}
-
-.card .categories span:hover,
-.card .materials span:hover {
-  transform: scale(1.1);
-}
-
-/* Overlay com botões de ação (opcional) */
-.card .overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 220px;
-  border-radius: 14px;
-  background: rgba(0,0,0,0.35);
+  font-size: 4rem;
+  color: #aaa;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
   opacity: 0;
   transition: opacity 0.3s;
 }
@@ -199,17 +157,104 @@
 }
 
 .overlay button {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
-  background: #ffffffaa;
-  color: #333;
-  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
+  border: none;
+  transition: background 0.2s;
 }
 
-.overlay button:hover {
-  background: #ffffff;
-  transform: translateY(-2px);
+.btn-edit {
+  background: #4a90e2;
+  color: #fff;
+}
+
+.btn-edit:hover {
+  background: #357abd;
+}
+
+.btn-delete {
+  background: #e74c3c;
+  color: #fff;
+}
+
+.btn-delete:hover {
+  background: #c0392b;
+}
+
+.card-content {
+  padding: 1rem;
+}
+
+.card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.4rem;
+  font-weight: 700;
+}
+
+.card p {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.4rem;
+}
+
+.categories span,
+.materials span {
+  display: inline-block;
+  background: #eef3ff;
+  color: #2f5ec4;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.5rem;
+  margin-right: 0.3rem;
+  margin-bottom: 0.3rem;
+}
+/* File Upload customizado */
+.file-upload-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+#file-upload {
+  display: none; /* esconde o input padrão */
+}
+
+.file-upload-button {
+  display: inline-block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #4a90e2;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 0.6rem;
+  cursor: pointer;
+  transition: background 0.3s, box-shadow 0.2s;
+  border: none;
+}
+
+.file-upload-button:hover {
+  background: #357abd;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.file-upload-button::after {
+  content: "📁"; /* ícone opcional */
+  margin-left: 0.5rem;
+}
+
+/* Responsivo */
+@media (max-width: 600px) {
+  .products-page {
+    padding: 1rem;
+  }
+
+  .admin-form {
+    padding: 1rem;
+  }
+
+  .card-image {
+    height: 140px;
+  }
 }
