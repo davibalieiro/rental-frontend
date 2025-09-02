@@ -30,8 +30,8 @@ export default function Materials() {
     e.preventDefault();
     try {
       const url = editing
-        ? `http://localhost:3000/api/materials/${editing}`
-        : "http://localhost:3000/api/materials";
+        ? `http://localhost:3000/api/material/${editing}`
+        : "http://localhost:3000/api/material";
       const method = editing ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -57,7 +57,7 @@ export default function Materials() {
   async function handleDelete(id) {
     if (!window.confirm("Tem certeza que deseja excluir este material?")) return;
     try {
-      await fetch(`http://localhost:3000/api/materials/${id}`, {
+      await fetch(`http://localhost:3000/api/material/${id}`, {
         method: "DELETE",
         credentials: "include",
       });

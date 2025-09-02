@@ -42,7 +42,7 @@ export default function Users() {
   const handleDelete = async (id) => {
     if (!window.confirm("Tem certeza que deseja excluir este usuário?")) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/admin/user/${id}`, {
+      const res = await fetch(`http://localhost:3000/api/user/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -66,9 +66,9 @@ export default function Users() {
       };
 
       const res = await fetch(
-        `http://localhost:3000/api/admin/user/${editingUser.id}`,
+        `http://localhost:3000/api/user/${editingUser.id}`,
         {
-          method: "PUT", // ou PATCH, conforme sua API
+          method: "PATCH",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify(payload),
@@ -93,8 +93,8 @@ export default function Users() {
       filters.status === "all"
         ? true
         : filters.status === "active"
-        ? !!u.is_active
-        : !u.is_active;
+          ? !!u.is_active
+          : !u.is_active;
     return matchesText && matchesStatus;
   });
 
