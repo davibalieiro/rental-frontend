@@ -1,132 +1,171 @@
-/* Container geral */
-.page-content {
-  background: #f5f5f5;
+.materials-page {
   padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  font-family: "Segoe UI", "Roboto", sans-serif;
+  background: #f0f2f5;
+  min-height: 100vh;
 }
 
-/* Título */
-.page-content h2 {
-  font-size: 22px;
-  margin-bottom: 20px;
-  color: #228b22;
+.materials-page h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #2d3436;
+}
+
+/* =========================
+   Formulário
+========================= */
+.materials-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  margin-bottom: 25px;
+  align-items: center;
+}
+
+.materials-form input {
+  flex: 1;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid #dcdde1;
+  font-size: 15px;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.materials-form input:focus {
+  border: 1px solid #0984e3;
+  box-shadow: 0 0 8px rgba(9,132,227,0.2);
+}
+
+.form-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-primary {
+  padding: 12px 18px;
+  background: #0984e3;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-primary:hover {
+  background: #0652dd;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+.btn-cancel {
+  padding: 12px 18px;
+  background: #d63031;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-cancel:hover {
+  background: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+}
+
+/* =========================
+   Tabela
+========================= */
+.materials-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+}
+
+.materials-table th,
+.materials-table td {
+  padding: 12px 15px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.materials-table thead {
+  background: #0984e3;
+  color: #fff;
   font-weight: 600;
 }
 
-/* Formulário */
-.admin-form {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 25px;
-  flex-wrap: wrap;
+.materials-table tbody tr.even {
+  background: #f8f9fa;
 }
 
-.admin-form input {
-  flex: 1;
-  padding: 10px 14px;
-  border: 2px solid #32cd32;
-  border-radius: 8px;
-  outline: none;
-  font-size: 15px;
-  transition: 0.2s;
-}
-
-.admin-form input:focus {
-  border-color: #228b22;
-  box-shadow: 0 0 6px rgba(34, 139, 34, 0.4);
-}
-
-/* Botões principais */
-.admin-form button {
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background 0.3s, transform 0.2s;
-}
-
-.admin-form button[type="submit"] {
-  background: #32cd32;
-  color: #fff;
-}
-
-.admin-form button[type="submit"]:hover {
-  background: #228b22;
-  transform: translateY(-2px);
-}
-
-.admin-form button[type="button"] {
-  background: #ff4500;
-  color: #fff;
-}
-
-.admin-form button[type="button"]:hover {
-  background: #cc3700;
-  transform: translateY(-2px);
-}
-
-/* Lista de categorias */
-.admin-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.list-item {
+.materials-table tbody tr.odd {
   background: #fff;
-  border: 1px solid #ddd;
-  padding: 12px 16px;
-  margin-bottom: 10px;
+}
+
+.materials-table tbody tr:hover {
+  background: #dfe6e9;
+  transform: translateX(2px);
+  transition: all 0.2s;
+}
+
+.btn-edit,
+.btn-delete {
+  padding: 6px 10px;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: 0.2s;
-}
-
-.list-item:hover {
-  border-color: #32cd32;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-}
-
-/* Nome da categoria */
-.list-item span {
-  font-size: 15px;
-  font-weight: 500;
-  color: #333;
-}
-
-/* Botões de ação */
-.actions {
-  display: flex;
-  gap: 8px;
-}
-
-.actions button {
-  padding: 6px 12px;
   border: none;
-  border-radius: 6px;
-  cursor: pointer;
   font-size: 14px;
-  transition: 0.2s;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: all 0.2s;
 }
 
-.actions button:first-child {
-  background: #32cd32;
+.btn-edit {
+  background: #00b894;
   color: #fff;
 }
 
-.actions button:first-child:hover {
-  background: #228b22;
+.btn-edit:hover {
+  background: #019875;
 }
 
-.actions button:last-child {
-  background: #ff4500;
+.btn-delete {
+  background: #d63031;
   color: #fff;
 }
 
-.actions button:last-child:hover {
-  background: #cc3700;
+.btn-delete:hover {
+  background: #c0392b;
+}
+
+/* =========================
+   Dark Mode
+========================= */
+.materials-page.dark {
+  background: #121212;
+  color: #eee;
+}
+
+.materials-page.dark .materials-form {
+  background: #1e1e1e;
+}
+
+.materials-page.dark .materials-table {
+  background: #1b1b1b;
+}
+
+.materials-page.dark .materials-table thead {
+  background: #0984e3;
 }

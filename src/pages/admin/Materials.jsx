@@ -5,11 +5,13 @@ export default function Materials() {
   const [materials, setMaterials] = useState([]);
   const [form, setForm] = useState({ name: "" });
   const [editing, setEditing] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Buscar materiais
   async function fetchMaterials() {
     try {
-      const res = await fetch("http://localhost:3000/api/materials", {
+      setLoading(true);
+      const res = await fetch("http://localhost:3000/api/materials/all", {
         method: "GET",
         credentials: "include",
       });
@@ -17,34 +19,37 @@ export default function Materials() {
       setMaterials(json.data || []);
     } catch (err) {
       console.error("Erro ao listar materiais", err);
+      alert("Erro ao carregar materiais!");
+    } finally {
+      setLoading(false);
     }
   }
 
-  // Criar ou editar material
+  // Criar/Editar material
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      if (editing) {
-        await fetch(`http://localhost:3000/api/materials/${editing}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(form),
-        });
-      } else {
-        await fetch("http://localhost:3000/api/materials", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(form),
-        });
-      }
+      const url = editing
+        ? `http://localhost:3000/api/materials/${editing}`
+        : "http://localhost:3000/api/materials";
+      const method = editing ? "PUT" : "POST";
 
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(form),
+      });
+
+      if (!res.ok) throw new Error("Erro ao salvar material");
+
+      alert(`Material ${editing ? "atualizado" : "adicionado"} com sucesso!`);
       setForm({ name: "" });
       setEditing(null);
       fetchMaterials();
     } catch (err) {
-      console.error("Erro ao salvar material", err);
+      console.error(err);
+      alert("Erro ao salvar material!");
     }
   }
 
@@ -58,7 +63,8 @@ export default function Materials() {
       });
       fetchMaterials();
     } catch (err) {
-      console.error("Erro ao excluir material", err);
+      console.error(err);
+      alert("Erro ao excluir material!");
     }
   }
 
@@ -73,10 +79,10 @@ export default function Materials() {
   }, []);
 
   return (
-    <div className="page-content">
-      <h2>Gerenciar Materiais</h2>
+    <div className="materials-page">
+      <h2>🛠 Gerenciar Materiais</h2>
 
-      <form onSubmit={handleSubmit} className="admin-form">
+      <form onSubmit={handleSubmit} className="materials-form">
         <input
           type="text"
           placeholder="Nome do material"
@@ -84,54 +90,54 @@ export default function Materials() {
           onChange={(e) => setForm({ name: e.target.value })}
           required
         />
-        <button type="submit" className="btn-primary">
-          {editing ? "Salvar" : "Adicionar"}
-        </button>
-        {editing && (
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={() => {
-              setEditing(null);
-              setForm({ name: "" });
-            }}
-          >
-            Cancelar
+        <div className="form-buttons">
+          <button type="submit" className="btn-primary">
+            {editing ? "Salvar" : "Adicionar"}
           </button>
-        )}
+          {editing && (
+            <button
+              type="button"
+              className="btn-cancel"
+              onClick={() => {
+                setEditing(null);
+                setForm({ name: "" });
+              }}
+            >
+              Cancelar
+            </button>
+          )}
+        </div>
       </form>
 
-      <table className="admin-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {materials.map((m) => (
-            <tr key={m.id}>
-              <td>{m.id}</td>
-              <td>{m.name}</td>
-              <td>
-                <button
-                  className="btn-edit"
-                  onClick={() => handleEdit(m)}
-                >
-                  Editar
-                </button>
-                <button
-                  className="btn-delete"
-                  onClick={() => handleDelete(m.id)}
-                >
-                  Excluir
-                </button>
-              </td>
+      {loading ? (
+        <p>Carregando materiais...</p>
+      ) : (
+        <table className="materials-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nome</th>
+              <th>Ações</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {materials.map((m, index) => (
+              <tr key={m.id} className={index % 2 === 0 ? "even" : "odd"}>
+                <td>{m.id}</td>
+                <td>{m.name}</td>
+                <td>
+                  <button className="btn-edit" onClick={() => handleEdit(m)}>
+                    Editar
+                  </button>
+                  <button className="btn-delete" onClick={() => handleDelete(m.id)}>
+                    Excluir
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
