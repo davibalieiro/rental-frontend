@@ -17,21 +17,18 @@ import Materials from "./Materials";
 import Users from "./Users";
 import NotFound from "../NotFound";
 import {
-  PieChart,
-  Pie,
-  Cell,
-  Tooltip,
-  ResponsiveContainer,
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
+  Tooltip,
+  ResponsiveContainer,
   CartesianGrid,
+  BarChart,
+  Bar,
 } from "recharts";
 import "./Admin.css";
 import { useAuth } from "~/hooks/useAuth";
-
-const COLORS = ["#32cd32", "#ff4500"]; // verde e laranja do tema
 
 export default function AdminPainel() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -60,7 +57,6 @@ export default function AdminPainel() {
         const statsJson = await statsRes.json();
         const data = statsJson?.data;
 
-        // Cards
         setCardStats({
           products: data?.totalProducts || 0,
           categories: data?.categories?.length || 0,
@@ -68,23 +64,20 @@ export default function AdminPainel() {
           users: data?.totalUsers || 0,
         });
 
-        // Usuários ativos/inativos
+        // Linha: evolução ativos/inativos
         setUsersData([
-          { name: "Ativos", value: data?.users?.active || 0 },
-          { name: "Inativos", value: data?.users?.inactive || 0 },
+          { name: "Ativos", ativos: data?.users?.active || 0, inativos: 0 },
+          { name: "Inativos", ativos: 0, inativos: data?.users?.inactive || 0 },
         ]);
 
-        // Categorias x produtos
         setCategoriesData(
           data?.categories?.map(c => ({ name: c.name, value: c.totalProducts })) || []
         );
 
-        // Materiais x produtos
         setMaterialsData(
           data?.materials?.map(m => ({ name: m.name, value: m.totalProducts })) || []
         );
 
-        // Favoritos por produto
         setFavoritesData(
           data?.favorites?.map(f => ({ name: f.name, value: f.totalFavorites })) || []
         );
@@ -108,30 +101,14 @@ export default function AdminPainel() {
     }
   };
 
-  const renderPieChart = (title, data) => (
+  const renderLineChart = (title, data) => (
     <div className="chart-card">
       <h3>{title}</h3>
       <ResponsiveContainer width="100%" height={250}>
-        <PieChart>
-          <Pie
-            data={data}
-            dataKey="value"
-            nameKey="name"
-            innerRadius={50}
-            outerRadius={80}
-            paddingAngle={2}
-            cornerRadius={5}
-            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
-          >
-            {data.map((entry, index) => (
-              <Cell
-                key={index}
-                fill={COLORS[index % COLORS.length]}
-                stroke="#fff"
-                strokeWidth={1}
-              />
-            ))}
-          </Pie>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
+          <XAxis dataKey="name" stroke="#8884d8" />
+          <YAxis stroke="#8884d8" />
           <Tooltip
             contentStyle={{
               backgroundColor: darkMode ? "#2b2b2b" : "#fff",
@@ -140,16 +117,16 @@ export default function AdminPainel() {
               padding: 8,
             }}
           />
-        </PieChart>
+          <Line type="monotone" dataKey="ativos" stroke="#32cd32" strokeWidth={3} />
+          <Line type="monotone" dataKey="inativos" stroke="#ff4500" strokeWidth={3} />
+        </LineChart>
       </ResponsiveContainer>
     </div>
   );
 
   const renderHorizontalBarChart = (title, data) => {
-    // altura dinâmica: cada item 35px + padding, máximo 700px
     const chartHeight = Math.min(data.length * 35 + 50, 700);
 
-    // truncar nomes longos
     const formattedData = data.map(d => ({
       ...d,
       name: d.name.length > 25 ? d.name.slice(0, 22) + "..." : d.name,
@@ -159,11 +136,7 @@ export default function AdminPainel() {
       <div className="chart-card" style={{ overflowY: data.length > 20 ? "auto" : "visible" }}>
         <h3>{title}</h3>
         <ResponsiveContainer width="100%" height={chartHeight}>
-          <BarChart
-            layout="vertical"
-            data={formattedData}
-            margin={{ top: 5, right: 20, left: 150, bottom: 5 }}
-          >
+          <BarChart layout="vertical" data={formattedData} margin={{ top: 5, right: 20, left: 150, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis type="number" stroke="#8884d8" />
             <YAxis type="category" dataKey="name" stroke="#8884d8" width={150} />
@@ -203,7 +176,7 @@ export default function AdminPainel() {
               <div className="card"><FaUsers /><div><h3>{cardStats.users}</h3><p>Usuários</p></div></div>
             </div>
             <div className="charts">
-              {renderPieChart("Usuários Ativos/Inativos", usersData)}
+              {renderLineChart("Usuários Ativos x Inativos", usersData)}
               {renderHorizontalBarChart("Produtos por Categoria", categoriesData)}
               {renderHorizontalBarChart("Produtos por Material", materialsData)}
               {renderHorizontalBarChart("Favoritos por Produto", favoritesData)}

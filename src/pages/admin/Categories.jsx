@@ -1,18 +1,17 @@
-// src/components/admin/Categories.jsx
 import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Categorias.css";
 
-export default function Categories() {
+export default function Categories({ darkMode }) {
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({ name: "" });
   const [editing, setEditing] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Buscar categorias
-  async function fetchCategories() {
+  // ====== FETCH ALL CATEGORIES ======
+  const fetchCategories = async () => {
     try {
       setLoading(true);
       const res = await fetch("http://localhost:3000/api/category/all", {
@@ -27,10 +26,10 @@ export default function Categories() {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  // Criar/Editar categoria
-  async function handleSubmit(e) {
+  // ====== ADD OR UPDATE CATEGORY ======
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const url = editing
@@ -55,12 +54,11 @@ export default function Categories() {
       console.error(err);
       toast.error("Erro ao salvar categoria");
     }
-  }
+  };
 
-  // Excluir categoria
-  async function handleDelete(id) {
+  // ====== DELETE CATEGORY ======
+  const handleDelete = async (id) => {
     if (!window.confirm("Tem certeza que deseja excluir esta categoria?")) return;
-
     try {
       const res = await fetch(`http://localhost:3000/api/category/${id}`, {
         method: "DELETE",
@@ -73,22 +71,24 @@ export default function Categories() {
       console.error(err);
       toast.error("Erro ao excluir categoria");
     }
-  }
+  };
 
-  // Editar
-  function startEdit(category) {
+  // ====== START EDITING ======
+  const startEdit = (category) => {
     setEditing(category.id);
     setForm({ name: category.name });
-  }
+  };
 
+  // ====== INIT ======
   useEffect(() => {
     fetchCategories();
   }, []);
 
   return (
-    <div className="categories-page">
+    <div className={`categories-page ${darkMode ? "dark" : ""}`}>
       <h2>📂 Gerenciar Categorias</h2>
 
+      {/* FORM ADD / EDIT */}
       <form onSubmit={handleSubmit} className="admin-form">
         <input
           type="text"
@@ -114,6 +114,7 @@ export default function Categories() {
         )}
       </form>
 
+      {/* LIST */}
       {loading ? (
         <p>Carregando categorias...</p>
       ) : (
@@ -144,7 +145,7 @@ export default function Categories() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme="light"
+        theme={darkMode ? "dark" : "light"}
       />
     </div>
   );

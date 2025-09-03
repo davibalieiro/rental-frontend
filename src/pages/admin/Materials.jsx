@@ -1,5 +1,5 @@
+// src/components/admin/Materials.jsx
 import React, { useEffect, useState } from "react";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./Materials.css";
@@ -22,7 +22,7 @@ export default function Materials() {
       setMaterials(json.data || []);
     } catch (err) {
       console.error("Erro ao listar materiais", err);
-      alert("Erro ao carregar materiais!");
+      toast.error("Erro ao carregar materiais!");
     } finally {
       setLoading(false);
     }
@@ -52,7 +52,7 @@ export default function Materials() {
       fetchMaterials();
     } catch (err) {
       console.error(err);
-      alert("Erro ao salvar material!");
+      toast.error("Erro ao salvar material!");
     }
   }
 
@@ -60,14 +60,16 @@ export default function Materials() {
   async function handleDelete(id) {
     if (!window.confirm("Tem certeza que deseja excluir este material?")) return;
     try {
-      await fetch(`http://localhost:3000/api/material/${id}`, {
+      const res = await fetch(`http://localhost:3000/api/material/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
+      if (!res.ok) throw new Error("Erro ao excluir material");
+      toast.success("Material excluído!");
       fetchMaterials();
     } catch (err) {
       console.error(err);
-      alert("Erro ao excluir material!");
+      toast.error("Erro ao excluir material!");
     }
   }
 
@@ -140,8 +142,8 @@ export default function Materials() {
             ))}
           </tbody>
         </table>
-
       )}
+
       <ToastContainer
         position="top-right"
         autoClose={3000}

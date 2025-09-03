@@ -1,8 +1,17 @@
+/* =========================
+   Página geral
+========================= */
 .materials-page {
   padding: 30px;
   font-family: "Segoe UI", "Roboto", sans-serif;
   background: #f0f2f5;
   min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+.materials-page.dark {
+  background: #121212;
+  color: #eee;
 }
 
 .materials-page h2 {
@@ -12,8 +21,12 @@
   color: #2d3436;
 }
 
+.materials-page.dark h2 {
+  color: #fff;
+}
+
 /* =========================
-   Formulário
+   Formulário moderno
 ========================= */
 .materials-form {
   display: flex;
@@ -25,6 +38,12 @@
   box-shadow: 0 8px 24px rgba(0,0,0,0.08);
   margin-bottom: 25px;
   align-items: center;
+  transition: all 0.3s ease;
+}
+
+.materials-page.dark .materials-form {
+  background: #1e1e1e;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 
 .materials-form input {
@@ -35,6 +54,14 @@
   font-size: 15px;
   outline: none;
   transition: border 0.2s, box-shadow 0.2s;
+  background: #fafafa;
+  color: #2d3436;
+}
+
+.materials-page.dark .materials-form input {
+  background: #2b2b2b;
+  color: #eee;
+  border: 1px solid #444;
 }
 
 .materials-form input:focus {
@@ -82,7 +109,7 @@
 }
 
 /* =========================
-   Tabela
+   Tabela de Materiais
 ========================= */
 .materials-table {
   width: 100%;
@@ -91,6 +118,11 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+  transition: all 0.3s;
+}
+
+.materials-page.dark .materials-table {
+  background: #1b1b1b;
 }
 
 .materials-table th,
@@ -106,6 +138,11 @@
   font-weight: 600;
 }
 
+.materials-page.dark .materials-table thead {
+  background: #0984e3;
+  color: #fff;
+}
+
 .materials-table tbody tr.even {
   background: #f8f9fa;
 }
@@ -114,12 +151,27 @@
   background: #fff;
 }
 
+.materials-page.dark .materials-table tbody tr.even {
+  background: #1c1c1c;
+}
+
+.materials-page.dark .materials-table tbody tr.odd {
+  background: #1b1b1b;
+}
+
 .materials-table tbody tr:hover {
   background: #dfe6e9;
   transform: translateX(2px);
   transition: all 0.2s;
 }
 
+.materials-page.dark .materials-table tbody tr:hover {
+  background: #2c2c2c;
+}
+
+/* =========================
+   Botões de ação
+========================= */
 .btn-edit,
 .btn-delete {
   padding: 6px 10px;
@@ -148,24 +200,4 @@
 
 .btn-delete:hover {
   background: #c0392b;
-}
-
-/* =========================
-   Dark Mode
-========================= */
-.materials-page.dark {
-  background: #121212;
-  color: #eee;
-}
-
-.materials-page.dark .materials-form {
-  background: #1e1e1e;
-}
-
-.materials-page.dark .materials-table {
-  background: #1b1b1b;
-}
-
-.materials-page.dark .materials-table thead {
-  background: #0984e3;
 }
