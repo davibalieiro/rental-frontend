@@ -1,3 +1,4 @@
+// src/pages/ProductPage.jsx
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -8,13 +9,15 @@ export default function ProductPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+
   const [product, setProduct] = useState(null);
-  const [wishlist, setWishlist] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const [notification, setNotification] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [loadingProduct, setLoadingProduct] = useState(true);
   const [relatedProducts, setRelatedProducts] = useState([]);
 
+  // 🔹 Carregar produto
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -24,7 +27,6 @@ export default function ProductPage() {
         const json = await res.json();
         setProduct(json.data);
 
-        // 🔗 carrega produtos relacionados pela categoria principal
         if (json.data?.categories?.length > 0) {
           const categorySlug = json.data.categories[0].slug;
           const relRes = await fetch(
@@ -42,14 +44,64 @@ export default function ProductPage() {
     fetchProduct();
   }, [slug]);
 
+  // 🔹 Carregar favoritos do usuário
   useEffect(() => {
-    const savedWishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-    setWishlist(savedWishlist);
-  }, []);
+    if (!user) return;
+    const fetchFavorites = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/favorites/${user.id}`, {
+          credentials: "include",
+        });
+        const json = await res.json();
+        setFavorites(json.data || []);
+      } catch (err) {
+        console.error("Erro ao buscar favoritos:", err);
+      }
+    };
+    fetchFavorites();
+  }, [user]);
 
   if (loadingProduct) return <p>Carregando produto...</p>;
   if (!product) return <p>Produto não encontrado</p>;
 
+  // 🔹 Adicionar/Remover favoritos
+  const handleWishlist = async () => {
+    if (!user) {
+      alert("Você precisa estar logado para salvar favoritos!");
+      navigate("/login");
+      return;
+    }
+
+    const isFav = favorites.some((f) => f.product.id === product.id);
+
+    try {
+      if (isFav) {
+        await fetch("http://localhost:3000/api/favorites", {
+          method: "DELETE",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ userId: user.id, productId: product.id }),
+        });
+        setFavorites(favorites.filter((f) => f.product.id !== product.id));
+        setNotification("❌ Produto removido dos favoritos");
+      } else {
+        await fetch("http://localhost:3000/api/favorites", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({ userId: user.id, productId: product.id }),
+        });
+        setFavorites([...favorites, { product }]);
+        setNotification("❤️ Produto adicionado aos favoritos");
+      }
+    } catch (err) {
+      console.error("Erro ao atualizar favoritos:", err);
+    } finally {
+      setTimeout(() => setNotification(null), 3000);
+    }
+  };
+
+  // 🔹 Orçamento
   const handleAddToCart = () => {
     if (!user) {
       alert("Você precisa estar logado para fazer um orçamento!");
@@ -65,24 +117,13 @@ export default function ProductPage() {
     setTimeout(() => setNotification(null), 3000);
   };
 
-  const handleWishlist = () => {
-    let newWishlist = [...wishlist];
-    if (!newWishlist.find((item) => item.slug === product.slug)) {
-      newWishlist.push(product);
-    } else {
-      newWishlist = newWishlist.filter((item) => item.slug !== product.slug);
-    }
-    setWishlist(newWishlist);
-    localStorage.setItem("wishlist", JSON.stringify(newWishlist));
-  };
-
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    setNotification("🔗 Link do produto copiado para área de transferência!");
+    setNotification("🔗 Link do produto copiado!");
     setTimeout(() => setNotification(null), 3000);
   };
 
-  const isFavorite = wishlist.some((item) => item.slug === product.slug);
+  const isFavorite = favorites.some((f) => f.product.id === product.id);
 
   return (
     <div className="product-page">
@@ -111,7 +152,6 @@ export default function ProductPage() {
       <div className="product-details">
         <h1>{product.name}</h1>
 
-        {/* ⭐ Avaliação fake (depois pode vir do backend) */}
         <div className="rating">
           {[...Array(5)].map((_, i) => (
             <FaStar key={i} className={i < 4 ? "star filled" : "star"} />

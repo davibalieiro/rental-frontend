@@ -21,31 +21,32 @@
 
 .product-image img {
   width: 100%;
-  max-width: 450px;
-  border-radius: 12px;
+  max-width: 460px;
+  border-radius: 14px;
   object-fit: cover;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.12);
 }
 
 .thumbnail-list {
   display: flex;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .thumbnail-list img {
-  width: 70px;
-  height: 70px;
+  width: 72px;
+  height: 72px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   border: 2px solid transparent;
   transition: all 0.2s ease;
 }
 
-.thumbnail-list img:hover {
+.thumbnail-list img:hover,
+.thumbnail-list img.active {
   border: 2px solid #007bff;
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 /* ========================
@@ -53,8 +54,8 @@
 ======================== */
 .image-actions {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 14px;
+  right: 14px;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -65,26 +66,33 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #eee;
+  background: #f5f5f5;
   border-radius: 50%;
-  width: 45px;
-  height: 45px;
-  font-size: 1.3rem;
-  color: #555;
+  width: 48px;
+  height: 48px;
+  font-size: 1.35rem;
+  color: #666;
   border: none;
   cursor: pointer;
-  transition: background 0.3s, transform 0.2s, color 0.3s;
+  transition: all 0.3s ease;
 }
 
 .wishlist-icon:hover,
 .share-icon:hover {
-  background: #ddd;
-  transform: scale(1.1);
+  background: #e2e2e2;
+  transform: scale(1.12);
 }
 
 .wishlist-icon.active {
   background: #ff4d4d;
   color: #fff;
+  animation: pulse 0.5s ease;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
 }
 
 /* ========================
@@ -93,15 +101,16 @@
 .product-details {
   flex: 1 1 55%;
   background: #fff;
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
 .product-details h1 {
-  font-size: 28px;
-  margin-bottom: 12px;
-  color: #222;
+  font-size: 30px;
+  margin-bottom: 14px;
+  color: #1e1e1e;
+  font-weight: 600;
 }
 
 /* ========================
@@ -110,13 +119,13 @@
 .rating {
   display: flex;
   align-items: center;
-  margin: 10px 0 15px;
+  margin: 12px 0 18px;
   gap: 6px;
 }
 
 .star {
   color: #ccc;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
 }
 
 .star.filled {
@@ -124,8 +133,8 @@
 }
 
 .rating span {
-  font-size: 0.9rem;
-  color: #555;
+  font-size: 0.95rem;
+  color: #666;
 }
 
 /* ========================
@@ -139,7 +148,7 @@
 
 .long-description {
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.65;
   margin: 12px 0;
   color: #666;
 }
@@ -153,6 +162,7 @@
 .product-categories a {
   color: #007bff;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .product-categories a:hover {
@@ -163,23 +173,24 @@
    Botões de Ação
 ======================== */
 .actions {
-  margin-top: 20px;
+  margin-top: 22px;
 }
 
 .buy-btn {
-  padding: 14px 22px;
-  background: #007bff;
+  padding: 14px 24px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
   color: white;
   border: none;
   border-radius: 10px;
   font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s;
-  box-shadow: 0 3px 10px rgba(0,123,255,0.2);
+  box-shadow: 0 3px 12px rgba(0,123,255,0.25);
 }
 
 .buy-btn:hover {
-  background: #0056b3;
+  background: linear-gradient(135deg, #0056b3, #004099);
   transform: translateY(-2px);
 }
 
@@ -187,14 +198,30 @@
    Notificação
 ======================== */
 .notification {
-  margin-top: 15px;
-  padding: 12px;
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.notification.success {
   background: #e9f7ef;
   border-left: 5px solid #28a745;
-  border-radius: 8px;
-  font-size: 14px;
   color: #155724;
-  animation: fadeIn 0.4s ease-in-out;
+}
+
+.notification.error {
+  background: #fdecea;
+  border-left: 5px solid #dc3545;
+  color: #721c24;
+}
+
+.notification.info {
+  background: #eaf4ff;
+  border-left: 5px solid #007bff;
+  color: #084298;
 }
 
 @keyframes fadeIn {
@@ -206,45 +233,45 @@
    Produtos Relacionados
 ======================== */
 .related-products {
-  margin-top: 50px;
+  margin-top: 60px;
   width: 100%;
 }
 
 .related-products h2 {
   font-size: 22px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   color: #333;
 }
 
 .related-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
 }
 
 .related-card {
   background: #fff;
-  border-radius: 10px;
-  padding: 12px;
+  border-radius: 12px;
+  padding: 14px;
   text-align: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: transform 0.25s, box-shadow 0.25s;
 }
 
 .related-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transform: translateY(-5px);
+  box-shadow: 0 5px 16px rgba(0,0,0,0.12);
 }
 
 .related-card img {
   width: 100%;
-  height: 140px;
+  height: 150px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 10px;
 }
 
 .related-card p {
-  margin-top: 10px;
+  margin-top: 12px;
   font-weight: 500;
   font-size: 15px;
   color: #444;

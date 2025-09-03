@@ -15,7 +15,7 @@ import FAQ from "./components/FAQ";
 import Regulamento from "./components/Regulamento";
 import Produto from './pages/Product'
 import CartPage from "./pages/CartPage";
-import Perfil from "./pages/Perfil";
+import Perfil from "./pages/perfil/Perfil";
 
 
 function App() {

@@ -1,0 +1,44 @@
+/* =========================
+   Card de Informações do Usuário
+========================= */
+.perfil-info-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.perfil-info {
+  margin-bottom: 20px;
+}
+
+.perfil-info p {
+  margin: 8px 0;
+  font-size: 15px;
+  color: #444;
+}
+
+.perfil-info strong {
+  color: #228b22; /* verde */
+}
+
+.perfil-info-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.perfil-info-actions button {
+  padding: 10px 16px;
+  background: #ff4500;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.perfil-info-actions button:hover {
+  background: #cc3700;
+}

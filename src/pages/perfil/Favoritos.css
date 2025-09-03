@@ -1,0 +1,117 @@
+/* ========================
+   Página de Favoritos
+======================== */
+.favorites-page {
+  padding: 30px;
+  font-family: "Segoe UI", sans-serif;
+  background: #f9f9f9;
+  min-height: 100vh;
+}
+
+.favorites-page h2 {
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: #333;
+  font-weight: 600;
+}
+
+.empty-message {
+  font-size: 16px;
+  color: #777;
+  margin-top: 10px;
+}
+
+/* ========================
+   Cards
+======================== */
+.favorites-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.favorite-card {
+  background: #fff;
+  padding: 18px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transition: transform 0.25s, box-shadow 0.25s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.favorite-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.product-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  transition: transform 0.3s ease;
+}
+
+.favorite-card:hover .product-image {
+  transform: scale(1.05);
+}
+
+.favorite-card h3 {
+  font-size: 18px;
+  color: #222;
+  margin: 8px 0;
+}
+
+.short-description {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 15px;
+}
+
+/* ========================
+   Ações
+======================== */
+.card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.btn-view,
+.btn-remove {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+/* Ver Produto */
+.btn-view {
+  background: #007bff;
+  color: #fff;
+}
+
+.btn-view:hover {
+  background: #0056b3;
+}
+
+/* Remover */
+.btn-remove {
+  background: #ff4d4d;
+  color: #fff;
+}
+
+.btn-remove:hover {
+  background: #cc0000;
+}
