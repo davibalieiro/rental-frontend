@@ -1,21 +1,29 @@
 import { useState, useEffect } from "react";
 
-export function useProductImages(products) {
 
+export function useProductImages(products) {
     const [imageUrls, setImageUrls] = useState({});
+
     useEffect(() => {
         const fetchImages = async () => {
             let urls = {};
             for (const product of products) {
-                try {
-                    const res = await fetch(`http://localhost:3000/api/product/${product.id}/image`, {
-                        credentials: "include",
-                    });
-                    const data = await res.json();
-                    urls[product.id] = data.sasToken;
-                } catch (err) {
-                    urls[product.id] = "https://via.placeholder.com/300x200";
+                if (product.img_blob_name) {
+                    try {
+                        const res = await fetch(`http://localhost:3000/api/product/${product.id}/image`, {
+                            credentials: "include",
+                        });
+                        const data = await res.json();
+
+                        urls[product.id] = data.sasToken;
+                        continue;
+                    } catch (err) {
+                        console.error(err);
+                    }
                 }
+
+                urls[product.id] = null;
+
             }
             setImageUrls(urls);
         };
@@ -25,6 +33,31 @@ export function useProductImages(products) {
         }
     }, [products]);
 
-    return { imageUrls }
+    return { imageUrls };
+}
 
+export function useProductImage(product) {
+    const [productImgUrl, setProductImgUrl] = useState(null);
+
+    useEffect(() => {
+        const fetchImages = async () => {
+            if (product?.img_blob_name) {
+                try {
+                    const res = await fetch(
+                        `http://localhost:3000/api/product/${product.id}/image`,
+                        { credentials: "include" }
+                    );
+                    const data = await res.json();
+                    setProductImgUrl(data.sasToken);
+                } catch (err) {
+                    console.error("Erro carregando imagem:", err);
+                    setProductImgUrl("https://via.placeholder.com/400x400"); // fallback
+                }
+            }
+        };
+
+        fetchImages();
+    }, [product]);
+
+    return { productImgUrl };
 }

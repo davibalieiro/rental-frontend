@@ -1,9 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useProductImages } from "~/hooks/useProductImages";
+import { useProducts } from "~/hooks/useProducts";
+
 import "./css/CartPage.css";
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
+
+  const { products } = useProducts();
+  const { imageUrls } = useProductImages(products);
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
@@ -73,10 +79,7 @@ export default function CartPage() {
                 <ul className="cart-list">
                   {cart.map((item, index) => (
                     <li key={index} className="cart-item">
-                      <img
-                        src={item.image || "https://via.placeholder.com/80"}
-                        alt={item.name}
-                      />
+                      <img src={imageUrls[item.id]} alt={item.name} />
                       <div className="cart-info">
                         <h4>{item.name}</h4>
                         <p>{item.short_description}</p>

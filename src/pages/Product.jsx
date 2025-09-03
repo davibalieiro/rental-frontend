@@ -4,6 +4,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { FaHeart, FaShareAlt, FaStar } from "react-icons/fa";
 import "./css/Products.css";
+import { useProductImage } from "~/hooks/useProductImages";
 
 export default function ProductPage() {
   const { slug } = useParams();
@@ -11,6 +12,7 @@ export default function ProductPage() {
   const { user, loading } = useAuth();
 
   const [product, setProduct] = useState(null);
+  const { productImgUrl } = useProductImage(product);
   const [favorites, setFavorites] = useState([]);
   const [notification, setNotification] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
@@ -128,9 +130,9 @@ export default function ProductPage() {
   return (
     <div className="product-page">
       <div className="product-image">
-        <img src={product.image || "https://via.placeholder.com/400x400"} alt={product.name} />
+        <img src={productImgUrl || "https://via.placeholder.com/400x400"} alt={product.name} />
         <div className="thumbnail-list">
-          {(product.gallery || [product.image]).map((img, i) => (
+          {(product.gallery || [productImgUrl]).map((img, i) => (
             <img key={i} src={img} alt={`thumb-${i}`} />
           ))}
         </div>

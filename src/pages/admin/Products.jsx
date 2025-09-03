@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { FaBox } from "react-icons/fa";
 import "./ProductAdmin.css";
+import { useProducts } from "~/hooks/useProducts";
+import { useProductImages } from "~/hooks/useProductImages";
 
 export default function Products() {
-  const [products, setProducts] = useState([]);
+  const { products } = useProducts();
+  const { imageUrls } = useProductImages(products);
   const [categories, setCategories] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [form, setForm] = useState({
@@ -15,16 +18,6 @@ export default function Products() {
     materialIds: [],
   });
   const [imageFile, setImageFile] = useState(null);
-
-  async function fetchProducts() {
-    try {
-      const res = await fetch("http://localhost:3000/api/product/all", { credentials: "include" });
-      const json = await res.json();
-      setProducts(json.data || []);
-    } catch (err) {
-      console.error(err);
-    }
-  }
 
   useEffect(() => {
     async function fetchOptions() {
@@ -40,7 +33,6 @@ export default function Products() {
       }
     }
     fetchOptions();
-    fetchProducts();
   }, []);
 
   async function handleSubmit(e) {
@@ -195,8 +187,8 @@ export default function Products() {
         {products.map((p) => (
           <div className="card" key={p.id}>
             <div className="card-image">
-              {p.img_blob_name ? (
-                <img src={`http://localhost:3000/api/product/${p.id}/image`} alt={p.name} />
+              {imageUrls[p.id] ? (
+                <img src={imageUrls[p.id]} alt={p.name} />
               ) : (
                 <FaBox className="placeholder-icon" />
               )}
