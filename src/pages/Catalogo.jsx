@@ -1,55 +1,18 @@
 import React, { useState, useEffect } from "react";
 import "./css/Catalogo.css";
 import { useNavigate } from "react-router";
+import { useProducts } from "~/hooks/useProducts";
+import { useProductImages } from "~/hooks/useProductImages";
 
 export default function Catalog() {
-  const [products, setProducts] = useState([]);
+  const { products, loading } = useProducts();
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { imageUrls } = useProductImages(products);
 
-  const [imageUrls, setImageUrls] = useState({});
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      let urls = {};
-      for (const product of products) {
-        try {
-          const res = await fetch(`http://localhost:3000/api/product/${product.id}/image`, {
-            credentials: "include",
-          });
-          const data = await res.json();
-          urls[product.id] = data.sasToken;
-        } catch (err) {
-          urls[product.id] = "https://via.placeholder.com/300x200";
-        }
-      }
-      setImageUrls(urls);
-    };
-
-    if (products.length > 0) {
-      fetchImages();
-    }
-  }, [products]);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/product/all", {
-          credentials: "include"
-        });
-        const json = await res.json();
-        setProducts(json.data || []);
-      } catch (err) {
-        console.error("Erro ao carregar produtos:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProducts();
-  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -61,8 +24,6 @@ export default function Catalog() {
         setCategories(json.data || []);
       } catch (err) {
         console.error("Erro ao carregar categorias:", err);
-      } finally {
-        setLoading(false);
       }
     };
     fetchCategories();
