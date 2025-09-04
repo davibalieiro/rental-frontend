@@ -21,7 +21,7 @@ export default function ProductPage() {
   const [favCount, setFavCount] = useState(0);
 
   // Hook de favoritos
-  const { favorites, toggleFavorite, fetchFavorites } = useFavorites(user?.id);
+  const { favorites, toggleFavorite, loadingToggle } = useFavorites(user?.id);
 
   // Carregar produto
   useEffect(() => {
@@ -136,8 +136,9 @@ export default function ProductPage() {
           <button
             className={`wishlist-icon ${isFavorite ? "active" : ""}`}
             onClick={handleWishlist}
+            disabled={loadingToggle === product.id}
           >
-            <FaHeart /> {favCount}
+            {loadingToggle === product.id ? "..." : <FaHeart />} {favCount}
           </button>
           <button className="share-icon" onClick={handleShare}>
             <FaShareAlt />

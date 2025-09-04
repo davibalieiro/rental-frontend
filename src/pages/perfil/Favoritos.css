@@ -1,125 +1,25 @@
-.favorites-page {
+.favoritos-list {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
-.favorites-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.btn-clear {
-  background: #ff4444;
-  color: #fff;
-  padding: 8px 14px;
-  border: none;
+.favorito-card {
+  width: 150px;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
-}
-
-.btn-clear:hover {
-  background: #cc0000;
-}
-
-.favorites-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-.favorite-card {
-  background: #fff;
-  padding: 15px;
-  border-radius: 12px;
+  padding: 0.5rem;
   text-align: center;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  transition: all 0.3s;
+  transition: transform 0.2s;
 }
 
-.favorite-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+.favorito-card:hover {
+  transform: scale(1.05);
 }
 
-.product-image {
+.favorito-card img {
   width: 100%;
-  height: 150px;
+  height: 120px;
   object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 12px;
-}
-
-.short-description {
-  font-size: 14px;
-  color: #555;
-  margin: 8px 0;
-  min-height: 40px;
-}
-
-.price {
-  font-size: 16px;
-  font-weight: bold;
-  color: #28a745;
-}
-
-.fav-count {
-  font-size: 13px;
-  color: #777;
-  margin: 6px 0;
-}
-
-.card-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-}
-
-.btn-view {
-  background: #007bff;
-  color: white;
-  padding: 8px 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn-view:hover {
-  background: #0056b3;
-}
-
-.btn-remove {
-  background: #ff4500;
-  color: white;
-  padding: 8px 10px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.btn-remove:hover {
-  background: #cc3700;
-}
-
-.empty-message {
-  text-align: center;
-  font-size: 16px;
-  color: #666;
-}
-
-.loading {
-  text-align: center;
-  font-size: 16px;
-  color: #333;
+  border-radius: 6px;
 }

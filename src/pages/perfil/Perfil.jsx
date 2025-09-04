@@ -5,23 +5,22 @@ import PerfilInfo from "./PerfilInfo";
 import MinhasReservas from "./MinhasReservas";
 import Favoritos from "./Favoritos";
 import Config from "./Config";
+import { useFavorites } from "../../hooks/useFavorites";
 import "./Perfil.css";
 
 export default function Perfil() {
-  const { user, loading } = useAuth();
+  const { user, loading, token } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("perfil");
-  const [favorites, setFavorites] = useState([]);
   const [reservas, setReservas] = useState([]);
+
+  // Hook de favoritos
+  const { favorites, loadingFavs, toggleFavorite, fetchFavorites } = useFavorites(user, token);
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
 
-    // Carrega favoritos
-    const savedFav = JSON.parse(localStorage.getItem("wishlist")) || [];
-    setFavorites(savedFav);
-
-    // Simula reservas
+    // Reservas simuladas
     setReservas([
       {
         id: 1,
@@ -81,7 +80,19 @@ export default function Perfil() {
       <div className="perfil-content">
         {activeTab === "perfil" && <PerfilInfo user={user} />}
         {activeTab === "reservas" && <MinhasReservas reservas={reservas} />}
-        {activeTab === "favoritos" && <Favoritos favorites={favorites} />}
+        {activeTab === "favoritos" && (
+          <>
+            {loadingFavs ? (
+              <p>Carregando favoritos...</p>
+            ) : (
+              <Favoritos
+                favorites={favorites}
+                toggleFavorite={toggleFavorite}
+                fetchFavorites={fetchFavorites}
+              />
+            )}
+          </>
+        )}
         {activeTab === "config" && <Config />}
       </div>
     </div>
