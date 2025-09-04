@@ -12,9 +12,7 @@ export function useFavorites(user, token) {
       setLoadingFavs(true);
       const res = await fetch(`http://localhost:3000/api/favorites/${user.id}`, {
         credentials: "include",
-        headers: token
-          ? { Authorization: `Bearer ${token}` }
-          : undefined,
+        
       });
 
       if (!res.ok) throw new Error("Falha ao buscar favoritos");
@@ -26,6 +24,8 @@ export function useFavorites(user, token) {
     } finally {
       setLoadingFavs(false);
     }
+    
+    return favorites;
   }
 
   // Adicionar ou remover favorito

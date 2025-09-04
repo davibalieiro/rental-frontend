@@ -45,8 +45,9 @@ export default function ProductPage() {
         // contador de favoritos
         if (json.data?.id) {
           const favRes = await fetch(
-            `http://localhost:3000/api/favorites/product/${json.data.id}`
-          );
+            `http://localhost:3000/api/favorites/product/${json.data.id}`,
+            {credentials: 'include'}
+          ); 
           const favJson = await favRes.json();
           setFavCount(favJson.data || 0);
         }
@@ -85,7 +86,7 @@ export default function ProductPage() {
         `http://localhost:3000/api/favorites/product/${product.id}`
       );
       const favJson = await favRes.json();
-      setFavCount(favJson.data || 0);
+      setFavCount(favJson.data?.totalFavorites || 0); 
     } catch (err) {
       console.error("Erro ao atualizar contador de favoritos:", err);
     }
@@ -134,10 +135,10 @@ export default function ProductPage() {
         {/* ❤️ Favoritar / Compartilhar */}
         <div className="image-actions">
           <button
-            className={`wishlist-icon ${isFavorite ? "active" : ""}`}
-            onClick={handleWishlist}
-            disabled={loadingToggle === product.id}
-          >
+  className={`wishlist-icon ${isFavorite ? "active" : ""}`}
+  onClick={handleWishlist}
+  disabled={loadingToggle === product.id}
+>
             {loadingToggle === product.id ? "..." : <FaHeart />} {favCount}
           </button>
           <button className="share-icon" onClick={handleShare}>
