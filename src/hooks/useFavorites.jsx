@@ -1,65 +1,67 @@
-import { useState, useEffect } from "react";
 
-export function useFavorites(user, token) {
+import { useState, useEffect } from "react";
+export function useFavorites(userId) {
   const [favorites, setFavorites] = useState([]);
   const [loadingFavs, setLoadingFavs] = useState(true);
-  const [loadingToggle, setLoadingToggle] = useState(null); // id do produto que está processando
+  const [loadingToggle, setLoadingToggle] = useState(null);
 
-  // Buscar favoritos do usuário
-  async function fetchFavorites() {
-    if (!user?.id) return;
-    try {
-      setLoadingFavs(true);
-      const res = await fetch(`http://localhost:3000/api/favorites/${user.id}`, {
-        credentials: "include",
-        headers: token
-          ? { Authorization: `Bearer ${token}` }
-          : undefined,
-      });
-
-      if (!res.ok) throw new Error("Falha ao buscar favoritos");
-      const json = await res.json();
-      setFavorites(json.data || []);
-    } catch (err) {
-      console.error("Erro ao carregar favoritos:", err);
-      setFavorites([]);
-    } finally {
-      setLoadingFavs(false);
+  useEffect(() => {
+    async function fetchFavorites() {
+      if (!userId) {
+        setLoadingFavs(false);
+        return;
+      }
+      try {
+        setLoadingFavs(true);
+        const res = await fetch(`http://localhost:3000/api/favorites/${userId}`, {
+          credentials: "include",
+        });
+        if (!res.ok) throw new Error("Falha ao buscar favoritos");
+        const json = await res.json();
+        setFavorites(json.data || []);
+      } catch (err) {
+        console.error("Erro ao carregar favoritos:", err);
+        setFavorites([]);
+      } finally {
+        setLoadingFavs(false);
+      }
     }
-  }
 
-  // Adicionar ou remover favorito
+    fetchFavorites();
+  }, [userId]);
+
   async function toggleFavorite(productId) {
-    if (!user?.id) return;
+    if (!userId) return;
+    setLoadingToggle(productId);
+
+    const isFav = favorites.some(f => f.product?.id === productId);
+    const url = isFav
+      ? `http://localhost:3000/api/favorites/${userId}/${productId}`
+      : `http://localhost:3000/api/favorites`;
+
+    const options = isFav
+      ? { method: "DELETE", credentials: "include" }
+      : {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, productId }),
+      };
+
+
     try {
-      setLoadingToggle(productId);
-      const isFav = favorites.some((f) => f.product?.id === productId);
+      const res = await fetch(url, options);
 
-      const url = isFav
-        ? `http://localhost:3000/api/favorites/${user.id}/${productId}`
-        : `http://localhost:3000/api/favorites`;
-
-      const res = await fetch(url, {
-        method: isFav ? "DELETE" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: isFav ? null : JSON.stringify({ userId: user.id, productId }),
-      });
-
+      console.log(res);
       if (!res.ok) {
         if (res.status === 401) throw new Error("Não autorizado! Faça login novamente.");
-        throw new Error(`Erro ${res.status}`);
+        throw new Error("Falha ao atualizar favorito");
       }
 
-      // Atualizar localmente sem refetch completo
-      if (isFav) {
-        setFavorites((prev) => prev.filter((f) => f.product?.id !== productId));
-      } else {
-        const json = await res.json();
-        setFavorites((prev) => [...prev, json.data]);
-      }
+      setFavorites(prev =>
+        isFav ? prev.filter(f => f.product?.id !== productId) : [...prev, { product: { id: productId } }]
+      );
+
     } catch (err) {
       console.error("Erro ao atualizar favorito:", err.message);
       alert(err.message);
@@ -68,9 +70,7 @@ export function useFavorites(user, token) {
     }
   }
 
-  useEffect(() => {
-    fetchFavorites();
-  }, [user?.id]);
-
-  return { favorites, loadingFavs, loadingToggle, toggleFavorite, fetchFavorites };
+  // A função fetchFavorites não precisa mais ser exportada,
+  // pois o hook agora cuida disso internamente.
+  return { favorites, loadingFavs, loadingToggle, toggleFavorite };
 }

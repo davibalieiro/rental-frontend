@@ -1,4 +1,4 @@
-// src/pages/ProductPage.jsx
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
@@ -19,8 +19,8 @@ export default function ProductPage() {
   const [loadingProduct, setLoadingProduct] = useState(true);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [favCount, setFavCount] = useState(0);
+  const [ratingCount, setRatingCount] = useState(0);
 
-  // Hook de favoritos
   const { favorites, toggleFavorite, loadingToggle } = useFavorites(user?.id);
 
   // Carregar produto
@@ -31,24 +31,19 @@ export default function ProductPage() {
           credentials: "include",
         });
         const json = await res.json();
-        setProduct(json.data);
 
-        if (json.data?.categories?.length > 0) {
-          const categorySlug = json.data.categories[0].slug;
+        setProduct(json.data?.product || null);
+        setFavCount(json.data?.totalFavorites ?? 0);
+        setRatingCount(json.data?.totalRating ?? 0);
+
+        // Carregar produtos relacionados
+        if (json.data?.product?.categories?.length > 0) {
+          const categorySlug = json.data.product.categories[0].slug;
           const relRes = await fetch(
             `http://localhost:3000/api/category/${categorySlug}/products`
           );
           const relJson = await relRes.json();
           setRelatedProducts(relJson.data || []);
-        }
-
-        // contador de favoritos
-        if (json.data?.id) {
-          const favRes = await fetch(
-            `http://localhost:3000/api/favorites/product/${json.data.id}`
-          );
-          const favJson = await favRes.json();
-          setFavCount(favJson.data || 0);
         }
       } catch (err) {
         console.error("Erro ao carregar produto:", err);
@@ -70,7 +65,8 @@ export default function ProductPage() {
       return;
     }
 
-    const isFav = favorites.some((f) => f.product?.id === product.id);
+    const isFav = favorites.some(f => f.product?.id === product.id);
+
     await toggleFavorite(product.id);
 
     setNotification(
@@ -79,16 +75,8 @@ export default function ProductPage() {
         : "❤️ Produto adicionado aos favoritos"
     );
 
-    // atualizar contador
-    try {
-      const favRes = await fetch(
-        `http://localhost:3000/api/favorites/product/${product.id}`
-      );
-      const favJson = await favRes.json();
-      setFavCount(favJson.data || 0);
-    } catch (err) {
-      console.error("Erro ao atualizar contador de favoritos:", err);
-    }
+    // atualizar contagem corretamente
+    setFavCount(prevCount => prevCount + (isFav ? -1 : 1));
 
     setTimeout(() => setNotification(null), 3000);
   };
@@ -125,8 +113,9 @@ export default function ProductPage() {
           src={productImgUrl || "https://via.placeholder.com/400x400"}
           alt={product.name}
         />
+
         <div className="thumbnail-list">
-          {(product.gallery || [productImgUrl]).map((img, i) => (
+          {(product.gallery?.length ? product.gallery : [productImgUrl]).map((img, i) => (
             <img key={i} src={img} alt={`thumb-${i}`} />
           ))}
         </div>
@@ -153,7 +142,7 @@ export default function ProductPage() {
           {[...Array(5)].map((_, i) => (
             <FaStar key={i} className={i < 4 ? "star filled" : "star"} />
           ))}
-          <span>(35 avaliações)</span>
+          <span>({ratingCount} avaliações)</span>
         </div>
 
         <p className="short-description">{product.short_description}</p>
