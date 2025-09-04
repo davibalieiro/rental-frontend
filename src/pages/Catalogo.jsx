@@ -78,7 +78,6 @@ export default function Catalog() {
                   alt={product.name}
                 />
                 <h4>{product.name}</h4>
-                <p className="price">R$ {product.price?.toFixed(2)}</p>
                 <button
                   className="buy-btn"
                   onClick={() => navigate(`/produto/${product.slug}`)}
