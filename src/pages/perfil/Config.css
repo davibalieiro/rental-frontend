@@ -1,78 +1,122 @@
-/* Container */
+/* =========================
+   Layout Geral do Container
+========================= */
 .config-container {
-  max-width: 650px;
-  margin: 40px auto;
-  padding: 25px;
-  background: #fff;
-  border-radius: 14px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.1);
   font-family: "Segoe UI", sans-serif;
+  background: #fff;
+  transition: all 0.3s ease;
 }
 
-.config-container h3 {
-  margin-bottom: 20px;
-  color: #222;
+.config-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
-/* Form */
-.config-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 35px;
-  padding: 15px;
-  border: 1px solid #eee;
-  border-radius: 10px;
-  background: #fafafa;
-}
-
-.config-form h4 {
-  margin-bottom: 8px;
+/* =========================
+   Títulos das Seções
+========================= */
+.config-form h3,
+.sessions-section h3,
+.history-section h3,
+.preferences-section h3,
+.export-section h3,
+.delete-section h3 {
+  margin-bottom: 12px;
   color: #007bff;
 }
 
-.config-form label {
-  font-weight: 500;
-  color: #333;
+/* =========================
+   Formulário
+========================= */
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 40px;
 }
 
 .config-form input,
-.config-form select {
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
+.preferences-section select {
+  padding: 14px;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  font-size: 15px;
   outline: none;
+  transition: all 0.2s;
 }
 
 .config-form input:focus,
-.config-form select:focus {
+.preferences-section select:focus {
   border-color: #007bff;
-  box-shadow: 0 0 0 2px rgba(0,123,255,0.15);
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
 }
 
-.config-form button {
-  margin-top: 10px;
-  padding: 12px;
+/* =========================
+   Botões
+========================= */
+.btn-primary {
+  padding: 14px;
   border: none;
-  border-radius: 8px;
-  background: #007bff;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #007bff, #0056b3);
   color: #fff;
-  font-weight: 600;
+  font-weight: bold;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s;
 }
 
-.config-form button:hover {
-  background: #0056b3;
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 123, 255, 0.3);
 }
 
-/* Alerts */
+.btn-danger {
+  padding: 14px 22px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #dc3545, #b02a37);
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-cancel {
+  padding: 14px 22px;
+  border: none;
+  border-radius: 12px;
+  background: #6c757d;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-cancel:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(108, 117, 125, 0.3);
+}
+
+/* =========================
+   Alertas
+========================= */
 .alert {
   padding: 12px 15px;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 20px;
   font-size: 14px;
+  opacity: 0;
+  animation: fadeSlide 0.5s forwards;
 }
 
 .alert.success {
@@ -87,80 +131,104 @@
   border-left: 5px solid #dc3545;
 }
 
-/* Excluir conta */
+.slide-in {
+  animation: fadeSlide 0.5s forwards;
+}
+
+/* =========================
+   Seções
+========================= */
+.sessions-section,
+.history-section,
+.preferences-section,
+.export-section {
+  margin-bottom: 35px;
+  padding: 20px;
+  border-radius: 16px;
+  background: #f9f9f9;
+}
+
+.sessions-section ul,
+.history-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px 0;
+}
+
+.sessions-section li,
+.history-section li {
+  padding: 6px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Seção de Exclusão */
 .delete-section {
-  padding: 15px;
-  border: 1px solid #f5c6cb;
-  border-radius: 10px;
+  padding: 20px;
+  border-radius: 16px;
   background: #fff5f5;
-  margin-top: 25px;
+  border: 1px solid #f5c6cb;
+  text-align: center;
 }
 
-.delete-section h4 {
-  color: #dc3545;
-  margin-bottom: 8px;
-}
-
-.btn-danger {
-  background: #dc3545;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
-}
-
-.btn-danger:hover {
-  background: #b02a37;
-}
-
-.btn-cancel {
-  background: #6c757d;
-  color: white;
-  padding: 10px 15px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
-}
-
-.btn-cancel:hover {
-  background: #545b62;
-}
-
-/* Modal */
+/* =========================
+   Modal
+========================= */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 999;
+  z-index: 1000;
+  animation: fadeIn 0.3s forwards;
 }
 
 .modal {
-  background: white;
-  padding: 25px;
-  border-radius: 12px;
-  width: 400px;
+  background: #fff;
+  padding: 35px;
+  border-radius: 20px;
+  width: 450px;
   max-width: 90%;
   text-align: center;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+  transform: scale(0.8);
+  animation: scaleIn 0.3s forwards;
 }
 
-.modal h4 {
-  margin-bottom: 10px;
+.modal input {
+  width: 70%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  margin: 15px 0;
+  font-size: 14px;
+  outline: none;
 }
 
 .modal-actions {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+}
+
+/* =========================
+   Animações
+========================= */
+@keyframes fadeSlide {
+  0% { opacity: 0; transform: translateX(-20px); }
+  100% { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
 }

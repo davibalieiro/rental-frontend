@@ -1,61 +1,32 @@
-import React, { useEffect, useState } from "react";
+// src/pages/Favorites.jsx
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaTrash, FaExternalLinkAlt, FaUsers } from "react-icons/fa";
 import "./Favoritos.css";
+import { useFavorites } from "../../hooks/useFavorites";
 
 export default function Favorites({ userId }) {
-  const [favorites, setFavorites] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { favorites, loadingFavs, toggleFavorite } = useFavorites(userId);
   const navigate = useNavigate();
-
-  async function fetchFavorites() {
-    try {
-      setLoading(true);
-      const res = await fetch(`http://localhost:3000/api/favorites/${userId}`, {
-        credentials: "include"
-      });
-      const json = await res.json();
-      setFavorites(json.data || []);
-    } catch (err) {
-      console.error("Erro ao carregar favoritos:", err);
-    } finally {
-      setLoading(false);
-    }
-  }
+  const [processing, setProcessing] = useState(false);
 
   async function handleRemove(productId) {
     if (!window.confirm("Tem certeza que deseja remover este produto dos favoritos?")) return;
-    try {
-      await fetch(`http://localhost:3000/api/favorites/${userId}/${productId}`, {
-        method: "DELETE",
-        credentials: "include",
-      });
-      fetchFavorites();
-    } catch (err) {
-      console.error("Erro ao remover favorito:", err);
-    }
+    setProcessing(true);
+    await toggleFavorite(productId);
+    setProcessing(false);
   }
 
   async function handleClearAll() {
     if (!window.confirm("Deseja remover todos os produtos dos favoritos?")) return;
-    try {
-      for (const fav of favorites) {
-        await fetch(`http://localhost:3000/api/favorites/${userId}/${fav.product.id}`, {
-          method: "DELETE",
-          credentials: "include",
-        });
-      }
-      fetchFavorites();
-    } catch (err) {
-      console.error("Erro ao limpar favoritos:", err);
+    setProcessing(true);
+    for (const fav of favorites) {
+      await toggleFavorite(fav.product.id);
     }
+    setProcessing(false);
   }
 
-  useEffect(() => {
-    fetchFavorites();
-  }, []);
-
-  if (loading) {
+  if (loadingFavs) {
     return <p className="loading">Carregando favoritos...</p>;
   }
 
@@ -64,7 +35,7 @@ export default function Favorites({ userId }) {
       <div className="favorites-header">
         <h2>💖 Meus Favoritos</h2>
         {favorites.length > 0 && (
-          <button className="btn-clear" onClick={handleClearAll}>
+          <button className="btn-clear" onClick={handleClearAll} disabled={processing}>
             Remover Todos
           </button>
         )}
@@ -80,18 +51,18 @@ export default function Favorites({ userId }) {
                 src={`http://localhost:3000/api/product/${f.product.id}/image`}
                 alt={f.product.name}
                 className="product-image"
-                onError={(e) => e.target.src = "https://via.placeholder.com/200"}
+                onError={(e) => (e.target.src = "https://via.placeholder.com/200")}
               />
               <h3>{f.product.name}</h3>
               <p className="short-description">
                 {f.product.short_description || "Sem descrição disponível."}
               </p>
-              
-              {f.product.price && (
+
+              {f.product.price != null && (
                 <p className="price">R$ {f.product.price.toFixed(2)}</p>
               )}
 
-              {f.product.favoritedCount !== undefined && (
+              {f.product.favoritedCount != null && (
                 <p className="fav-count">
                   <FaUsers /> {f.product.favoritedCount} pessoas favoritaram
                 </p>
@@ -107,6 +78,7 @@ export default function Favorites({ userId }) {
                 <button
                   className="btn-remove"
                   onClick={() => handleRemove(f.product.id)}
+                  disabled={processing}
                 >
                   <FaTrash /> Remover
                 </button>

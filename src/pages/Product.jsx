@@ -5,21 +5,25 @@ import { useAuth } from "../hooks/useAuth";
 import { FaHeart, FaShareAlt, FaStar } from "react-icons/fa";
 import "./css/Products.css";
 import { useProductImage } from "~/hooks/useProductImages";
+import { useFavorites } from "../hooks/useFavorites";
 
 export default function ProductPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
   const [product, setProduct] = useState(null);
   const { productImgUrl } = useProductImage(product);
-  const [favorites, setFavorites] = useState([]);
   const [notification, setNotification] = useState(null);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [loadingProduct, setLoadingProduct] = useState(true);
   const [relatedProducts, setRelatedProducts] = useState([]);
+  const [favCount, setFavCount] = useState(0);
 
-  // 🔹 Carregar produto
+  // Hook de favoritos
+  const { favorites, toggleFavorite, fetchFavorites } = useFavorites(user?.id);
+
+  // Carregar produto
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -37,6 +41,15 @@ export default function ProductPage() {
           const relJson = await relRes.json();
           setRelatedProducts(relJson.data || []);
         }
+
+        // contador de favoritos
+        if (json.data?.id) {
+          const favRes = await fetch(
+            `http://localhost:3000/api/favorites/product/${json.data.id}`
+          );
+          const favJson = await favRes.json();
+          setFavCount(favJson.data || 0);
+        }
       } catch (err) {
         console.error("Erro ao carregar produto:", err);
       } finally {
@@ -46,27 +59,10 @@ export default function ProductPage() {
     fetchProduct();
   }, [slug]);
 
-  // 🔹 Carregar favoritos do usuário
-  useEffect(() => {
-    if (!user) return;
-    const fetchFavorites = async () => {
-      try {
-        const res = await fetch(`http://localhost:3000/api/favorites/${user.id}`, {
-          credentials: "include",
-        });
-        const json = await res.json();
-        setFavorites(json.data || []);
-      } catch (err) {
-        console.error("Erro ao buscar favoritos:", err);
-      }
-    };
-    fetchFavorites();
-  }, [user]);
-
   if (loadingProduct) return <p>Carregando produto...</p>;
   if (!product) return <p>Produto não encontrado</p>;
 
-  // 🔹 Adicionar/Remover favoritos
+  // Adicionar/Remover favoritos
   const handleWishlist = async () => {
     if (!user) {
       alert("Você precisa estar logado para salvar favoritos!");
@@ -74,36 +70,30 @@ export default function ProductPage() {
       return;
     }
 
-    const isFav = favorites.some((f) => f.product.id === product.id);
+    const isFav = favorites.some((f) => f.product?.id === product.id);
+    await toggleFavorite(product.id);
 
+    setNotification(
+      isFav
+        ? "❌ Produto removido dos favoritos"
+        : "❤️ Produto adicionado aos favoritos"
+    );
+
+    // atualizar contador
     try {
-      if (isFav) {
-        await fetch("http://localhost:3000/api/favorites", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ userId: user.id, productId: product.id }),
-        });
-        setFavorites(favorites.filter((f) => f.product.id !== product.id));
-        setNotification("❌ Produto removido dos favoritos");
-      } else {
-        await fetch("http://localhost:3000/api/favorites", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify({ userId: user.id, productId: product.id }),
-        });
-        setFavorites([...favorites, { product }]);
-        setNotification("❤️ Produto adicionado aos favoritos");
-      }
+      const favRes = await fetch(
+        `http://localhost:3000/api/favorites/product/${product.id}`
+      );
+      const favJson = await favRes.json();
+      setFavCount(favJson.data || 0);
     } catch (err) {
-      console.error("Erro ao atualizar favoritos:", err);
-    } finally {
-      setTimeout(() => setNotification(null), 3000);
+      console.error("Erro ao atualizar contador de favoritos:", err);
     }
+
+    setTimeout(() => setNotification(null), 3000);
   };
 
-  // 🔹 Orçamento
+  // Orçamento
   const handleAddToCart = () => {
     if (!user) {
       alert("Você precisa estar logado para fazer um orçamento!");
@@ -119,31 +109,35 @@ export default function ProductPage() {
     setTimeout(() => setNotification(null), 3000);
   };
 
+  // Compartilhar
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
     setNotification("🔗 Link do produto copiado!");
     setTimeout(() => setNotification(null), 3000);
   };
 
-  const isFavorite = favorites.some((f) => f.product.id === product.id);
+  const isFavorite = favorites.some((f) => f.product?.id === product.id);
 
   return (
     <div className="product-page">
       <div className="product-image">
-        <img src={productImgUrl || "https://via.placeholder.com/400x400"} alt={product.name} />
+        <img
+          src={productImgUrl || "https://via.placeholder.com/400x400"}
+          alt={product.name}
+        />
         <div className="thumbnail-list">
           {(product.gallery || [productImgUrl]).map((img, i) => (
             <img key={i} src={img} alt={`thumb-${i}`} />
           ))}
         </div>
 
-        {/* ❤️ botão de favoritos e compartilhar */}
+        {/* ❤️ Favoritar / Compartilhar */}
         <div className="image-actions">
           <button
             className={`wishlist-icon ${isFavorite ? "active" : ""}`}
             onClick={handleWishlist}
           >
-            <FaHeart />
+            <FaHeart /> {favCount}
           </button>
           <button className="share-icon" onClick={handleShare}>
             <FaShareAlt />
@@ -163,7 +157,9 @@ export default function ProductPage() {
 
         <p className="short-description">{product.short_description}</p>
         <p className="long-description">{product.long_description}</p>
-        <p><strong>Dimensão:</strong> {product.dimension}</p>
+        <p>
+          <strong>Dimensão:</strong> {product.dimension}
+        </p>
 
         {product.categories?.length > 0 && (
           <div className="product-categories">
@@ -206,7 +202,10 @@ export default function ProductPage() {
             {relatedProducts.slice(0, 4).map((p) => (
               <div key={p.id} className="related-card">
                 <Link to={`/produto/${p.slug}`}>
-                  <img src={p.image || "https://via.placeholder.com/200"} alt={p.name} />
+                  <img
+                    src={p.image || "https://via.placeholder.com/200"}
+                    alt={p.name}
+                  />
                   <p>{p.name}</p>
                 </Link>
               </div>
