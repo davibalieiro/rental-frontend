@@ -1,31 +1,37 @@
-.cart-page {
-  display: flex;
-  gap: 2rem;
-  padding: 2rem;
+.cart-container {
   max-width: 1200px;
   margin: auto;
-  align-items: flex-start;
+  padding: 2rem;
 }
 
-/* COLUNA ESQUERDA */
-.cart-left {
+.cart-title {
+  text-align: center;
+  color: #ff6600;
+  margin-bottom: 2rem;
+}
+
+.cart-content {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.cart-items {
   flex: 2;
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-/* COLUNA DIREITA */
-.cart-right {
+.cart-form {
   flex: 1;
 }
 
-/* CARD PADRÃO */
 .card {
   background: #fff;
   padding: 1.5rem;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
 }
 
 .card h2 {
@@ -33,103 +39,43 @@
   color: #ff6600;
 }
 
-/* LISTA DE ITENS */
-.cart-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
 .cart-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 1rem;
   padding: 1rem 0;
   border-bottom: 1px solid #eee;
+  transition: transform 0.2s;
+}
+
+.cart-item:hover {
+  transform: translateX(3px);
 }
 
 .cart-item img {
-  width: 90px;
-  height: 90px;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 12px;
 }
 
-.cart-item.small img {
-  width: 60px;
-  height: 60px;
-}
-
-.cart-info {
+.cart-details {
   flex: 1;
 }
 
-.cart-info h3,
-.cart-info h4 {
+.cart-details h4 {
   margin: 0 0 0.3rem;
 }
 
-.cart-info p {
+.cart-details p {
   color: #666;
   font-size: 0.85rem;
-  margin: 0;
 }
 
-/* BOTÕES */
-.remove-btn {
-  background: #ff6600;
-  border: none;
-  color: #fff;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: 0.3s;
-}
-
-.remove-btn:hover {
-  background: #e65c00;
-}
-
-.checkout-btn {
-  background: #ff6600;
-  color: white;
-  border: none;
-  padding: 14px;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 100%;
-  margin-top: 1rem;
-  transition: 0.3s;
-}
-
-.checkout-btn:hover {
-  background: #e65c00;
-}
-.view-product-btn {
-  background: #32cd32; /* verde do site */
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 0.85rem;
-  margin-top: 0.5rem;
-  transition: 0.3s;
-}
-
-.view-product-btn:hover {
-  background: #228b22;
-}
-.cart-info p strong {
-  color: #333;
-}
 .quantity-control {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   margin-top: 0.5rem;
 }
 
@@ -138,34 +84,83 @@
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 6px;
-  padding: 4px;
+  padding: 6px;
 }
 
 .quantity-control button {
-  background: #ddd;
   border: none;
-  padding: 4px 10px;
-  cursor: pointer;
+  background: #eee;
+  padding: 6px 10px;
   border-radius: 6px;
-  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
 .quantity-control button:hover {
-  background: #ccc;
+  background: #ddd;
+}
+
+.view-product-btn {
+  margin-top: 0.5rem;
+  background: #32cd32;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.view-product-btn:hover {
+  background: #228b22;
+}
+
+.remove-btn {
+  background: #ff6600;
+  border: none;
+  color: #fff;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s;
+}
+
+.remove-btn:hover {
+  background: #e65c00;
+}
+
+.clear-cart-btn,
+.checkout-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
 .clear-cart-btn {
   background: #999;
   color: #fff;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 6px;
-  cursor: pointer;
   margin-top: 1rem;
 }
 
 .clear-cart-btn:hover {
   background: #777;
+}
+
+.checkout-btn {
+  background: #ff6600;
+  color: #fff;
+  margin-top: 1rem;
+}
+
+.checkout-btn:hover {
+  background: #e65c00;
 }
 
 .feedback-msg {
@@ -174,12 +169,6 @@
   margin-bottom: 0.8rem;
 }
 
-.total {
-  font-size: 1.1rem;
-  margin-top: 1rem;
-}
-
-/* TEXTAREA */
 .cart-notes {
   width: 100%;
   min-height: 100px;
@@ -190,21 +179,11 @@
   font-size: 0.9rem;
   resize: vertical;
 }
-.page-title {
-  text-align: center;
-  margin-bottom: 0.3em;
-  color: #ff6600;
-  margin-top: 2rem;
-}
-
-.form-card {
-  margin-bottom: 2rem;
-}
 
 .checkout-form {
   display: flex;
   flex-direction: column;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .form-row {
@@ -221,28 +200,85 @@
 
 .form-group label {
   font-weight: 600;
-  margin-bottom: 0.4rem;
-  color: #333;
+  margin-bottom: 0.3rem;
 }
 
-.form-group input,
-.form-group select {
+.form-group input {
   padding: 0.7rem;
   border-radius: 8px;
   border: 1px solid #ccc;
-  font-size: 0.95rem;
 }
 
-.form-group input:focus,
-.form-group select:focus {
-  border-color: #ff6600;
+.form-group input:focus {
   outline: none;
+  border-color: #ff6600;
   box-shadow: 0 0 4px rgba(255, 102, 0, 0.3);
+}
+
+/* Sugestões de produtos */
+.suggestion-list {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.suggestion-item {
+  flex: 1 1 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.suggestion-item:hover {
+  transform: translateY(-3px);
+}
+
+.suggestion-item img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.suggestion-item p {
+  font-size: 0.85rem;
+  margin-top: 0.3rem;
+  text-align: center;
+}
+
+/* Modal de confirmação */
+.modal-confirm {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.modal-confirm p {
+  margin-bottom: 1rem;
+}
+
+.modal-confirm button {
+  margin-right: 0.5rem;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 /* RESPONSIVO */
 @media (max-width: 900px) {
-  .cart-page {
+  .cart-content {
     flex-direction: column;
+  }
+  .suggestion-list {
+    justify-content: center;
   }
 }

@@ -1,21 +1,26 @@
+// CartPage.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProductImages } from "~/hooks/useProductImages";
 import { useProducts } from "~/hooks/useProducts";
-
+import { FaPlus, FaMinus, FaTrashAlt } from "react-icons/fa";
 import "./css/CartPage.css";
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
-
   const { products } = useProducts();
   const { imageUrls } = useProductImages(products);
   const [message, setMessage] = useState("");
+  const [notes, setNotes] = useState("");
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
     setCart(savedCart);
+
+    const savedNotes = localStorage.getItem("cartNotes") || "";
+    setNotes(savedNotes);
   }, []);
 
   const updateCart = (newCart, msg = "") => {
@@ -33,20 +38,21 @@ export default function CartPage() {
   };
 
   const clearCart = () => {
+    setShowClearConfirm(false);
     updateCart([], "Carrinho limpo com sucesso.");
   };
 
   const increaseQuantity = (index) => {
     const updatedCart = [...cart];
     updatedCart[index].quantity = (updatedCart[index].quantity || 1) + 1;
-    updateCart(updatedCart);
+    updateCart(updatedCart, "Quantidade atualizada");
   };
 
   const decreaseQuantity = (index) => {
     const updatedCart = [...cart];
     if ((updatedCart[index].quantity || 1) > 1) {
       updatedCart[index].quantity -= 1;
-      updateCart(updatedCart);
+      updateCart(updatedCart, "Quantidade atualizada");
     }
   };
 
@@ -54,21 +60,28 @@ export default function CartPage() {
     const updatedCart = [...cart];
     const newValue = parseInt(value, 10);
     updatedCart[index].quantity = isNaN(newValue) || newValue < 1 ? 1 : newValue;
-    updateCart(updatedCart);
+    updateCart(updatedCart, "Quantidade atualizada");
+  };
+
+  const handleNotesChange = (e) => {
+    setNotes(e.target.value);
+    localStorage.setItem("cartNotes", e.target.value);
   };
 
   const handleConfirmOrder = () => {
     navigate("/orcamento");
   };
 
-  return (
-    <div>
-      {/* TITULO EM CIMA DE TUDO */}
-      <h1 className="page-title">Finalizar Pedido</h1>
+  const suggestedProducts = products
+    .filter((p) => !cart.find((c) => c.id === p.id))
+    .slice(0, 4);
 
-      <div className="cart-page">
-        {/* COLUNA ESQUERDA - Detalhe do Pedido + Resumo */}
-        <div className="cart-left">
+  return (
+    <div className="cart-container">
+      <h1 className="cart-title">Finalizar Pedido</h1>
+
+      <div className="cart-content">
+        <div className="cart-items">
           <div className="card">
             <h2>Detalhe do Pedido</h2>
             {message && <p className="feedback-msg">{message}</p>}
@@ -76,64 +89,75 @@ export default function CartPage() {
               <p>Seu carrinho está vazio.</p>
             ) : (
               <>
-                <ul className="cart-list">
-                  {cart.map((item, index) => (
-                    <li key={index} className="cart-item">
-                      <img src={imageUrls[item.id]} alt={item.name} />
-                      <div className="cart-info">
-                        <h4>{item.name}</h4>
-                        <p>{item.short_description}</p>
-                        {/* QUANTIDADE */}
-                        <div className="quantity-control">
-                          <button onClick={() => decreaseQuantity(index)}>
-                            -
-                          </button>
-                          <input
-                            type="number"
-                            value={item.quantity || 1}
-                            min="1"
-                            onChange={(e) =>
-                              handleQuantityChange(index, e.target.value)
-                            }
-                          />
-                          <button onClick={() => increaseQuantity(index)}>
-                            +
-                          </button>
-                        </div>
-                        {/* BOTÃO VER PRODUTO */}
-                        <button
-                          className="view-product-btn"
-                          onClick={() => navigate(`/produto/${item.slug}`)}
-                        >
-                          Ver Produto
+                {cart.map((item, index) => (
+                  <div key={index} className="cart-item">
+                    <img
+                      src={imageUrls[item.id]}
+                      alt={item.name}
+                      onClick={() => navigate(`/produto/${item.slug}`)}
+                      style={{ cursor: "pointer" }}
+                    />
+                    <div className="cart-details">
+                      <h4>{item.name}</h4>
+                      <p>{item.short_description}</p>
+
+                      <div className="quantity-control">
+                        <button onClick={() => decreaseQuantity(index)}>
+                          <FaMinus />
+                        </button>
+                        <input
+                          type="number"
+                          value={item.quantity || 1}
+                          min="1"
+                          onChange={(e) => handleQuantityChange(index, e.target.value)}
+                        />
+                        <button onClick={() => increaseQuantity(index)}>
+                          <FaPlus />
                         </button>
                       </div>
+
                       <button
-                        className="remove-btn"
-                        onClick={() => removeItem(index)}
+                        className="view-product-btn"
+                        onClick={() => navigate(`/produto/${item.slug}`)}
                       >
-                        Remover
+                        Ver Produto
                       </button>
-                    </li>
-                  ))}
-                </ul>
-                <button className="clear-cart-btn" onClick={clearCart}>
+                    </div>
+                    <button
+                      className="remove-btn"
+                      onClick={() => removeItem(index)}
+                    >
+                      <FaTrashAlt />
+                    </button>
+                  </div>
+                ))}
+
+                <button
+                  className="clear-cart-btn"
+                  onClick={() => setShowClearConfirm(true)}
+                >
                   Limpar Carrinho
                 </button>
+
+                {showClearConfirm && (
+                  <div className="modal-confirm">
+                    <p>Tem certeza que deseja limpar o carrinho?</p>
+                    <button onClick={clearCart}>Sim</button>
+                    <button onClick={() => setShowClearConfirm(false)}>Não</button>
+                  </div>
+                )}
               </>
             )}
           </div>
 
-          {/* Resumo da Locação agora embaixo do Detalhe do Pedido */}
           <div className="card">
             <h2>Resumo da Locação</h2>
-            <p>Confira os itens e prossiga para confirmar o pedido.</p>
-
             <textarea
-              placeholder="Observações (ex: horário de retirada, local de entrega, necessidades especiais...)"
+              placeholder="Observações..."
               className="cart-notes"
+              value={notes}
+              onChange={handleNotesChange}
             />
-
             <button
               className="checkout-btn"
               onClick={handleConfirmOrder}
@@ -142,11 +166,25 @@ export default function CartPage() {
               Confirmar Pedido
             </button>
           </div>
+
+          {/* Sugestões de produtos */}
+          {suggestedProducts.length > 0 && (
+            <div className="card">
+              <h2>Você pode gostar</h2>
+              <div className="suggestion-list">
+                {suggestedProducts.map((p) => (
+                  <div key={p.id} className="suggestion-item" onClick={() => navigate(`/produto/${p.slug}`)}>
+                    <img src={imageUrls[p.id]} alt={p.name} />
+                    <p>{p.name}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* COLUNA DIREITA - Detalhes do Evento */}
-        <div className="cart-right">
-          <div className="card form-card">
+        <div className="cart-form">
+          <div className="card">
             <h2>Detalhes do Evento</h2>
             <form className="checkout-form">
               <div className="form-row">
@@ -159,7 +197,6 @@ export default function CartPage() {
                   <input type="time" required />
                 </div>
               </div>
-
               <div className="form-row">
                 <div className="form-group">
                   <label>Local do Evento</label>
