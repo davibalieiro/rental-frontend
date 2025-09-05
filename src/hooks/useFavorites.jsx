@@ -1,34 +1,11 @@
 
+
 import { useState, useEffect } from "react";
 export function useFavorites(userId) {
   const [favorites, setFavorites] = useState([]);
   const [loadingFavs, setLoadingFavs] = useState(true);
   const [loadingToggle, setLoadingToggle] = useState(null);
 
-<<<<<<< HEAD
-  // Buscar favoritos do usuário
-  async function fetchFavorites() {
-    if (!user?.id) return;
-    try {
-      setLoadingFavs(true);
-      const res = await fetch(`http://localhost:3000/api/favorites/${user.id}`, {
-        credentials: "include",
-        
-      });
-
-      if (!res.ok) throw new Error("Falha ao buscar favoritos");
-      const json = await res.json();
-      setFavorites(json.data || []);
-    } catch (err) {
-      console.error("Erro ao carregar favoritos:", err);
-      setFavorites([]);
-    } finally {
-      setLoadingFavs(false);
-    }
-    
-    return favorites;
-  }
-=======
   useEffect(() => {
     async function fetchFavorites() {
       if (!userId) {
@@ -50,7 +27,6 @@ export function useFavorites(userId) {
         setLoadingFavs(false);
       }
     }
->>>>>>> 1873bbca526fccb4942189742033f53ba9a52215
 
     fetchFavorites();
   }, [userId]);

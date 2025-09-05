@@ -1,25 +1,177 @@
-.favoritos-list {
+/* =========================
+   Layout da página
+========================= */
+.favorites-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+}
+
+/* =========================
+   Header
+========================= */
+.favorites-header {
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
 }
 
-.favorito-card {
-  width: 150px;
-  border: 1px solid #ddd;
+.favorites-header h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #e63978;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-clear {
+  background: #ff4d4f;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.2rem;
   border-radius: 8px;
-  padding: 0.5rem;
-  text-align: center;
-  transition: transform 0.2s;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: 0.2s ease;
 }
 
-.favorito-card:hover {
-  transform: scale(1.05);
+.btn-clear:hover {
+  background: #e03637;
 }
 
-.favorito-card img {
+.btn-clear:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Lista de cards
+========================= */
+.favorites-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+/* =========================
+   Card individual
+========================= */
+.favorite-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.favorite-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+}
+
+.product-image {
   width: 100%;
-  height: 120px;
+  height: 180px;
   object-fit: cover;
-  border-radius: 6px;
+  border-radius: 12px;
+  margin-bottom: 1rem;
+  background: #f6f6f6;
+}
+
+/* =========================
+   Conteúdo do card
+========================= */
+.favorite-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #222;
+}
+
+.short-description {
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.8rem;
+  min-height: 40px;
+}
+
+.price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #27ae60;
+  margin-bottom: 0.5rem;
+}
+
+.fav-count {
+  font-size: 0.85rem;
+  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+/* =========================
+   Ações
+========================= */
+.card-actions {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.btn-view,
+.btn-remove {
+  flex: 1;
+  padding: 0.6rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: 0.2s ease;
+}
+
+.btn-view {
+  background: #3498db;
+  color: #fff;
+}
+
+.btn-view:hover {
+  background: #2980b9;
+}
+
+.btn-remove {
+  background: #ff4d4f;
+  color: #fff;
+}
+
+.btn-remove:hover {
+  background: #e03637;
+}
+
+.btn-remove:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* =========================
+   Mensagens
+========================= */
+.loading,
+.empty-message {
+  text-align: center;
+  font-size: 1rem;
+  color: #666;
+  margin-top: 3rem;
 }
