@@ -15,7 +15,8 @@ export default function Perfil() {
   const [reservas, setReservas] = useState([]);
 
   // Hook de favoritos
-  const { favorites, loadingFavs, toggleFavorite, fetchFavorites } = useFavorites(user, token);
+  const { favorites, loadingFavs, toggleFavorite, fetchFavorites } =
+    useFavorites(user, token);
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
@@ -43,10 +44,9 @@ export default function Perfil() {
     <div className="perfil-container">
       {/* Sidebar */}
       <div className="perfil-sidebar">
-        <div className="perfil-avatar">
-          <img src="/assets/avatar_placeholder.png" alt="Avatar" />
+        <div className="perfil-user-info">
+          <h2>{user?.name || "Usuário"}</h2>
         </div>
-        <h2>{user?.name || "Usuário"}</h2>
 
         <div className="perfil-tabs">
           <button

@@ -167,6 +167,40 @@
 .product-categories a:hover {
   text-decoration: underline;
 }
+/* ========================
+   Quantidade na página do produto
+======================== */
+.product-page-quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.product-page-quantity input {
+  width: 60px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 6px;
+  font-size: 16px;
+}
+
+.product-page-quantity button {
+  background: #4f46e5;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.3s;
+}
+
+.product-page-quantity button:hover {
+  background: #6366f1;
+  transform: translateY(-2px);
+}
 
 /* ========================
    Botões de Ação

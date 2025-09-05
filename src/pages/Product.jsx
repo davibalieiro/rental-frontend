@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { FaHeart, FaShareAlt, FaStar } from "react-icons/fa";
+import { FaHeart, FaShareAlt, FaStar, FaPlus, FaMinus } from "react-icons/fa";
 import { useAuth } from "../hooks/useAuth";
 import { useProductImage } from "../hooks/useProductImages";
 import { useFavoritesContext } from "../context/FavoritesContext";
@@ -23,6 +23,7 @@ export default function ProductPage() {
   const [avgRating, setAvgRating] = useState(0);
   const [userRating, setUserRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+  const [quantity, setQuantity] = useState(1); // quantidade inicial
 
   const notify = (msg) => {
     setNotification(msg);
@@ -62,9 +63,7 @@ export default function ProductPage() {
 
     const fetchUserRating = async (productId) => {
       try {
-        const res = await fetch(`http://localhost:3000/api/rating/user/${user.id}`, {
-          credentials: "include"
-        });
+        const res = await fetch(`http://localhost:3000/api/rating/user/${user.id}`, { credentials: "include" });
         if (!res.ok) return;
 
         const json = await res.json();
@@ -91,10 +90,22 @@ export default function ProductPage() {
     setFavCount(prev => prev + (added ? 1 : -1));
   };
 
+  const handleQuantityChange = (delta) => {
+    setQuantity(prev => Math.max(1, prev + delta));
+  };
+
   const handleAddToCart = () => {
     if (!user) return navigate("/login", { state: { from: slug } });
+
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push({ ...product });
+    const existingIndex = cart.findIndex(c => c.id === product.id);
+
+    if (existingIndex >= 0) {
+      cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + quantity;
+    } else {
+      cart.push({ ...product, quantity });
+    }
+
     localStorage.setItem("cart", JSON.stringify(cart));
     notify(`✅ ${product.name} adicionado ao carrinho!`);
   };
@@ -177,16 +188,13 @@ export default function ProductPage() {
       <div className="product-details">
         <h1>{product.name}</h1>
 
-        {/* Avaliação interativa */}
         <div className="rating">
           {[...Array(5)].map((_, i) => {
             const starValue = i + 1;
             return (
               <FaStar
                 key={i}
-                className={
-                  starValue <= (hoverRating || userRating) ? "star filled" : "star"
-                }
+                className={starValue <= (hoverRating || userRating) ? "star filled" : "star"}
                 onMouseEnter={() => setHoverRating(starValue)}
                 onMouseLeave={() => setHoverRating(0)}
                 onClick={() => handleRating(starValue)}
@@ -223,7 +231,19 @@ export default function ProductPage() {
           </div>
         )}
 
+        {/* Ações: quantidade + adicionar ao carrinho */}
         <div className="actions">
+          <div className="quantity-control product-page-quantity">
+            <button onClick={() => handleQuantityChange(-1)}><FaMinus /></button>
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+            />
+            <button onClick={() => handleQuantityChange(1)}><FaPlus /></button>
+          </div>
+
           <button className="buy-btn" onClick={handleAddToCart}>Fazer Orçamento</button>
         </div>
 
