@@ -1,29 +1,28 @@
 import React, { useState, useEffect } from "react";
-import "./css/Catalogo.css";
 import { useNavigate } from "react-router";
 import { useProducts } from "~/hooks/useProducts";
 import { useProductImages } from "~/hooks/useProductImages";
+import "./css/Catalogo.css";
 
 export default function Catalog() {
   const { products, loading } = useProducts();
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
+  const [added, setAdded] = useState({});
   const navigate = useNavigate();
   const { imageUrls } = useProductImages(products);
-
-
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await fetch("http://localhost:3000/api/category/all", {
-          credentials: "include"
+          credentials: "include",
         });
         const json = await res.json();
         setCategories(json.data || []);
       } catch (err) {
-        console.error("Erro ao carregar categorias:", err);
+        console.error(err);
       }
     };
     fetchCategories();
@@ -32,17 +31,27 @@ export default function Catalog() {
   const filteredProducts = products.filter((p) => {
     return (
       p.name.toLowerCase().includes(search.toLowerCase()) &&
-      (category
-        ? p.categories.some((c) => c.name === category)
-        : true)
+      (category ? p.categories.some((c) => c.name === category) : true)
     );
   });
+
+  const addToCart = (product) => {
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const exists = cart.find((item) => item.id === product.id);
+    if (!exists) {
+      cart.push({ ...product, quantity: 1 });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      setAdded((prev) => ({ ...prev, [product.id]: true }));
+      setTimeout(() => {
+        setAdded((prev) => ({ ...prev, [product.id]: false }));
+      }, 2000);
+    }
+  };
 
   return (
     <div className="catalog-container">
       <h1>Catálogo</h1>
 
-      {/* FILTROS */}
       <div className="catalog-filters">
         <input
           type="text"
@@ -50,7 +59,6 @@ export default function Catalog() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
-
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
@@ -62,10 +70,8 @@ export default function Catalog() {
             </option>
           ))}
         </select>
-
       </div>
 
-      {/* LISTAGEM */}
       {loading ? (
         <p>Carregando produtos...</p>
       ) : (
@@ -73,17 +79,32 @@ export default function Catalog() {
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <div key={product.id} className="product-card">
+                <div className="badge">
+                  {product.categories?.[0]?.name || ""}
+                </div>
                 <img
                   src={imageUrls[product.id] || "https://via.placeholder.com/300x200"}
                   alt={product.name}
+                  loading="lazy"
+                  onClick={() => navigate(`/produto/${product.slug}`)}
+                  style={{ cursor: "pointer" }}
                 />
                 <h4>{product.name}</h4>
-                <button
-                  className="buy-btn"
-                  onClick={() => navigate(`/produto/${product.slug}`)}
-                >
-                  Ver detalhes
-                </button>
+
+                <div className="product-actions">
+                  <button
+                    className="buy-btn"
+                    onClick={() => navigate(`/produto/${product.slug}`)}
+                  >
+                    Ver detalhes
+                  </button>
+                  <button
+                    className="cart-btn"
+                    onClick={() => addToCart(product)}
+                  >
+                    {added[product.id] ? "✔ Adicionado!" : "🛒 Adicionar"}
+                  </button>
+                </div>
               </div>
             ))
           ) : (
