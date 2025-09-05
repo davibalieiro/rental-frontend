@@ -9,6 +9,8 @@ export default function Favorites() {
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
 
+  const defaultImage = "/images/placeholder.png"; // fallback local
+
   const handleRemove = async (product) => {
     if (!window.confirm("Tem certeza que deseja remover este produto dos favoritos?")) return;
     setProcessing(true);
@@ -27,6 +29,7 @@ export default function Favorites() {
 
   return (
     <div className="favorites-page">
+      {/* Cabeçalho */}
       <div className="favorites-header">
         <h2>💖 Meus Favoritos</h2>
         {localFavorites.length > 0 && (
@@ -36,32 +39,60 @@ export default function Favorites() {
         )}
       </div>
 
+      {/* Nenhum favorito */}
       {localFavorites.length === 0 ? (
-        <p className="empty-message">Você ainda não tem produtos favoritados.</p>
+        <p className="empty-message">Você ainda não tem produtos favoritados. 🛒</p>
       ) : (
         <div className="favorites-cards">
-          {localFavorites.map(f => (
+          {localFavorites.map((f) => (
             <div key={f.product.id} className="favorite-card">
-              <img
-                src={f.product.image || `http://localhost:3000/api/product/${f.product.id}/image`}
-                alt={f.product.name}
-                className="product-image"
-                onError={(e) => (e.target.src = "https://via.placeholder.com/200")}
-              />
-              <h3>{f.product.name}</h3>
-              <p className="short-description">{f.product.short_description || "Sem descrição disponível."}</p>
+              {/* Imagem do produto */}
+              <div className="image-container">
+                <img
+                  src={`http://localhost:3000/api/product/${f.product.id}/image/download`}
+                  alt={f.product.name || "Produto sem nome"}
+                  className="product-image"
+                  onError={(e) => {
+                    e.target.onerror = null; // evita loop infinito
+                    e.target.src = "/images/placeholder.png"; // fallback local
+                  }}
+                />
 
-              {f.product.price != null && <p className="price">R$ {f.product.price.toFixed(2)}</p>}
+              </div>
 
-              {f.product.favoritedCount != null && (
-                <p className="fav-count"><FaUsers /> {f.product.favoritedCount} pessoas favoritaram</p>
+              {/* Nome */}
+              <h3>{f.product.name || "Produto sem nome"}</h3>
+
+              {/* Descrição */}
+              <p className="short-description">
+                {f.product.short_description || "Sem descrição disponível."}
+              </p>
+
+              {/* Preço */}
+              {f.product.price != null && (
+                <p className="price">R$ {f.product.price.toFixed(2)}</p>
               )}
 
+              {/* Contagem de favoritos */}
+              {f.product.favoritedCount != null && (
+                <p className="fav-count">
+                  <FaUsers /> {f.product.favoritedCount} pessoas favoritaram
+                </p>
+              )}
+
+              {/* Ações */}
               <div className="card-actions">
-                <button className="btn-view" onClick={() => navigate(`/produto/${f.product.slug}`)}>
+                <button
+                  className="btn-view"
+                  onClick={() => navigate(`/produto/${f.product.slug}`)}
+                >
                   <FaExternalLinkAlt /> Ver Produto
                 </button>
-                <button className="btn-remove" onClick={() => handleRemove(f.product)} disabled={processing}>
+                <button
+                  className="btn-remove"
+                  onClick={() => handleRemove(f.product)}
+                  disabled={processing}
+                >
                   <FaTrash /> Remover
                 </button>
               </div>

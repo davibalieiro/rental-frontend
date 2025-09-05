@@ -20,12 +20,9 @@
 }
 
 .favorites-header h2 {
-  font-size: 1.8rem;
-  font-weight: 600;
+  font-size: 2rem;
+  font-weight: bold;
   color: #e63978;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
 }
 
 .btn-clear {
@@ -64,7 +61,6 @@
   background: #fff;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -76,17 +72,29 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
-.product-image {
+/* =========================
+   Imagem do produto
+========================= */
+.image-container {
   width: 100%;
   height: 180px;
-  object-fit: cover;
-  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   margin-bottom: 1rem;
+  overflow: hidden;
+  border-radius: 12px;
   background: #f6f6f6;
 }
 
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 /* =========================
-   Conteúdo do card
+   Conteúdo
 ========================= */
 .favorite-card h3 {
   font-size: 1.2rem;
@@ -168,7 +176,6 @@
 /* =========================
    Mensagens
 ========================= */
-.loading,
 .empty-message {
   text-align: center;
   font-size: 1rem;
