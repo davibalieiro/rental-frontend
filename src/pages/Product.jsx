@@ -14,89 +14,148 @@ export default function ProductPage() {
 
   const [product, setProduct] = useState(null);
   const { productImgUrl } = useProductImage(product);
+  const [mainImg, setMainImg] = useState(productImgUrl);
   const [notification, setNotification] = useState(null);
-  const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [loadingProduct, setLoadingProduct] = useState(true);
   const [relatedProducts, setRelatedProducts] = useState([]);
   const [favCount, setFavCount] = useState(0);
   const [ratingCount, setRatingCount] = useState(0);
+  const [avgRating, setAvgRating] = useState(0);
+  const [userRating, setUserRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+
+  const notify = (msg) => {
+    setNotification(msg);
+    setTimeout(() => setNotification(null), 3000);
+  };
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const res = await fetch(`http://localhost:3000/api/product/${slug}`, { credentials: "include" });
         const json = await res.json();
-        setProduct(json.data?.product || null);
+        const prod = json.data?.product || null;
+        setProduct(prod);
+        setMainImg(prod?.image || productImgUrl);
         setFavCount(json.data?.totalFavorites ?? 0);
         setRatingCount(json.data?.totalRating ?? 0);
+        setAvgRating(json.data?.avg ?? 0);
 
-        if (json.data?.product?.categories?.length > 0) {
-          const categorySlug = json.data.product.categories[0].slug;
-          const relRes = await fetch(`http://localhost:3000/api/category/${categorySlug}/products`);
-          const relJson = await relRes.json();
-          setRelatedProducts(relJson.data || []);
-        }
+        if (prod?.categories?.length) fetchRelatedProducts(prod.categories[0].slug);
+        if (user) fetchUserRating(prod.id);
       } catch (err) {
         console.error("Erro ao carregar produto:", err);
       } finally {
         setLoadingProduct(false);
       }
     };
+
+    const fetchRelatedProducts = async (categorySlug) => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/category/${categorySlug}/products`);
+        const json = await res.json();
+        setRelatedProducts(json.data?.filter(p => p.slug !== slug) || []);
+      } catch (err) {
+        console.error("Erro ao carregar produtos relacionados:", err);
+      }
+    };
+
+    const fetchUserRating = async (productId) => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/rating/user/${user.id}`, {
+          credentials: "include"
+        });
+        if (!res.ok) return;
+
+        const json = await res.json();
+        const ratingsArray = Array.isArray(json) ? json : [];
+        const ratingObj = ratingsArray.find(r => r.product.id === productId);
+        if (ratingObj) setUserRating(ratingObj.evaluation);
+      } catch (err) {
+        console.error("Erro ao buscar avaliação do usuário:", err);
+      }
+    };
+
     fetchProduct();
-  }, [slug]);
+  }, [slug, productImgUrl, user]);
 
   if (loadingProduct) return <p>Carregando produto...</p>;
   if (!product) return <p>Produto não encontrado</p>;
 
+  const isFavorite = localFavorites.some(f => f.product?.id === product.id);
+
   const handleWishlist = async () => {
-    if (!user) {
-      alert("Você precisa estar logado para salvar favoritos!");
-      navigate("/login");
-      return;
-    }
-
+    if (!user) return navigate("/login", { state: { from: slug } });
     const added = await addOrRemoveFavorite(product);
-
-    setNotification(
-      added
-        ? "❤ Produto adicionado aos favoritos"
-        : "❌ Produto removido dos favoritos"
-    );
-
+    notify(added ? "❤ Produto adicionado aos favoritos" : "❌ Produto removido dos favoritos");
     setFavCount(prev => prev + (added ? 1 : -1));
-    setTimeout(() => setNotification(null), 3000);
   };
 
   const handleAddToCart = () => {
-    if (!user) {
-      alert("Você precisa estar logado para fazer um orçamento!");
-      navigate("/login");
-      return;
-    }
-
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    cart.push({ ...product, selectedQuantity });
+    if (!user) return navigate("/login", { state: { from: slug } });
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    cart.push({ ...product });
     localStorage.setItem("cart", JSON.stringify(cart));
-
-    setNotification(`✅ ${selectedQuantity}x ${product.name} adicionado ao carrinho!`);
-    setTimeout(() => setNotification(null), 3000);
+    notify(`✅ ${product.name} adicionado ao carrinho!`);
   };
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);
-    setNotification("🔗 Link do produto copiado!");
-    setTimeout(() => setNotification(null), 3000);
+    notify("🔗 Link do produto copiado!");
   };
 
-  const isFavorite = localFavorites.some(f => f.product?.id === product.id);
+  const handleRating = async (value) => {
+    if (!user) {
+      notify("Você precisa estar logado para avaliar!");
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:3000/api/rating", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          userId: user.id,
+          productId: product.id,
+          evaluation: Number(value)
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json();
+        throw new Error(err.message || "Erro ao avaliar produto");
+      }
+
+      setUserRating(value);
+
+      // Atualiza média e total de avaliações
+      const avgRes = await fetch(`http://localhost:3000/api/product/${slug}`, { credentials: "include" });
+      const avgJson = await avgRes.json();
+      setAvgRating(avgJson.data?.avg ?? 0);
+      setRatingCount(avgJson.data?.totalRating ?? 0);
+
+      notify(`⭐ Avaliação enviada com sucesso!`);
+    } catch (err) {
+      notify(err.message);
+    }
+  };
 
   return (
     <div className="product-page">
+      {/* Imagem do Produto */}
       <div className="product-image">
-        <img src={productImgUrl || "https://via.placeholder.com/400x400"} alt={product.name} />
+        <img src={mainImg || "https://via.placeholder.com/400x400"} alt={product.name} />
         <div className="thumbnail-list">
-          {(product.gallery?.length ? product.gallery : [productImgUrl]).map((img, i) => (
-            <img key={i} src={img} alt={`thumb-${i}`} />
+          {(product.gallery?.length ? product.gallery : [mainImg]).map((img, i) => (
+            <img
+              key={i}
+              src={img}
+              alt={`thumb-${i}`}
+              onClick={() => setMainImg(img)}
+              className={mainImg === img ? "active" : ""}
+            />
           ))}
         </div>
 
@@ -114,13 +173,27 @@ export default function ProductPage() {
         </div>
       </div>
 
+      {/* Detalhes do Produto */}
       <div className="product-details">
         <h1>{product.name}</h1>
+
+        {/* Avaliação interativa */}
         <div className="rating">
-          {[...Array(5)].map((_, i) => (
-            <FaStar key={i} className={i < 4 ? "star filled" : "star"} />
-          ))}
-          <span>({ratingCount} avaliações)</span>
+          {[...Array(5)].map((_, i) => {
+            const starValue = i + 1;
+            return (
+              <FaStar
+                key={i}
+                className={
+                  starValue <= (hoverRating || userRating) ? "star filled" : "star"
+                }
+                onMouseEnter={() => setHoverRating(starValue)}
+                onMouseLeave={() => setHoverRating(0)}
+                onClick={() => handleRating(starValue)}
+              />
+            );
+          })}
+          <span>({ratingCount} avaliações, média {avgRating.toFixed(1)})</span>
         </div>
 
         <p className="short-description">{product.short_description}</p>
@@ -157,6 +230,7 @@ export default function ProductPage() {
         {notification && <div className="notification">{notification}</div>}
       </div>
 
+      {/* Produtos Relacionados */}
       {relatedProducts.length > 0 && (
         <div className="related-products">
           <h2>Produtos Relacionados</h2>
