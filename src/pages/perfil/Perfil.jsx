@@ -10,9 +10,10 @@ import { useFavorites } from "../../hooks/useFavorites";
 import { useFavoritesContext } from "~/context/FavoritesContext";
 import { useCupons } from "../../hooks/useCupons"; // 🔹 Novo hook
 import "./css/Perfil.css";
+import { useUserContext } from "~/context/UserContext";
 
 export default function Perfil() {
-  const { user, loading } = useAuth();
+  const { user, loading } = useUserContext();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("perfil");
   const [reservas, setReservas] = useState([]);

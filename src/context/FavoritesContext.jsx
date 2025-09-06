@@ -1,11 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useFavorites } from "../hooks/useFavorites";
-import { useAuth } from "../hooks/useAuth";
+import { useUserContext } from "./UserContext";
 
 const FavoritesContext = createContext();
 
 export function FavoritesProvider({ children }) {
-  const { user } = useAuth();
+  const { user } = useUserContext();
   const { favorites, toggleFavorite, loadingToggle } = useFavorites(user?.id);
   const [localFavorites, setLocalFavorites] = useState([]);
 

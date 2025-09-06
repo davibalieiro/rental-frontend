@@ -38,6 +38,7 @@ import {
 } from "recharts";
 import "./css/Admin.css";
 import { useAuth } from "~/hooks/useAuth";
+import { useUserContext } from "~/context/UserContext";
 
 export default function AdminPainel() {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -61,7 +62,7 @@ export default function AdminPainel() {
   const [loadingCoupons, setLoadingCoupons] = useState(true);
   const [errorCoupons, setErrorCoupons] = useState(null);
 
-  const { user, loading } = useAuth();
+  const { user, loading } = useUserContext();
   const navigate = useNavigate();
 
   // --- FETCH DASHBOARD STATS ---

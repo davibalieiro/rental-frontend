@@ -5,11 +5,12 @@ import { useAuth } from "../hooks/useAuth";
 import { useProductImage } from "../hooks/useProductImages";
 import { useFavoritesContext } from "../context/FavoritesContext";
 import "./css/Products.css";
+import { useUserContext } from "~/context/UserContext";
 
 export default function ProductPage() {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user } = useUserContext();
   const { localFavorites, addOrRemoveFavorite, loadingToggle } = useFavoritesContext();
 
   const [product, setProduct] = useState(null);

@@ -4,6 +4,7 @@ import { useProductImages } from "~/hooks/useProductImages";
 import { useProducts } from "~/hooks/useProducts";
 import { FaPlus, FaMinus, FaTrashAlt } from "react-icons/fa";
 import "./css/CartPage.css";
+import { useUserContext } from "~/context/UserContext";
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
@@ -13,6 +14,7 @@ export default function CartPage() {
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponMessage, setCouponMessage] = useState("");
+  const { user } = useUserContext();
 
   const { products } = useProducts();
   const { imageUrls } = useProductImages(products);
@@ -95,8 +97,25 @@ export default function CartPage() {
 
       const data = await res.json().catch(() => null);
 
-      if (!res.ok || !data || !data.data) {
+      const couponData = data?.data;
+      if (!couponData) {
         setCouponMessage(data?.error || "Cupom inválido ou não encontrado.");
+
+        setAppliedCoupon(null);
+        return;
+      }
+      const allowedUsers = Array.isArray(couponData?.allowedUsers) ? couponData.allowedUsers : [];
+      const usersThatUsedCoupon = Array.isArray(couponData?.usersThatUsedCoupon) ? couponData.usersThatUsedCoupon : [];
+      console.log(allowedUsers);
+
+      if (!res.ok || !allowedUsers.some(u => u.id === user.id)) {
+        setCouponMessage(data?.error || "Cupom inválido ou não encontrado.");
+        setAppliedCoupon(null);
+        return;
+      }
+
+      if (usersThatUsedCoupon.some(u => u.id === user.id)) {
+        setCouponMessage("Você já usou esse cupom.");
         setAppliedCoupon(null);
         return;
       }
@@ -115,7 +134,10 @@ export default function CartPage() {
       }
 
       setAppliedCoupon(coupon);
+      // GUARDA ESSE CUPOM EM ALGUM CANTO, SÓ VAI VALIDAR (/use/couponId) QUANDO CONFIRMAR A COMPRA
+
       setCouponMessage(`Cupom aplicado: ${coupon.text}`);
+
     } catch (err) {
       console.error("Erro ao aplicar cupom:", err);
       setCouponMessage("Erro ao validar cupom.");
