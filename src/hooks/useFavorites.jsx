@@ -29,6 +29,7 @@ export function useFavorites(userId) {
     }
 
     fetchFavorites();
+    console.log(favorites);
   }, [userId]);
 
   async function toggleFavorite(productId) {
@@ -71,7 +72,5 @@ export function useFavorites(userId) {
     }
   }
 
-  // A função fetchFavorites não precisa mais ser exportada,
-  // pois o hook agora cuida disso internamente.
   return { favorites, loadingFavs, loadingToggle, toggleFavorite };
 }

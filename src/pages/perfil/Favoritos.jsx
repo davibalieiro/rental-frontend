@@ -4,12 +4,11 @@ import { FaTrash, FaExternalLinkAlt, FaUsers } from "react-icons/fa";
 import { useFavoritesContext } from "../../context/FavoritesContext";
 import "./css/Favoritos.css";
 
-export default function Favorites() {
-  const { localFavorites, addOrRemoveFavorite } = useFavoritesContext();
+export default function Favorites({ localFavorites, addOrRemoveFavorite }) {
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
 
-  const defaultImage = "/placeholder.svg"; // fallback local
+  const defaultImage = "/placeholder.svg";
 
   const handleRemove = async (product) => {
     if (!window.confirm("Tem certeza que deseja remover este produto dos favoritos?")) return;

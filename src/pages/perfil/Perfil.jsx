@@ -7,6 +7,7 @@ import Favoritos from "./Favoritos";
 import Config from "./Config";
 import MeusCupons from "./MeusCupons"; // 🔹 Novo componente
 import { useFavorites } from "../../hooks/useFavorites";
+import { useFavoritesContext } from "~/context/FavoritesContext";
 import { useCupons } from "../../hooks/useCupons"; // 🔹 Novo hook
 import "./css/Perfil.css";
 
@@ -17,7 +18,9 @@ export default function Perfil() {
   const [reservas, setReservas] = useState([]);
 
   // Hook de favoritos
-  const { favorites, loadingFavs, toggleFavorite, fetchFavorites } = useFavorites(user?.id);
+  // const { favorites, loadingFavs, toggleFavorite } = useFavorites(user?.id);
+  const { localFavorites, addOrRemoveFavorite, loadingToggle } = useFavoritesContext();
+
 
   // Hook de cupons
   const { cupons, loadingCupons, usarCupom } = useCupons(
@@ -90,19 +93,16 @@ export default function Perfil() {
 
       {/* Conteúdo */}
       <div className="perfil-content">
-        {activeTab === "perfil" && <PerfilInfo user={user} favorites={favorites} />}
+        {activeTab === "perfil" && <PerfilInfo user={user} favorites={localFavorites} />}
         {activeTab === "reservas" && <MinhasReservas reservas={reservas} />}
         {activeTab === "favoritos" && (
           <>
-            {loadingFavs ? (
-              <p>Carregando favoritos...</p>
-            ) : (
-              <Favoritos
-                favorites={favorites}
-                toggleFavorite={toggleFavorite}
-                fetchFavorites={fetchFavorites}
-              />
-            )}
+
+            <Favoritos
+              localFavorites={localFavorites}
+              addOrRemoveFavorite={addOrRemoveFavorite}
+            />
+
           </>
         )}
         {activeTab === "cupons" && (

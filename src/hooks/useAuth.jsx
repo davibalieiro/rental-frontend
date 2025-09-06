@@ -13,7 +13,7 @@ export function useAuth() {
         if (!res.ok) throw new Error("Não autenticado");
 
         const data = await res.json();
-        setUser(data); // aqui ajustamos para data diretamente
+        setUser(data);
       } catch (err) {
         setUser(null);
       } finally {
@@ -22,6 +22,7 @@ export function useAuth() {
     };
 
     fetchUser();
+    console.log(user, "user")
   }, []);
 
   return { user, loading };

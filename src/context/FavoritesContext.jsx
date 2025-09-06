@@ -19,7 +19,7 @@ export function FavoritesProvider({ children }) {
 
     const isFav = localFavorites.some(f => f.product?.id === product.id);
 
-    await toggleFavorite(product.id); // atualiza backend
+    await toggleFavorite(product.id);
 
     setLocalFavorites(prev =>
       isFav
