@@ -45,7 +45,6 @@ export default function Coupons() {
         .split(",")
         .map((v) => v.trim())
         .filter((v) => v !== "")
-        .map(Number);
       setForm({ ...form, allowedUsers: ids, allowedUsersInput: value });
     } else {
       setForm({ ...form, [name]: type === "checkbox" ? checked : value });
