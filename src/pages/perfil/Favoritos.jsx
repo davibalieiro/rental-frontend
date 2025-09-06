@@ -9,7 +9,7 @@ export default function Favorites() {
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
 
-  const defaultImage = "/images/placeholder.png"; // fallback local
+  const defaultImage = "/placeholder.svg"; // fallback local
 
   const handleRemove = async (product) => {
     if (!window.confirm("Tem certeza que deseja remover este produto dos favoritos?")) return;
@@ -53,8 +53,11 @@ export default function Favorites() {
                   alt={f.product.name || "Produto sem nome"}
                   className="product-image"
                   onError={(e) => {
-                    e.target.onerror = null; // evita loop infinito
-                    e.target.src = "/images/placeholder.png"; // fallback local
+                    console.error(e)
+                    const target = e.target;
+                    if (target.src !== window.location.origin + defaultImage) {
+                      target.src = defaultImage // fallback local
+                    }
                   }}
                 />
 
