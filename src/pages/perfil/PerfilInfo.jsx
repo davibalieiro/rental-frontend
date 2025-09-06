@@ -8,8 +8,13 @@ export default function PerfilInfo({ user, favorites = [] }) {
         <p><strong>Nome:</strong> {user?.name}</p>
         <p><strong>Email:</strong> {user?.email}</p>
         <p><strong>Telefone:</strong> {user?.phone || "Não informado"}</p>
-        <p><strong>Status:</strong> {user?.status || "Novo Usuário"}</p>
-        <p><strong>Data de Cadastro:</strong> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("pt-BR") : "Não disponível"}</p>
+        <p><strong>Status:</strong> {user?.is_active ? "Ativo" : "Inativo"}</p>
+        <p>
+          <strong>Data de Cadastro:</strong>{" "}
+          {user?.created_at
+            ? new Date(user.created_at).toLocaleString("pt-BR")
+            : "Não disponível"}
+        </p>
         <p><strong>Favoritos Salvos:</strong> {favorites.length}</p>
       </div>
     </div>
