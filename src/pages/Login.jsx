@@ -17,6 +17,7 @@ function SuccessModal({ message }) {
 }
 
 export default function Auth() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,8 +39,8 @@ export default function Auth() {
 
     try {
       const url = isLogin
-        ? "http://localhost:3000/api/login"
-        : "http://localhost:3000/api/register";
+        ? `${API_URL}/login`
+        : `${API_URL}/register`;
 
       const body = isLogin
         ? { email, password }

@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./css/Materials.css";
 
 export default function Materials() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const [materials, setMaterials] = useState([]);
   const [form, setForm] = useState({ name: "" });
   const [editing, setEditing] = useState(null);
@@ -14,7 +15,7 @@ export default function Materials() {
   async function fetchMaterials() {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/api/material/all", {
+      const res = await fetch(`${API_URL}/material/all`, {
         method: "GET",
         credentials: "include",
       });
@@ -33,8 +34,8 @@ export default function Materials() {
     e.preventDefault();
     try {
       const url = editing
-        ? `http://localhost:3000/api/material/${editing}`
-        : "http://localhost:3000/api/material";
+        ? `${API_URL}/material/${editing}`
+        : `${API_URL}/material`;
       const method = editing ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -60,7 +61,7 @@ export default function Materials() {
   async function handleDelete(id) {
     if (!window.confirm("Tem certeza que deseja excluir este material?")) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/material/${id}`, {
+      const res = await fetch(`${API_URL}/material/${id}`, {
         method: "DELETE",
         credentials: "include",
       });

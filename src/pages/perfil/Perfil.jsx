@@ -19,8 +19,7 @@ export default function Perfil() {
   const [reservas, setReservas] = useState([]);
 
   // Hook de favoritos
-  // const { favorites, loadingFavs, toggleFavorite } = useFavorites(user?.id);
-  const { localFavorites, addOrRemoveFavorite, loadingToggle } = useFavoritesContext();
+  const { localFavorites, addOrRemoveFavorite } = useFavoritesContext();
 
 
   // Hook de cupons

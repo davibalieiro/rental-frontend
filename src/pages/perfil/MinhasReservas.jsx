@@ -4,6 +4,8 @@ import { FaExternalLinkAlt, FaTimesCircle } from "react-icons/fa";
 import "./css/MinhasReservas.css";
 
 export default function MinhasReservas({ reservas = [] }) {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
+
   const navigate = useNavigate();
 
   function formatarData(data) {
@@ -31,7 +33,7 @@ export default function MinhasReservas({ reservas = [] }) {
               <div className="reserva-image">
                 {r.product?.id ? (
                   <img
-                    src={`http://localhost:3000/api/product/${r.product.id}/image`}
+                    src={`${API_URL}/product/${r.product.id}/image`}
                     alt={r.product.name}
                   />
                 ) : (

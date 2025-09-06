@@ -15,7 +15,7 @@ export default function Users() {
   // Função para buscar os cupons privados da API
   const fetchPrivateCoupons = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/coupons/all", {
+      const res = await fetch(`${API_URL}/coupons/all`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Não foi possível carregar os cupons");
@@ -33,7 +33,7 @@ export default function Users() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/api/user/all", {
+      const res = await fetch(`${API_URL}/user/all`, {
         credentials: "include",
       });
 
@@ -62,7 +62,7 @@ export default function Users() {
   const handleDelete = async (id) => {
     if (!window.confirm("Tem certeza que deseja excluir este usuário?")) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/user/${id}`, {
+      const res = await fetch(`${API_URL}/user/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -89,7 +89,7 @@ export default function Users() {
       };
 
       const userRes = await fetch(
-        `http://localhost:3000/api/user/${editingUser.id}`,
+        `${API_URL}/user/${editingUser.id}`,
         {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
@@ -123,7 +123,7 @@ export default function Users() {
       const couponUpdates = [];
 
       const updateCoupon = async (couponId, action) => {
-        const couponRes = await fetch(`http://localhost:3000/api/coupons/${couponId}`, { credentials: "include" });
+        const couponRes = await fetch(`${API_URL}/coupons/${couponId}`, { credentials: "include" });
         if (!couponRes.ok) throw new Error(`Não foi possível carregar o cupom ${couponId}`);
         const couponData = (await couponRes.json()).data;
 
@@ -147,7 +147,7 @@ export default function Users() {
 
         delete couponPayload.id;
 
-        return fetch(`http://localhost:3000/api/coupons/${couponId}`, {
+        return fetch(`${API_URL}/coupons/${couponId}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',

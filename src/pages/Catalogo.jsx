@@ -5,6 +5,7 @@ import { useProductImages } from "~/hooks/useProductImages";
 import "./css/Catalogo.css";
 
 export default function Catalog() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const { products, loading } = useProducts();
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
@@ -16,7 +17,7 @@ export default function Catalog() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/category/all", {
+        const res = await fetch(`${API_URL}/category/all`, {
           credentials: "include",
         });
         const json = await res.json();

@@ -7,6 +7,7 @@ import "./css/CartPage.css";
 import { useUserContext } from "~/context/UserContext";
 
 export default function CartPage() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const [cart, setCart] = useState([]);
   const [notes, setNotes] = useState("");
   const [message, setMessage] = useState("");
@@ -91,7 +92,7 @@ export default function CartPage() {
     if (!couponCode.trim()) return;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/coupons/code/${couponCode}`, {
+      const res = await fetch(`${API_URL}/coupons/code/${couponCode}`, {
         credentials: "include",
       });
 

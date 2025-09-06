@@ -41,6 +41,7 @@ import { useAuth } from "~/hooks/useAuth";
 import { useUserContext } from "~/context/UserContext";
 
 export default function AdminPainel() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const [activeTab, setActiveTab] = useState("dashboard");
   const [darkMode, setDarkMode] = useState(false);
   const [menuOpen, setMenuOpen] = useState(true);
@@ -70,7 +71,7 @@ export default function AdminPainel() {
     const fetchData = async () => {
       setStatus("loading");
       try {
-        const res = await fetch("http://localhost:3000/api/stats", {
+        const res = await fetch(`${API_URL}/stats`, {
           credentials: "include",
         });
         const json = await res.json();
@@ -120,25 +121,6 @@ export default function AdminPainel() {
     fetchData();
   }, []);
 
-  // --- FETCH COUPONS ---
-  const fetchCoupons = async () => {
-    try {
-      setLoadingCoupons(true);
-      setErrorCoupons(null);
-      const res = await fetch("http://localhost:5000/api/coupons/all", {
-        headers: { Authorization: `Bearer ${user?.token}` },
-      });
-      if (!res.ok) throw new Error(`Erro ${res.status}: ${res.statusText}`);
-      const data = await res.json();
-      setCoupons(data.data || []);
-    } catch (err) {
-      console.error("Erro ao buscar cupons:", err);
-      setErrorCoupons(err.message);
-    } finally {
-      setLoadingCoupons(false);
-    }
-  };
-
   useEffect(() => {
     if (user?.token && activeTab === "coupons") fetchCoupons();
   }, [user, activeTab]);
@@ -146,7 +128,7 @@ export default function AdminPainel() {
   // --- LOGOUT ---
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3000/api/logout", {
+      await fetch(`${API_URL}/logout`, {
         method: "POST",
         credentials: "include",
       });
@@ -231,89 +213,6 @@ export default function AdminPainel() {
             <Bar dataKey="value" fill={color} radius={[5, 5, 5, 5]} />
           </BarChart>
         </ResponsiveContainer>
-      </div>
-    );
-  };
-
-  // --- CUPONS ---
-  const toggleCouponStatus = async (coupon) => {
-    try {
-      await fetch(`http://localhost:5000/api/coupons/${coupon.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${user.token}`,
-        },
-        body: JSON.stringify({ isActive: !coupon.isActive }),
-      });
-      fetchCoupons();
-    } catch (err) {
-      console.error("Erro ao atualizar cupom:", err);
-    }
-  };
-
-  const deleteCoupon = async (coupon) => {
-    if (!window.confirm("Tem certeza que deseja deletar este cupom?")) return;
-    try {
-      await fetch(`http://localhost:5000/api/coupons/${coupon.id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${user.token}` },
-      });
-      fetchCoupons();
-    } catch (err) {
-      console.error("Erro ao deletar cupom:", err);
-    }
-  };
-
-  const renderCoupons = () => {
-    if (loadingCoupons) return <p>Carregando cupons...</p>;
-    if (errorCoupons) return <p>Erro: {errorCoupons}</p>;
-
-    return (
-      <div className="coupons">
-        <h2>Cupons</h2>
-        <table className="admin-table">
-          <thead>
-            <tr>
-              <th>Código</th>
-              <th>Descrição</th>
-              <th>Benefício</th>
-              <th>Expira Em</th>
-              <th>Ativo</th>
-              <th>Ações</th>
-            </tr>
-          </thead>
-          <tbody>
-            {coupons.map((coupon) => (
-              <tr key={coupon.id}>
-                <td>{coupon.code}</td>
-                <td>{coupon.text}</td>
-                <td>{coupon.benefit}</td>
-                <td>{new Date(coupon.expiresIn).toLocaleDateString()}</td>
-                <td>
-                  <button
-                    className="status-btn"
-                    onClick={() => toggleCouponStatus(coupon)}
-                  >
-                    {coupon.isActive ? <FaToggleOn color="green" /> : <FaToggleOff color="red" />}
-                  </button>
-                </td>
-                <td>
-                  <button className="delete-btn" onClick={() => deleteCoupon(coupon)}>
-                    <FaTrashAlt />
-                  </button>
-                </td>
-              </tr>
-            ))}
-            {coupons.length === 0 && (
-              <tr>
-                <td colSpan="6" style={{ textAlign: "center" }}>
-                  Nenhum cupom encontrado.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
       </div>
     );
   };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./css/Config.css";
 
 export default function Config() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const [formData, setFormData] = useState({
     oldPassword: "",
     newPassword: "",
@@ -39,7 +40,7 @@ export default function Config() {
       return setError("As senhas não coincidem.");
     }
     try {
-      const res = await fetch("http://localhost:3000/api/user/change-password", {
+      const res = await fetch(`${API_URL}/user/change-password`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -64,7 +65,7 @@ export default function Config() {
 
   const handleDeleteAccount = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/user/delete", {
+      const res = await fetch(`${API_URL}/user/delete`, {
         method: "DELETE",
         credentials: "include",
       });
@@ -186,7 +187,7 @@ export default function Config() {
             <div className="modal-actions">
               <button className="btn-cancel" onClick={() => setShowDeleteModal(false)}>Cancelar</button>
               <button className="btn-danger" disabled={!canDelete} onClick={() => {
-                if(formData.confirmDelete === "DELETE") handleDeleteAccount();
+                if (formData.confirmDelete === "DELETE") handleDeleteAccount();
                 else setError("Digite DELETE para confirmar");
               }}>Confirmar Exclusão</button>
             </div>

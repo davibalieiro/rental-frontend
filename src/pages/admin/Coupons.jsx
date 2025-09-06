@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./css/Coupons.css";
 
 export default function Coupons() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const [coupons, setCoupons] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,7 +21,7 @@ export default function Coupons() {
   const fetchCoupons = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/api/coupons/all", {
+      const res = await fetch(`${API_URL}/coupons/all`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Falha ao buscar cupons");
@@ -54,8 +55,8 @@ export default function Coupons() {
   const handleSubmit = async () => {
     try {
       const url = editingCoupon
-        ? `http://localhost:3000/api/coupons/${editingCoupon.id}`
-        : "http://localhost:3000/api/coupons";
+        ? `${API_URL}/coupons/${editingCoupon.id}`
+        : `${API_URL}/coupons`;
       const method = editingCoupon ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -88,7 +89,7 @@ export default function Coupons() {
   const handleDelete = async (id) => {
     if (!window.confirm("Deseja realmente deletar este cupom?")) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/coupons/${id}`, {
+      const res = await fetch(`${API_URL}/coupons/${id}`, {
         method: "DELETE",
         credentials: "include",
       });

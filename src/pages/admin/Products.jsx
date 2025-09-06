@@ -5,6 +5,7 @@ import { useProducts } from "~/hooks/useProducts";
 import { useProductImages } from "~/hooks/useProductImages";
 
 export default function Products() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const { products } = useProducts();
   const { imageUrls } = useProductImages(products);
   const [categories, setCategories] = useState([]);
@@ -22,8 +23,8 @@ export default function Products() {
   useEffect(() => {
     async function fetchOptions() {
       try {
-        const catRes = await fetch("http://localhost:3000/api/category/all");
-        const matRes = await fetch("http://localhost:3000/api/material/all");
+        const catRes = await fetch(`${API_URL}/api/category/all`);
+        const matRes = await fetch(`${API_URL}/api/material/all`);
         const catData = await catRes.json();
         const matData = await matRes.json();
         setCategories(catData.data || []);
@@ -38,7 +39,7 @@ export default function Products() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:3000/api/product", {
+      const res = await fetch(`${API_URL}/api/product`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -50,7 +51,7 @@ export default function Products() {
       if (imageFile) {
         const formData = new FormData();
         formData.append("image", imageFile);
-        await fetch(`http://localhost:3000/api/upload-image/${productId}`, {
+        await fetch(`${API_URL}/api/upload-image/${productId}`, {
           method: "POST",
           body: formData,
           credentials: "include",

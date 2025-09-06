@@ -5,6 +5,8 @@ import { faEnvelope, faPhone, faMapMarkerAlt } from "@fortawesome/free-solid-svg
 import { faInstagram, faFacebook, faWhatsapp } from "@fortawesome/free-brands-svg-icons";
 
 export default function Contact() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -15,7 +17,7 @@ export default function Contact() {
     setStatus("Enviando...");
 
     try {
-      const response = await fetch("http://localhost:3000/api/contact", {
+      const response = await fetch(`${API_URL}/contact`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, message }),

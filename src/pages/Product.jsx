@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { FaHeart, FaShareAlt, FaStar, FaPlus, FaMinus } from "react-icons/fa";
-import { useAuth } from "../hooks/useAuth";
 import { useProductImage } from "../hooks/useProductImages";
 import { useFavoritesContext } from "../context/FavoritesContext";
 import "./css/Products.css";
 import { useUserContext } from "~/context/UserContext";
 
 export default function ProductPage() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const { slug } = useParams();
   const navigate = useNavigate();
   const { user } = useUserContext();
@@ -34,7 +34,7 @@ export default function ProductPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/product/${slug}`, { credentials: "include" });
+        const res = await fetch(`${API_URL}/product/${slug}`, { credentials: "include" });
         const json = await res.json();
         const prod = json.data?.product || null;
         setProduct(prod);
@@ -54,7 +54,7 @@ export default function ProductPage() {
 
     const fetchRelatedProducts = async (categorySlug) => {
       try {
-        const res = await fetch(`http://localhost:3000/api/category/${categorySlug}/products`);
+        const res = await fetch(`${API_URL}/category/${categorySlug}/products`);
         const json = await res.json();
         setRelatedProducts(json.data?.filter(p => p.slug !== slug) || []);
       } catch (err) {
@@ -64,7 +64,7 @@ export default function ProductPage() {
 
     const fetchUserRating = async (productId) => {
       try {
-        const res = await fetch(`http://localhost:3000/api/rating/user/${user.id}`, { credentials: "include" });
+        const res = await fetch(`${API_URL}/rating/user/${user.id}`, { credentials: "include" });
         if (!res.ok) return;
 
         const json = await res.json();
@@ -124,7 +124,7 @@ export default function ProductPage() {
     }
 
     try {
-      const res = await fetch("http://localhost:3000/api/rating", {
+      const res = await fetch(`${API_URL}/rating`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -143,7 +143,7 @@ export default function ProductPage() {
       setUserRating(value);
 
       // Atualiza média e total de avaliações
-      const avgRes = await fetch(`http://localhost:3000/api/product/${slug}`, { credentials: "include" });
+      const avgRes = await fetch(`${API_URL}/product/${slug}`, { credentials: "include" });
       const avgJson = await avgRes.json();
       setAvgRating(avgJson.data?.avg ?? 0);
       setRatingCount(avgJson.data?.totalRating ?? 0);

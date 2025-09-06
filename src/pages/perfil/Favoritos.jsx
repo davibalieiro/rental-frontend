@@ -5,6 +5,8 @@ import { useFavoritesContext } from "../../context/FavoritesContext";
 import "./css/Favoritos.css";
 
 export default function Favorites({ localFavorites, addOrRemoveFavorite }) {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
+
   const [processing, setProcessing] = useState(false);
   const navigate = useNavigate();
 
@@ -48,7 +50,7 @@ export default function Favorites({ localFavorites, addOrRemoveFavorite }) {
               {/* Imagem do produto */}
               <div className="image-container">
                 <img
-                  src={`http://localhost:3000/api/product/${f.product.id}/image/download`}
+                  src={`${API_URL}/product/${f.product.id}/image/download`}
                   alt={f.product.name || "Produto sem nome"}
                   className="product-image"
                   onError={(e) => {

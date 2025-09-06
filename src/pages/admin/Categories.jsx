@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./css/Categorias.css";
 
 export default function Categories({ darkMode }) {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({ name: "" });
   const [editing, setEditing] = useState(null);
@@ -14,7 +15,7 @@ export default function Categories({ darkMode }) {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const res = await fetch("http://localhost:3000/api/category/all", {
+      const res = await fetch(`${API_URL}/category/all`, {
         method: "GET",
         credentials: "include",
       });
@@ -33,8 +34,8 @@ export default function Categories({ darkMode }) {
     e.preventDefault();
     try {
       const url = editing
-        ? `http://localhost:3000/api/category/${editing}`
-        : "http://localhost:3000/api/category";
+        ? `${API_URL}/category/${editing}`
+        : `${API_URL}/category`;
       const method = editing ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -60,7 +61,7 @@ export default function Categories({ darkMode }) {
   const handleDelete = async (id) => {
     if (!window.confirm("Tem certeza que deseja excluir esta categoria?")) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/category/${id}`, {
+      const res = await fetch(`${API_URL}/category/${id}`, {
         method: "DELETE",
         credentials: "include",
       });
