@@ -1,23 +1,20 @@
 import { useState, useEffect } from "react";
 
-export function useCupons(user, token) {
+export function useCupons(user) {
   const [cupons, setCupons] = useState([]);
   const [loadingCupons, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!user || !token) return;
+    if (!user) return;
 
     async function fetchCupons() {
       try {
         setLoading(true);
         setError(null);
 
-        const res = await fetch("http://localhost:5000/api/coupons/my", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // garante que tá autenticado
-          },
+        const res = await fetch("http://localhost:3000/api/coupons/my", {
+          credentials: "include"
         });
 
         if (!res.ok) {
@@ -35,7 +32,7 @@ export function useCupons(user, token) {
     }
 
     fetchCupons();
-  }, [user, token]);
+  }, [user]);
 
   return { cupons, loadingCupons, error };
 }

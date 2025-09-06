@@ -11,19 +11,18 @@ import { useCupons } from "../../hooks/useCupons"; // 🔹 Novo hook
 import "./css/Perfil.css";
 
 export default function Perfil() {
-  const { user, loading, token } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("perfil");
   const [reservas, setReservas] = useState([]);
 
   // Hook de favoritos
   const { favorites, loadingFavs, toggleFavorite, fetchFavorites } =
-    useFavorites(user, token);
+    useFavorites(user,);
 
   // Hook de cupons
   const { cupons, loadingCupons, usarCupom, fetchCupons } = useCupons(
-    user,
-    token
+    user
   );
 
   useEffect(() => {
