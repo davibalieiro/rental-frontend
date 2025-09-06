@@ -17,11 +17,10 @@ export default function Perfil() {
   const [reservas, setReservas] = useState([]);
 
   // Hook de favoritos
-  const { favorites, loadingFavs, toggleFavorite, fetchFavorites } =
-    useFavorites(user,);
+  const { favorites, loadingFavs, toggleFavorite, fetchFavorites } = useFavorites(user?.id);
 
   // Hook de cupons
-  const { cupons, loadingCupons, usarCupom, fetchCupons } = useCupons(
+  const { cupons, loadingCupons, usarCupom } = useCupons(
     user
   );
 
@@ -91,7 +90,7 @@ export default function Perfil() {
 
       {/* Conteúdo */}
       <div className="perfil-content">
-        {activeTab === "perfil" && <PerfilInfo user={user} />}
+        {activeTab === "perfil" && <PerfilInfo user={user} favorites={favorites} />}
         {activeTab === "reservas" && <MinhasReservas reservas={reservas} />}
         {activeTab === "favoritos" && (
           <>
