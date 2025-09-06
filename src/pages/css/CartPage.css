@@ -273,6 +273,35 @@
   cursor: pointer;
 }
 
+/* CUPOM */
+.coupon-section {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.coupon-section input {
+  flex: 1;
+  padding: 0.7rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.coupon-section button {
+  background: #ff6600;
+  color: #fff;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.3s;
+}
+
+.coupon-section button:hover {
+  background: #e65c00;
+}
+
 /* RESPONSIVO */
 @media (max-width: 900px) {
   .cart-content {

@@ -1,4 +1,3 @@
-// CartPage.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProductImages } from "~/hooks/useProductImages";
@@ -8,11 +7,15 @@ import "./css/CartPage.css";
 
 export default function CartPage() {
   const [cart, setCart] = useState([]);
+  const [notes, setNotes] = useState("");
+  const [message, setMessage] = useState("");
+  const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponMessage, setCouponMessage] = useState("");
+
   const { products } = useProducts();
   const { imageUrls } = useProductImages(products);
-  const [message, setMessage] = useState("");
-  const [notes, setNotes] = useState("");
-  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +43,9 @@ export default function CartPage() {
   const clearCart = () => {
     setShowClearConfirm(false);
     updateCart([], "Carrinho limpo com sucesso.");
+    setAppliedCoupon(null);
+    setCouponCode("");
+    setCouponMessage("");
   };
 
   const increaseQuantity = (index) => {
@@ -75,6 +81,47 @@ export default function CartPage() {
   const suggestedProducts = products
     .filter((p) => !cart.find((c) => c.id === p.id))
     .slice(0, 4);
+
+  // ========================
+  // CUPOM
+  // ========================
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+
+    try {
+      const res = await fetch(`http://localhost:3000/api/coupons/code/${couponCode}`, {
+        credentials: "include",
+      });
+
+      const data = await res.json().catch(() => null);
+
+      if (!res.ok || !data || !data.data) {
+        setCouponMessage(data?.error || "Cupom inválido ou não encontrado.");
+        setAppliedCoupon(null);
+        return;
+      }
+
+      const coupon = data.data;
+
+      if (!coupon.isActive) {
+        setCouponMessage("Este cupom está inativo.");
+        setAppliedCoupon(null);
+        return;
+      }
+      if (new Date(coupon.expiresIn) < new Date()) {
+        setCouponMessage("Este cupom expirou.");
+        setAppliedCoupon(null);
+        return;
+      }
+
+      setAppliedCoupon(coupon);
+      setCouponMessage(`Cupom aplicado: ${coupon.text}`);
+    } catch (err) {
+      console.error("Erro ao aplicar cupom:", err);
+      setCouponMessage("Erro ao validar cupom.");
+      setAppliedCoupon(null);
+    }
+  };
 
   return (
     <div className="cart-container">
@@ -150,6 +197,26 @@ export default function CartPage() {
             )}
           </div>
 
+          {/* CUPOM */}
+          <div className="card">
+            <h2>Cupom de Desconto</h2>
+            <div className="coupon-section">
+              <input
+                type="text"
+                placeholder="Digite seu cupom"
+                value={couponCode}
+                onChange={(e) => setCouponCode(e.target.value)}
+              />
+              <button onClick={handleApplyCoupon}>Aplicar</button>
+            </div>
+            {couponMessage && <p className="feedback-msg">{couponMessage}</p>}
+            {appliedCoupon && (
+              <p style={{ color: "green", fontWeight: "bold" }}>
+                Cupom aplicado: {appliedCoupon.text} ({appliedCoupon.benefit})
+              </p>
+            )}
+          </div>
+
           <div className="card">
             <h2>Resumo da Locação</h2>
             <textarea
@@ -167,13 +234,16 @@ export default function CartPage() {
             </button>
           </div>
 
-          {/* Sugestões de produtos */}
           {suggestedProducts.length > 0 && (
             <div className="card">
               <h2>Você pode gostar</h2>
               <div className="suggestion-list">
                 {suggestedProducts.map((p) => (
-                  <div key={p.id} className="suggestion-item" onClick={() => navigate(`/produto/${p.slug}`)}>
+                  <div
+                    key={p.id}
+                    className="suggestion-item"
+                    onClick={() => navigate(`/produto/${p.slug}`)}
+                  >
                     <img src={imageUrls[p.id]} alt={p.name} />
                     <p>{p.name}</p>
                   </div>
