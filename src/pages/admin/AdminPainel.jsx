@@ -30,6 +30,10 @@ import {
   CartesianGrid,
   BarChart,
   Bar,
+  PieChart,
+  Pie,
+  Cell,
+  Legend,
 } from "recharts";
 import "./css/Admin.css";
 import { useAuth } from "~/hooks/useAuth";
@@ -38,7 +42,7 @@ export default function AdminPainel() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [darkMode, setDarkMode] = useState(false);
   const [menuOpen, setMenuOpen] = useState(true);
-  const [status, setStatus] = useState("loading"); // "loading" | "success" | "error"
+  const [status, setStatus] = useState("loading");
 
   const [usersData, setUsersData] = useState([]);
   const [categoriesData, setCategoriesData] = useState([]);
@@ -72,7 +76,6 @@ export default function AdminPainel() {
 
         if (!data) throw new Error("Dados não encontrados");
 
-        // Atualiza cards
         setCardStats({
           products: data.totalProducts || 0,
           categories: data.categories?.length || 0,
@@ -80,12 +83,10 @@ export default function AdminPainel() {
           users: data.totalUsers || 0,
         });
 
-        // Usuários ativos/inativos
         setUsersData([
           { name: "Usuários", Ativos: data.users?.active || 0, Inativos: data.users?.inactive || 0 },
         ]);
 
-        // Produtos por categoria
         setCategoriesData(
           data.categories?.map((c) => ({
             name: c.name,
@@ -93,7 +94,6 @@ export default function AdminPainel() {
           })) || []
         );
 
-        // Produtos por material
         setMaterialsData(
           data.materials?.map((m) => ({
             name: m.name,
@@ -101,7 +101,6 @@ export default function AdminPainel() {
           })) || []
         );
 
-        // Favoritos por produto
         setFavoritesData(
           data.favorites?.map((f) => ({
             name: f.name,
@@ -156,31 +155,48 @@ export default function AdminPainel() {
     }
   };
 
-  // --- CHARTS ---
-  const renderLineChart = (title, data) => (
-    <div className="chart-card">
-      <h3>{title}</h3>
-      <ResponsiveContainer width="100%" height={250}>
-        <LineChart data={data}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#ccc" />
-          <XAxis dataKey="name" stroke="#8884d8" />
-          <YAxis stroke="#8884d8" />
-          <Tooltip
-            contentStyle={{
-              backgroundColor: darkMode ? "#2b2b2b" : "#fff",
-              borderRadius: 6,
-              fontSize: 12,
-              padding: 8,
-            }}
-          />
-          <Line type="monotone" dataKey="Ativos" stroke="#32cd32" strokeWidth={3} />
-          <Line type="monotone" dataKey="Inativos" stroke="#ff4500" strokeWidth={3} />
-        </LineChart>
-      </ResponsiveContainer>
-    </div>
-  );
+  // --- GRÁFICOS ---
+  const renderPieChart = (title, data) => {
+    const COLORS = ["#32cd32", "#ff4500"]; // Ativos = verde, Inativos = vermelho
+    const pieData = [
+      { name: "Ativos", value: data[0]?.Ativos || 0 },
+      { name: "Inativos", value: data[0]?.Inativos || 0 },
+    ];
 
-  const renderHorizontalBarChart = (title, data) => {
+    return (
+      <div className="chart-card">
+        <h3>{title}</h3>
+        <ResponsiveContainer width="100%" height={250}>
+          <PieChart>
+            <Pie
+              data={pieData}
+              dataKey="value"
+              nameKey="name"
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+            >
+              {pieData.map((entry, index) => (
+                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip
+              contentStyle={{
+                backgroundColor: darkMode ? "#2b2b2b" : "#fff",
+                borderRadius: 6,
+                fontSize: 12,
+                padding: 8,
+              }}
+            />
+            <Legend />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  };
+
+  const renderHorizontalBarChart = (title, data, color = "#32cd32") => {
     const chartHeight = Math.min(data.length * 35 + 50, 700);
     const formattedData = data.map((d) => ({
       ...d,
@@ -210,7 +226,7 @@ export default function AdminPainel() {
                 padding: 8,
               }}
             />
-            <Bar dataKey="value" fill="#32cd32" radius={[5, 5, 5, 5]} />
+            <Bar dataKey="value" fill={color} radius={[5, 5, 5, 5]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -315,7 +331,7 @@ export default function AdminPainel() {
       case "users":
         return <Users />;
       case "coupons":
-        return <Coupons token={user.token} />;
+        return renderCoupons();
       default:
         return (
           <div className="dashboard">
@@ -351,10 +367,10 @@ export default function AdminPainel() {
               </div>
             </div>
             <div className="charts">
-              {renderLineChart("Usuários Ativos x Inativos", usersData)}
-              {renderHorizontalBarChart("Produtos por Categoria", categoriesData)}
-              {renderHorizontalBarChart("Produtos por Material", materialsData)}
-              {renderHorizontalBarChart("Favoritos por Produto", favoritesData)}
+              {renderPieChart("Usuários Ativos x Inativos", usersData)}
+              {renderHorizontalBarChart("Produtos por Categoria", categoriesData, "#1e90ff")}
+              {renderHorizontalBarChart("Produtos por Material", materialsData, "#ff8c00")}
+              {renderHorizontalBarChart("Favoritos por Produto", favoritesData, "#6a5acd")}
             </div>
           </div>
         );
