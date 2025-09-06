@@ -13,8 +13,10 @@ export default function Coupons() {
     expiresIn: "",
     isPublic: true,
     allowedUsers: [],
+    allowedUsersInput: "", // campo para input de IDs
   });
 
+  // Busca cupons
   const fetchCoupons = async () => {
     try {
       setLoading(true);
@@ -37,10 +39,17 @@ export default function Coupons() {
 
   const handleInput = (e) => {
     const { name, value, type, checked } = e.target;
-    setForm({
-      ...form,
-      [name]: type === "checkbox" ? checked : value,
-    });
+
+    if (name === "allowedUsersInput") {
+      const ids = value
+        .split(",")
+        .map((v) => v.trim())
+        .filter((v) => v !== "")
+        .map(Number);
+      setForm({ ...form, allowedUsers: ids, allowedUsersInput: value });
+    } else {
+      setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+    }
   };
 
   const handleSubmit = async () => {
@@ -68,6 +77,7 @@ export default function Coupons() {
         expiresIn: "",
         isPublic: true,
         allowedUsers: [],
+        allowedUsersInput: "",
       });
       setEditingCoupon(null);
       fetchCoupons();
@@ -98,6 +108,7 @@ export default function Coupons() {
       expiresIn: coupon.expiresIn?.slice(0, 10),
       isPublic: coupon.isPublic,
       allowedUsers: coupon.allowedUsers?.map((u) => u.id) || [],
+      allowedUsersInput: coupon.allowedUsers?.map((u) => u.id).join(",") || "",
     });
   };
 
@@ -142,6 +153,7 @@ export default function Coupons() {
             onChange={handleInput}
           />
         </label>
+
         <div className="form-buttons">
           <button className="btn btn-primary" onClick={handleSubmit}>
             {editingCoupon ? "Atualizar Cupom" : "Criar Cupom"}
@@ -157,6 +169,7 @@ export default function Coupons() {
                   expiresIn: "",
                   isPublic: true,
                   allowedUsers: [],
+                  allowedUsersInput: "",
                 });
               }}
             >
@@ -175,11 +188,20 @@ export default function Coupons() {
             <p>Benefício: {c.benefit}</p>
             <p>Expira em: {new Date(c.expiresIn).toLocaleDateString()}</p>
             <p>Público: {c.isPublic ? "Sim" : "Não"}</p>
+            {!c.isPublic && c.allowedUsers.length > 0 && (
+              <p>
+                Usuários permitidos:{" "}
+                {c.allowedUsers.map((u) => `${u.name} (${u.email})`).join(", ")}
+              </p>
+            )}
             <div className="card-buttons">
               <button className="btn btn-edit" onClick={() => handleEdit(c)}>
                 Editar
               </button>
-              <button className="btn btn-delete" onClick={() => handleDelete(c.id)}>
+              <button
+                className="btn btn-delete"
+                onClick={() => handleDelete(c.id)}
+              >
                 Deletar
               </button>
             </div>
