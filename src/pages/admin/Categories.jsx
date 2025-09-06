@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./Categorias.css";
+import "./css/Categorias.css";
 
 export default function Categories({ darkMode }) {
   const [categories, setCategories] = useState([]);

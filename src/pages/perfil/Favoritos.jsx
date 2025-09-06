@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaTrash, FaExternalLinkAlt, FaUsers } from "react-icons/fa";
 import { useFavoritesContext } from "../../context/FavoritesContext";
-import "./Favoritos.css";
+import "./css/Favoritos.css";
 
 export default function Favorites() {
   const { localFavorites, addOrRemoveFavorite } = useFavoritesContext();

@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./Materials.css";
+import "./css/Materials.css";
 
 export default function Materials() {
   const [materials, setMaterials] = useState([]);

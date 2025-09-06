@@ -1,5 +1,5 @@
 import React from "react";
-
+import "./css/PerfilInfo.css"
 export default function PerfilInfo({ user, favorites = [] }) {
   return (
     <div className="perfil-info-card">

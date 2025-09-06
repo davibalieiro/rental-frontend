@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { FaExternalLinkAlt, FaTimesCircle } from "react-icons/fa";
-import "./MinhasReservas.css";
+import "./css/MinhasReservas.css";
 
 export default function MinhasReservas({ reservas = [] }) {
   const navigate = useNavigate();

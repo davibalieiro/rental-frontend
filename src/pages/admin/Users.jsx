@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./Users.css";
+import "./css/Users.css";
 
 export default function Users() {
   const [users, setUsers] = useState([]);

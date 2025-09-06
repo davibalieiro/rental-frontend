@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { FaBox } from "react-icons/fa";
-import "./ProductAdmin.css";
+import "./css/ProductAdmin.css";
 import { useProducts } from "~/hooks/useProducts";
 import { useProductImages } from "~/hooks/useProductImages";
 

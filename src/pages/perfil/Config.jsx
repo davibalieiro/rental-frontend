@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./Config.css";
+import "./css/Config.css";
 
 export default function Config() {
   const [formData, setFormData] = useState({

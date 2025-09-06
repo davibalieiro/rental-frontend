@@ -5,8 +5,10 @@ import PerfilInfo from "./PerfilInfo";
 import MinhasReservas from "./MinhasReservas";
 import Favoritos from "./Favoritos";
 import Config from "./Config";
+import MeusCupons from "./MeusCupons"; // 🔹 Novo componente
 import { useFavorites } from "../../hooks/useFavorites";
-import "./Perfil.css";
+import { useCupons } from "../../hooks/useCupons"; // 🔹 Novo hook
+import "./css/Perfil.css";
 
 export default function Perfil() {
   const { user, loading, token } = useAuth();
@@ -17,6 +19,12 @@ export default function Perfil() {
   // Hook de favoritos
   const { favorites, loadingFavs, toggleFavorite, fetchFavorites } =
     useFavorites(user, token);
+
+  // Hook de cupons
+  const { cupons, loadingCupons, usarCupom, fetchCupons } = useCupons(
+    user,
+    token
+  );
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
@@ -68,6 +76,12 @@ export default function Perfil() {
             Favoritos
           </button>
           <button
+            className={activeTab === "cupons" ? "active" : ""}
+            onClick={() => setActiveTab("cupons")}
+          >
+            Meus Cupons
+          </button>
+          <button
             className={activeTab === "config" ? "active" : ""}
             onClick={() => setActiveTab("config")}
           >
@@ -90,6 +104,15 @@ export default function Perfil() {
                 toggleFavorite={toggleFavorite}
                 fetchFavorites={fetchFavorites}
               />
+            )}
+          </>
+        )}
+        {activeTab === "cupons" && (
+          <>
+            {loadingCupons ? (
+              <p>Carregando cupons...</p>
+            ) : (
+              <MeusCupons cupons={cupons} usarCupom={usarCupom} />
             )}
           </>
         )}
