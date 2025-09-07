@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./css/Materials.css";
+import { FaHammer } from "react-icons/fa";
 
 export default function Materials() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
@@ -86,7 +87,7 @@ export default function Materials() {
 
   return (
     <div className="materials-page">
-      <h2>🛠 Gerenciar Materiais</h2>
+      <h2><FaHammer /> Gerenciar Materiais</h2>
 
       <form onSubmit={handleSubmit} className="materials-form">
         <input

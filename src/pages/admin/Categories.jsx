@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaFolder, FaTag, FaTags, FaTrash } from "react-icons/fa";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./css/Categorias.css";
@@ -87,7 +87,7 @@ export default function Categories({ darkMode }) {
 
   return (
     <div className={`categories-page ${darkMode ? "dark" : ""}`}>
-      <h2>📂 Gerenciar Categorias</h2>
+      <h2><FaTags /> Gerenciar Categorias</h2>
 
       {/* FORM ADD / EDIT */}
       <form onSubmit={handleSubmit} className="admin-form">

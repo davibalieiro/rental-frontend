@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./css/Users.css";
+import { FaUser, FaUserEdit } from "react-icons/fa";
 
 export default function Users() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
@@ -229,7 +230,7 @@ export default function Users() {
   return (
     <div className="users-page">
       <div className="users-header">
-        <h2>👤 Gerenciar Usuários</h2>
+        <h2><FaUserEdit /> Gerenciar Usuários</h2>
         <div className="users-filters">
           <input
             type="text"
