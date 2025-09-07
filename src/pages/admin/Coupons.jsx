@@ -7,6 +7,9 @@ export default function Coupons() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
   const [editingCoupon, setEditingCoupon] = useState(null);
   const [form, setForm] = useState({
     text: "",
@@ -14,19 +17,21 @@ export default function Coupons() {
     expiresIn: "",
     isPublic: true,
     allowedUsers: [],
-    allowedUsersInput: "", // campo para input de IDs
+    allowedUsersInput: "",
   });
 
   // Busca cupons
   const fetchCoupons = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_URL}/coupons/all`, {
+      const res = await fetch(`${API_URL}/coupons/all?page=${page}`, {
         credentials: "include",
       });
       if (!res.ok) throw new Error("Falha ao buscar cupons");
       const data = await res.json();
+
       setCoupons(data.data || []);
+      setTotalPages(data.pagination.totalPages || 1); // <-- API precisa retornar isso
     } catch (err) {
       setError(err.message);
     } finally {
@@ -36,7 +41,7 @@ export default function Coupons() {
 
   useEffect(() => {
     fetchCoupons();
-  }, []);
+  }, [page]); // busca novamente quando a página mudar
 
   const handleInput = (e) => {
     const { name, value, type, checked } = e.target;
@@ -45,7 +50,7 @@ export default function Coupons() {
       const ids = value
         .split(",")
         .map((v) => v.trim())
-        .filter((v) => v !== "")
+        .filter((v) => v !== "");
       setForm({ ...form, allowedUsers: ids, allowedUsersInput: value });
     } else {
       setForm({ ...form, [name]: type === "checkbox" ? checked : value });
@@ -119,6 +124,7 @@ export default function Coupons() {
     <div className="coupons-container">
       <h2>Cupons</h2>
 
+      {/* ==== FORM DE CRIAÇÃO/EDIÇÃO ==== */}
       <div className="coupon-form">
         <input
           name="text"
@@ -179,6 +185,7 @@ export default function Coupons() {
         </div>
       </div>
 
+      {/* ==== LISTA DE CUPONS ==== */}
       <div className="coupons-list">
         {coupons.map((c) => (
           <div key={c.id} className="coupon-card">
@@ -191,7 +198,9 @@ export default function Coupons() {
             {!c.isPublic && c.allowedUsers.length > 0 && (
               <p>
                 Usuários permitidos:{" "}
-                {c.allowedUsers.map((u) => `${u.name} (${u.email})`).join(", ")}
+                {c.allowedUsers
+                  .map((u) => `${u.name} (${u.email})`)
+                  .join(", ")}
               </p>
             )}
             <div className="card-buttons">
@@ -207,6 +216,35 @@ export default function Coupons() {
             </div>
           </div>
         ))}
+      </div>
+
+      {/* ==== PAGINAÇÃO ==== */}
+      <div className="pagination">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+          className="page-btn"
+        >
+          ◀ Anterior
+        </button>
+
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setPage(i + 1)}
+            className={`page-btn ${page === i + 1 ? "active" : ""}`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
+          className="page-btn"
+        >
+          Próxima ▶
+        </button>
       </div>
     </div>
   );
