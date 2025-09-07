@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaBox } from "react-icons/fa";
+import { FaBox, FaBoxes } from "react-icons/fa";
 import "./css/ProductAdmin.css";
 import { useProducts } from "~/hooks/useProducts";
 import { useProductImages } from "~/hooks/useProductImages";
@@ -75,7 +75,7 @@ export default function Products() {
 
   return (
     <div className="products-page">
-      <h2>📦 Gerenciar Produtos</h2>
+      <h2><FaBoxes /> Gerenciar Produtos</h2>
 
       <form onSubmit={handleSubmit} className="admin-form">
         <div className="form-group">

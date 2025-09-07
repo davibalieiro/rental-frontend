@@ -31,7 +31,7 @@ export default function Coupons() {
       const data = await res.json();
 
       setCoupons(data.data || []);
-      setTotalPages(data.pagination.totalPages || 1); // <-- API precisa retornar isso
+      setTotalPages(data.pagination.totalPages || 1);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -41,7 +41,7 @@ export default function Coupons() {
 
   useEffect(() => {
     fetchCoupons();
-  }, [page]); // busca novamente quando a página mudar
+  }, [page]);
 
   const handleInput = (e) => {
     const { name, value, type, checked } = e.target;
