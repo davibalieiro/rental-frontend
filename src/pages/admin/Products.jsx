@@ -23,8 +23,8 @@ export default function Products() {
   useEffect(() => {
     async function fetchOptions() {
       try {
-        const catRes = await fetch(`${API_URL}/api/category/all`);
-        const matRes = await fetch(`${API_URL}/api/material/all`);
+        const catRes = await fetch(`${API_URL}/category/all`);
+        const matRes = await fetch(`${API_URL}/material/all`);
         const catData = await catRes.json();
         const matData = await matRes.json();
         setCategories(catData.data || []);
@@ -39,7 +39,7 @@ export default function Products() {
   async function handleSubmit(e) {
     e.preventDefault();
     try {
-      const res = await fetch(`${API_URL}/api/product`, {
+      const res = await fetch(`${API_URL}/product`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -51,7 +51,7 @@ export default function Products() {
       if (imageFile) {
         const formData = new FormData();
         formData.append("image", imageFile);
-        await fetch(`${API_URL}/api/upload-image/${productId}`, {
+        await fetch(`${API_URL}/upload-image/${productId}`, {
           method: "POST",
           body: formData,
           credentials: "include",

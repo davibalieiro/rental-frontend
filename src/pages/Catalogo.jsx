@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { useProducts } from "~/hooks/useProducts";
 import { useProductImages } from "~/hooks/useProductImages";
 import "./css/Catalogo.css";
+import { FaCheckCircle, FaCartPlus, FaAngry, FaShoppingBag } from "react-icons/fa";
 
 export default function Catalog() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
@@ -103,7 +104,12 @@ export default function Catalog() {
                     className="cart-btn"
                     onClick={() => addToCart(product)}
                   >
-                    {added[product.id] ? "✔ Adicionado!" : "🛒 Adicionar"}
+
+                    {added[product.id] ? (
+                      <span><FaCheckCircle /> Adicionado!</span>
+                    ) : (
+                      <span><FaShoppingBag /> Adicionar</span>
+                    )}
                   </button>
                 </div>
               </div>

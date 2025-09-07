@@ -4,6 +4,7 @@ import "react-toastify/dist/ReactToastify.css";
 import "./css/Users.css";
 
 export default function Users() {
+  const API_URL = import.meta.env.VITE_API_URL_V1;
   const [users, setUsers] = useState([]);
   const [editingUser, setEditingUser] = useState(null);
   const [loading, setLoading] = useState(false);
