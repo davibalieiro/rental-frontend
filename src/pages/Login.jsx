@@ -67,7 +67,7 @@ export default function Auth() {
         setLoginSuccessModal("Login bem-sucedido! Redirecionando...");
 
         setTimeout(() => {
-          navigate("/");
+          window.location.href = "/";
         }, 2000);
 
       } else {

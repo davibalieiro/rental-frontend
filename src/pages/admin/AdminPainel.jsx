@@ -13,6 +13,7 @@ import {
   FaToggleOn,
   FaToggleOff,
   FaCalculator,
+  FaSpinner,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Products from "./Products";
@@ -59,11 +60,13 @@ export default function AdminPainel() {
     users: 0,
   });
 
-  const [coupons, setCoupons] = useState([]);
-  const [loadingCoupons, setLoadingCoupons] = useState(true);
-  const [errorCoupons, setErrorCoupons] = useState(null);
+  // const [coupons, setCoupons] = useState([]);
+  // const [loadingCoupons, setLoadingCoupons] = useState(true);
+  // const [errorCoupons, setErrorCoupons] = useState(null);
 
-  const { user, loading } = useUserContext();
+  const { user, isAuthenticated, isReady } = useUserContext();
+
+
   const navigate = useNavigate();
 
   // --- FETCH DASHBOARD STATS ---
@@ -278,7 +281,7 @@ export default function AdminPainel() {
     }
   };
 
-  if (loading) return <p>Carregando autenticação...</p>;
+  if (isReady) return <p>Carregando autenticação...</p>;
   if (!user || !user.is_admin) return <NotFound />;
 
   return (

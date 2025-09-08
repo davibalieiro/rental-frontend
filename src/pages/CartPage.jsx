@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProductImages } from "~/hooks/useProductImages";
 import { useProducts } from "~/hooks/useProducts";
-import { FaPlus, FaMinus, FaTrashAlt } from "react-icons/fa";
+import { FaPlus, FaMinus, FaTrashAlt, FaSpinner } from "react-icons/fa";
 import "./css/CartPage.css";
 import { useUserContext } from "~/context/UserContext";
 
@@ -15,11 +15,18 @@ export default function CartPage() {
   const [couponCode, setCouponCode] = useState("");
   const [appliedCoupon, setAppliedCoupon] = useState(null);
   const [couponMessage, setCouponMessage] = useState("");
-  const { user } = useUserContext();
+  const { user, loading } = useUserContext();
+
+  const navigate = useNavigate();
 
   const { products } = useProducts();
   const { imageUrls } = useProductImages(products);
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/login");
+    }
+  }, [user, loading, navigate]);
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -78,7 +85,7 @@ export default function CartPage() {
   };
 
   const handleConfirmOrder = () => {
-    navigate("/orcamento");
+    navigate("/concluir-pedido");
   };
 
   const suggestedProducts = products
@@ -108,13 +115,15 @@ export default function CartPage() {
       const allowedUsers = Array.isArray(couponData?.allowedUsers) ? couponData.allowedUsers : [];
       const usersThatUsedCoupon = Array.isArray(couponData?.usersThatUsedCoupon) ? couponData.usersThatUsedCoupon : [];
       console.log(allowedUsers);
+      console.log(res);
 
-      if (!res.ok || !allowedUsers.some(u => u.id === user.id)) {
+      if (!res.ok ||
+        (!couponData.isPublic && !allowedUsers.some(u => u.id === user.id))
+        || !couponData.isActive) {
         setCouponMessage(data?.error || "Cupom inválido ou não encontrado.");
         setAppliedCoupon(null);
         return;
       }
-
       if (usersThatUsedCoupon.some(u => u.id === user.id)) {
         setCouponMessage("Você já usou esse cupom.");
         setAppliedCoupon(null);
@@ -136,8 +145,7 @@ export default function CartPage() {
 
       setAppliedCoupon(coupon);
       // GUARDA ESSE CUPOM EM ALGUM CANTO, SÓ VAI VALIDAR (/use/couponId) QUANDO CONFIRMAR A COMPRA
-
-      setCouponMessage(`Cupom aplicado: ${coupon.text}`);
+      localStorage.setItem('coupon', JSON.stringify(coupon));
 
     } catch (err) {
       console.error("Erro ao aplicar cupom:", err);

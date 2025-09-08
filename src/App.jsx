@@ -19,6 +19,7 @@ import CartPage from "./pages/CartPage";
 import Perfil from "./pages/perfil/Perfil";
 import Favorites from "./pages/perfil/Favoritos";   // se você tiver a página de favoritos
 import { UserProvider } from "./context/UserContext";
+import ConcludeOrder from "./pages/ConcludeOrder";
 
 function App() {
   return (
@@ -51,6 +52,7 @@ function App() {
                 <Route path="/cartpage" element={<CartPage />} />
                 <Route path="/produto/:slug" element={<Produto />} />
                 <Route path="/favoritos" element={<Favorites />} /> {/* ✅ rota para favoritos */}
+                <Route path="/concluir-pedido" element={<ConcludeOrder />} />
               </Routes>
             </main>
             <Footer />

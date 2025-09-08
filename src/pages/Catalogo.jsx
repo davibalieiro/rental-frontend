@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useProducts } from "~/hooks/useProducts";
 import { useProductImages } from "~/hooks/useProductImages";
 import "./css/Catalogo.css";
-import { FaCheckCircle, FaCartPlus, FaAngry, FaShoppingBag } from "react-icons/fa";
+import { FaCheckCircle, FaShoppingBag } from "react-icons/fa";
 
 export default function Catalog() {
   const API_URL = import.meta.env.VITE_API_URL_V1;

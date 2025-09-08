@@ -6,7 +6,6 @@ export function useCupons(user) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!user) return;
 
     async function fetchCupons() {
       try {
