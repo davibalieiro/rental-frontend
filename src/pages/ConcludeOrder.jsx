@@ -107,6 +107,7 @@ export default function ConcludeOrder() {
                 credentials: 'include',
                 body: JSON.stringify(orderPayload),
             });
+
             if (!orderResponse.ok) {
                 const errorData = await orderResponse.json();
                 throw new Error(errorData.message || 'Falha ao criar o pedido.');
@@ -222,7 +223,6 @@ export default function ConcludeOrder() {
             >
                 <p>Por favor, confirme os detalhes do seu pedido antes de finalizar.</p>
                 <div style={{ margin: '1rem 0', padding: '1rem', background: '#f1f1f1ff', borderRadius: '5px' }}>
-                    {/* AQUI USAMOS A NOVA FUNÇÃO DE FORMATAÇÃO */}
                     <p><strong>Data de Entrega:</strong> {formatDateTimeForDisplay(targetDate)}</p>
                     {initialDate && (
                         <p><strong>Disponível a partir de:</strong> {formatDateTimeForDisplay(initialDate)}</p>

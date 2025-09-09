@@ -14,6 +14,7 @@ import {
   FaToggleOff,
   FaCalculator,
   FaSpinner,
+  FaShoppingBag,
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Products from "./Products";
@@ -40,6 +41,7 @@ import {
 import "./css/Admin.css";
 import { useAuth } from "~/hooks/useAuth";
 import { useUserContext } from "~/context/UserContext";
+import Orders from "./Orders";
 
 export default function AdminPainel() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
@@ -64,7 +66,7 @@ export default function AdminPainel() {
   // const [loadingCoupons, setLoadingCoupons] = useState(true);
   // const [errorCoupons, setErrorCoupons] = useState(null);
 
-  const { user, isAuthenticated, isReady } = useUserContext();
+  const { user, isReady } = useUserContext();
 
 
   const navigate = useNavigate();
@@ -236,6 +238,8 @@ export default function AdminPainel() {
         return <Users />;
       case "coupons":
         return <Coupons />;
+      case "orders":
+        return <Orders currentUser={user} />;
       default:
         return (
           <div className="dashboard">
@@ -321,6 +325,11 @@ export default function AdminPainel() {
           >
             <FaCubes />
             {menuOpen && "Materiais"}
+          </button>
+          <button className={activeTab === "orders" ? "active" : ""}
+            onClick={() => setActiveTab("orders")}>
+            <FaShoppingBag />
+            {menuOpen && "Pedidos"}
           </button>
           <button
             className={activeTab === "users" ? "active" : ""}
