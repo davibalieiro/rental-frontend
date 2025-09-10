@@ -1,17 +1,24 @@
 import { useState, useEffect } from "react";
 
-export function useProducts() {
+export function useProducts(initialPage = 1, initialPerPage = 12) {
     const [products, setProducts] = useState([]);
+    const [pagination, setPagination] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [page, setPage] = useState(initialPage);
+    const [perPage, setPerPage] = useState(initialPerPage);
 
     useEffect(() => {
+
         const fetchProducts = async () => {
+            setLoading(true);
             try {
-                const res = await fetch("http://localhost:3000/api/product/all", {
-                    credentials: "include",
-                });
+                const res = await fetch(
+                    `${API_URL}/product/all?page=${page}&perPage=${perPage}`,
+                    { credentials: "include" }
+                );
                 const json = await res.json();
-                setProducts(json.data || []);
+                setProducts(json.response.data || []);
+                setPagination(json.response.pagination || null);
             } catch (err) {
                 console.error("Erro ao carregar produtos:", err);
             } finally {
@@ -19,7 +26,7 @@ export function useProducts() {
             }
         };
         fetchProducts();
-    }, []);
+    }, [page, perPage]);
 
-    return { products, loading };
+    return { products, pagination, loading, page, setPage, perPage, setPerPage };
 }

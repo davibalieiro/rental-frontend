@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-import { useProducts } from "~/hooks/useProducts";
+import { useProductsContext } from "~/context/ProductsContext";
 import { useProductImages } from "~/hooks/useProductImages";
 import "./css/Catalogo.css";
 import { FaCheckCircle, FaShoppingBag } from "react-icons/fa";
 
 export default function Catalog() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
-  const { products, loading } = useProducts();
+
+  const {
+    products,
+    pagination,
+    loading,
+    page,
+    setPage,
+    perPage,
+    setPerPage
+  } = useProductsContext();
+
   const [categories, setCategories] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -15,6 +25,7 @@ export default function Catalog() {
   const navigate = useNavigate();
   const { imageUrls } = useProductImages(products);
 
+  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -28,15 +39,18 @@ export default function Catalog() {
       }
     };
     fetchCategories();
-  }, []);
+  }, [API_URL]);
 
+  // Filtra produtos por busca e categoria
   const filteredProducts = products.filter((p) => {
-    return (
-      p.name.toLowerCase().includes(search.toLowerCase()) &&
-      (category ? p.categories.some((c) => c.name === category) : true)
-    );
+    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = category
+      ? p.categories?.some((c) => c.name === category)
+      : true;
+    return matchesSearch && matchesCategory;
   });
 
+  // Adiciona produto ao carrinho
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
     const exists = cart.find((item) => item.id === product.id);
@@ -50,10 +64,21 @@ export default function Catalog() {
     }
   };
 
+  // Muda a página de forma segura
+  const handlePageChange = (newPage) => {
+    const totalPages = pagination?.totalPages || 1;
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
+
+  const totalPages = pagination?.totalPages || 1;
+
   return (
     <div className="catalog-container">
       <h1>Catálogo</h1>
 
+      {/* Filtros */}
       <div className="catalog-filters">
         <input
           type="text"
@@ -74,50 +99,62 @@ export default function Catalog() {
         </select>
       </div>
 
+      {/* Produtos */}
       {loading ? (
         <p>Carregando produtos...</p>
       ) : (
-        <div className="catalog-grid">
-          {filteredProducts.length > 0 ? (
-            filteredProducts.map((product) => (
-              <div key={product.id} className="product-card">
-                <div className="badge">
-                  {product.categories?.[0]?.name || ""}
-                </div>
-                <img
-                  src={imageUrls[product.id] || "https://via.placeholder.com/300x200"}
-                  alt={product.name}
-                  loading="lazy"
-                  onClick={() => navigate(`/produto/${product.slug}`)}
-                  style={{ cursor: "pointer" }}
-                />
-                <h4>{product.name}</h4>
-
-                <div className="product-actions">
-                  <button
-                    className="buy-btn"
+        <>
+          <div className="catalog-grid">
+            {filteredProducts.length > 0 ? (
+              filteredProducts.map((product) => (
+                <div key={product.id} className="product-card">
+                  <div className="badge">
+                    {product.categories?.[0]?.name || ""}
+                  </div>
+                  <img
+                    src={imageUrls[product.id] || "https://via.placeholder.com/300x200"}
+                    alt={product.name}
+                    loading="lazy"
                     onClick={() => navigate(`/produto/${product.slug}`)}
-                  >
-                    Ver detalhes
-                  </button>
-                  <button
-                    className="cart-btn"
-                    onClick={() => addToCart(product)}
-                  >
-
-                    {added[product.id] ? (
-                      <span><FaCheckCircle /> Adicionado!</span>
-                    ) : (
-                      <span><FaShoppingBag /> Adicionar</span>
-                    )}
-                  </button>
+                    style={{ cursor: "pointer" }}
+                  />
+                  <h4>{product.name}</h4>
+                  <div className="product-actions">
+                    <button
+                      className="buy-btn"
+                      onClick={() => navigate(`/produto/${product.slug}`)}
+                    >
+                      Ver detalhes
+                    </button>
+                    <button
+                      className="cart-btn"
+                      onClick={() => addToCart(product)}
+                    >
+                      {added[product.id] ? (
+                        <span><FaCheckCircle /> Adicionado!</span>
+                      ) : (
+                        <span><FaShoppingBag /> Adicionar</span>
+                      )}
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))
-          ) : (
-            <p>Nenhum produto encontrado</p>
-          )}
-        </div>
+              ))
+            ) : (
+              <p>Nenhum produto encontrado</p>
+            )}
+          </div>
+
+          {/* Paginação */}
+          <div className="pagination">
+            <button onClick={() => handlePageChange(page - 1)} disabled={page === 1}>
+              ◀️ Anterior
+            </button>
+            <span>Página {page} de {totalPages}</span>
+            <button onClick={() => handlePageChange(page + 1)} disabled={page === totalPages}>
+              Próxima ▶️
+            </button>
+          </div>
+        </>
       )}
     </div>
   );
