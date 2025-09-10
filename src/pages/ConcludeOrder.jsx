@@ -110,7 +110,9 @@ export default function ConcludeOrder() {
 
             if (!orderResponse.ok) {
                 const errorData = await orderResponse.json();
+                console.log(orderResponse)
                 throw new Error(errorData.message || 'Falha ao criar o pedido.');
+                
             }
 
             if (coupon && coupon.id) {

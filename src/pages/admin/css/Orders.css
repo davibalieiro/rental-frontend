@@ -31,7 +31,7 @@
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 2rem;
-}
+}   
 
 .search-bar input,
 .search-bar select {
@@ -362,6 +362,41 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+/* ==========================
+   Destaques de prioridade
+========================== */
+.priority-red {
+  border: 2px solid #dc2626 !important;
+  background: #fef2f2 !important;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.2);
+}
+
+.priority-orange {
+  border: 2px solid #ea580c !important;
+  background: #fff7ed !important;
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
+}
+
+/* Badge de alerta para prazos */
+.priority-badge {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.priority-red .priority-badge {
+  background: #dc2626;
+  color: #fff;
+}
+
+.priority-orange .priority-badge {
+  background: #ea580c;
+  color: #fff;
 }
 
 /* ==========================

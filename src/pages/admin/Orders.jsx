@@ -142,6 +142,20 @@ export default function Orders({ currentUser }) {
         fetchOrders();
     }, [fetchOrders]);
 
+    // 🔹 Calcular prioridade do pedido
+    const getPriorityLevel = (order) => {
+        if (!order.target_date || order.status === "APPROVED") return 0;
+
+        const today = new Date();
+        const deliveryDate = new Date(order.target_date);
+        const diffTime = deliveryDate - today;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays < 0 || diffDays <= 7) return 2; // vermelho
+        if (diffDays <= 14) return 1; // laranja
+        return 0;
+    };
+
     useEffect(() => {
         let filtered = [...allOrders];
 
@@ -160,6 +174,22 @@ export default function Orders({ currentUser }) {
         if (statusFilter) {
             filtered = filtered.filter((o) => o.status === statusFilter);
         }
+
+        // 🔹 Ordenação com prioridade
+        filtered = filtered.sort((a, b) => {
+            const priorityA = getPriorityLevel(a);
+            const priorityB = getPriorityLevel(b);
+
+            if (priorityA !== priorityB) return priorityB - priorityA; // maior prioridade primeiro
+
+            // mesma prioridade → ordenar por data de entrega
+            if (a.target_date && b.target_date) {
+                return new Date(a.target_date) - new Date(b.target_date);
+            }
+
+            // fallback → data de chegada
+            return new Date(a.order_date) - new Date(b.order_date);
+        });
 
         setOrders(filtered);
     }, [searchEmail, searchName, statusFilter, allOrders]);
@@ -314,7 +344,16 @@ export default function Orders({ currentUser }) {
                         {orders.length > 0 ? (
                             <div className="orders-grid">
                                 {orders.map((order) => (
-                                    <div key={order.id} className="order-card">
+                                    <div
+                                        key={order.id}
+                                        className={`order-card ${
+                                            getPriorityLevel(order) === 2
+                                                ? "priority-red"
+                                                : getPriorityLevel(order) === 1
+                                                ? "priority-orange"
+                                                : ""
+                                        }`}
+                                    >
                                         <div className="card-header">
                                             <div>
                                                 <p className="order-id">
