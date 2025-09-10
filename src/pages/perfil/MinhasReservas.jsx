@@ -10,7 +10,7 @@ export default function MinhasReservas() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/user/orders", {
+        const res = await fetch("http://localhost:3000/api/user/order", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
