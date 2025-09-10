@@ -1,76 +1,88 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
-import { FaExternalLinkAlt, FaTimesCircle } from "react-icons/fa";
+import React, { useEffect, useState } from "react";
+import { FaRegCalendarAlt, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import "./css/MinhasReservas.css";
 
-export default function MinhasReservas({ reservas = [] }) {
-  const API_URL = import.meta.env.VITE_API_URL_V1;
+export default function MinhasReservas() {
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/user/orders", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include", // 🔹 MUITO IMPORTANTE para cookies HttpOnly
+        });
 
-  function formatarData(data) {
-    try {
-      return new Date(data).toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      });
-    } catch {
-      return data;
-    }
-  }
+        if (!res.ok) {
+          throw new Error(`Erro ao buscar suas reservas. Status: ${res.status}`);
+        }
+
+        const data = await res.json();
+        setOrders(data.data || []);
+      } catch (err) {
+        console.error("Erro no fetchOrders:", err);
+        setError("Não foi possível carregar suas reservas.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, []);
+
+  if (loading) return <p className="loading">Carregando reservas...</p>;
+  if (error) return <p className="error">{error}</p>;
+  if (orders.length === 0) return <p className="empty">Você não possui reservas.</p>;
 
   return (
-    <div className="reservas-page">
-      <h3>📅 Minhas Reservas</h3>
-
-      {reservas.length === 0 ? (
-        <p className="empty-message">Você ainda não fez nenhuma reserva.</p>
-      ) : (
-        <div className="reservas-cards">
-          {reservas.map((r) => (
-            <div className="reserva-card" key={r.id}>
-              <div className="reserva-image">
-                {r.product?.id ? (
-                  <img
-                    src={`${API_URL}/product/${r.product.id}/image`}
-                    alt={r.product.name}
-                  />
-                ) : (
-                  <div className="placeholder">📦</div>
-                )}
-              </div>
-
-              <div className="reserva-info">
-                <h4>{r.product?.name || r.produto}</h4>
-                <p>
-                  <strong>Status:</strong>{" "}
-                  <span className={`status-badge ${r.status?.toLowerCase()}`}>
-                    {r.status}
-                  </span>
-                </p>
-                <p>
-                  <strong>Data:</strong> {formatarData(r.data)}
-                </p>
-              </div>
-
-              <div className="reserva-actions">
-                <button
-                  className="btn-details"
-                  onClick={() => navigate(`/produto/${r.slug}`)}
-                >
-                  <FaExternalLinkAlt /> Ver Detalhes
-                </button>
-                {r.status !== "Cancelada" && (
-                  <button className="btn-cancel">
-                    <FaTimesCircle /> Cancelar
-                  </button>
-                )}
-              </div>
+    <div className="minhas-reservas-container">
+      <h1 className="title">Minhas Reservas</h1>
+      <div className="orders-grid">
+        {orders.map((order) => (
+          <div key={order.id} className="order-card">
+            <div className="order-header">
+              <h2>Pedido #{order.id}</h2>
+              <span
+                className={`status ${
+                  order.status === "CANCELLED"
+                    ? "cancelled"
+                    : order.status === "COMPLETED"
+                    ? "completed"
+                    : "pending"
+                }`}
+              >
+                {order.status === "CANCELLED" && <FaTimesCircle />}
+                {order.status === "COMPLETED" && <FaCheckCircle />}
+                {order.status !== "CANCELLED" && order.status !== "COMPLETED" && <FaRegCalendarAlt />}
+                {" "}{order.status}
+              </span>
             </div>
-          ))}
-        </div>
-      )}
+            <p>
+              <FaRegCalendarAlt className="icon" /> <strong>Data do pedido:</strong>{" "}
+              {new Date(order.order_date).toLocaleDateString()}
+            </p>
+            <p>
+              <FaRegCalendarAlt className="icon" /> <strong>Data prevista:</strong>{" "}
+              {new Date(order.target_date).toLocaleDateString()}
+            </p>
+            <div className="products">
+              <h3>Produtos:</h3>
+              <ul>
+                {order.orderProducts.map((op) => (
+                  <li key={op.productId}>
+                    {op.name} - {op.dimension} - Quantidade: {op.quantity}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,52 +1,28 @@
 import React, { useState, useEffect } from "react";
-import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import PerfilInfo from "./PerfilInfo";
 import MinhasReservas from "./MinhasReservas";
 import Favoritos from "./Favoritos";
 import Config from "./Config";
-import MeusCupons from "./MeusCupons"; // 🔹 Novo componente
-import { useFavorites } from "../../hooks/useFavorites";
+import MeusCupons from "./MeusCupons";
 import { useFavoritesContext } from "~/context/FavoritesContext";
-import { useCupons } from "../../hooks/useCupons"; // 🔹 Novo hook
-import "./css/Perfil.css";
+import { useCupons } from "../../hooks/useCupons";
 import { useUserContext } from "~/context/UserContext";
+import "./css/Perfil.css";
 
 export default function Perfil() {
   const { user, loading } = useUserContext();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("perfil");
-  const [reservas, setReservas] = useState([]);
 
   // Hook de favoritos
   const { localFavorites, addOrRemoveFavorite } = useFavoritesContext();
 
-
   // Hook de cupons
-  const { cupons, loadingCupons, usarCupom } = useCupons(
-    user
-  );
+  const { cupons, loadingCupons, usarCupom } = useCupons(user);
 
   useEffect(() => {
     if (!loading && !user) navigate("/login");
-
-    // Reservas simuladas
-    setReservas([
-      {
-        id: 1,
-        produto: "Cadeira Gamer",
-        status: "Confirmada",
-        data: "2025-08-31",
-        slug: "cadeira-gamer",
-      },
-      {
-        id: 2,
-        produto: "Mesa de Escritório",
-        status: "Pendente",
-        data: "2025-09-03",
-        slug: "mesa-escritorio",
-      },
-    ]);
   }, [loading, user, navigate]);
 
   return (
@@ -93,18 +69,19 @@ export default function Perfil() {
 
       {/* Conteúdo */}
       <div className="perfil-content">
-        {activeTab === "perfil" && <PerfilInfo user={user} favorites={localFavorites} />}
-        {activeTab === "reservas" && <MinhasReservas reservas={reservas} />}
-        {activeTab === "favoritos" && (
-          <>
-
-            <Favoritos
-              localFavorites={localFavorites}
-              addOrRemoveFavorite={addOrRemoveFavorite}
-            />
-
-          </>
+        {activeTab === "perfil" && (
+          <PerfilInfo user={user} favorites={localFavorites} />
         )}
+
+        {activeTab === "reservas" && <MinhasReservas />}
+
+        {activeTab === "favoritos" && (
+          <Favoritos
+            localFavorites={localFavorites}
+            addOrRemoveFavorite={addOrRemoveFavorite}
+          />
+        )}
+
         {activeTab === "cupons" && (
           <>
             {loadingCupons ? (
@@ -114,6 +91,7 @@ export default function Perfil() {
             )}
           </>
         )}
+
         {activeTab === "config" && <Config />}
       </div>
     </div>
