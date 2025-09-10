@@ -1,131 +1,190 @@
-/* Container principal */
-.reservas-nova-page {
-  padding: 30px 20px;
-  max-width: 1000px;
+/* ==========================
+   Layout principal
+========================== */
+.minhas-reservas-container {
+  max-width: 1200px;
   margin: 0 auto;
+  padding: 30px 20px;
   font-family: "Inter", sans-serif;
-  background-color: #f7f8fa;
 }
 
-/* Título */
-.reservas-nova-page h2 {
-  font-size: 1.8rem;
+.title {
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 25px;
-  color: #1f2937;
-}
-
-/* Mensagem de vazio */
-.empty-message {
+  margin-bottom: 30px;
+  color: #1e293b;
   text-align: center;
-  font-size: 1rem;
-  color: #6b7280;
-  margin-top: 50px;
 }
 
-/* Lista de cards */
-.reservas-nova-list {
+/* ==========================
+   Grid de pedidos
+========================== */
+.orders-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
 }
 
-/* Card de reserva */
-.reserva-nova-card {
+/* ==========================
+   Card de pedido
+========================== */
+.order-card {
   background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+  border-radius: 16px;
+  padding: 20px 24px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
   display: flex;
   flex-direction: column;
-  transition: transform 0.2s, box-shadow 0.2s;
+  gap: 14px;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
-.reserva-nova-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+.order-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
 }
 
-/* Header do card */
-.reserva-nova-header {
+/* ==========================
+   Cabeçalho
+========================== */
+.order-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 }
 
-.reserva-nova-header h3 {
-  font-size: 1.1rem;
+.order-header h2 {
+  font-size: 1.2rem;
   font-weight: 600;
-  color: #111827;
+  color: #0f172a;
 }
 
-/* Badge de status */
-.reserva-status {
-  padding: 5px 10px;
-  border-radius: 50px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  color: #fff;
-  text-align: center;
-}
-
-.status-confirmada {
-  background-color: #10b981;
-}
-
-.status-pendente {
-  background-color: #f59e0b;
-}
-
-.status-cancelada {
-  background-color: #ef4444;
-}
-
-/* Corpo do card */
-.reserva-nova-body {
-  margin-bottom: 15px;
-}
-
-.reserva-nova-body p {
-  font-size: 0.9rem;
-  color: #374151;
-  display: flex;
+/* ==========================
+   Status
+========================== */
+.status {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  margin: 6px 0;
-}
-
-/* Ações */
-.reserva-nova-actions {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.btn-cancelar {
-  background-color: #ef4444;
-  color: #ffffff;
-  border: none;
-  padding: 8px 14px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 6px 12px;
   border-radius: 8px;
-  font-size: 0.85rem;
-  font-weight: 500;
-  cursor: pointer;
+  gap: 6px;
+  text-transform: capitalize;
+}
+
+/* Status específicos */
+.status.pending {
+  background: #fef9c3;
+  color: #ca8a04;
+}
+
+.status.completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status.cancelled {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* ==========================
+   Infos
+========================== */
+.order-card p {
+  font-size: 0.95rem;
+  color: #334155;
   display: flex;
   align-items: center;
   gap: 6px;
-  transition: background 0.2s, transform 0.2s;
 }
 
-.btn-cancelar:hover {
-  background-color: #b91c1c;
-  transform: scale(1.05);
+.order-card strong {
+  color: #1e293b;
 }
 
-/* Mobile adjustments */
-@media (max-width: 640px) {
-  .reservas-nova-list {
-    grid-template-columns: 1fr;
+/* Icones */
+.icon {
+  color: #64748b;
+  font-size: 1rem;
+}
+
+/* ==========================
+   Produtos
+========================== */
+.products {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-top: 6px;
+}
+
+.products h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #0f172a;
+}
+
+.products ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.products li {
+  font-size: 0.9rem;
+  color: #475569;
+  padding: 6px 0;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.products li:last-child {
+  border-bottom: none;
+}
+
+/* ==========================
+   Estados (loading / error / vazio)
+========================== */
+.loading,
+.error,
+.empty {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 1.1rem;
+  color: #475569;
+}
+
+.error {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.empty {
+  color: #64748b;
+  font-style: italic;
+}
+
+/* ==========================
+   Responsividade
+========================== */
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .order-card {
+    padding: 16px;
+  }
+
+  .order-header h2 {
+    font-size: 1rem;
+  }
+
+  .products h3 {
+    font-size: 0.95rem;
   }
 }

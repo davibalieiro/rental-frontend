@@ -1,88 +1,211 @@
 import React, { useEffect, useState } from "react";
 import { FaRegCalendarAlt, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./css/MinhasReservas.css";
+import Modal from "~/components/Modal";
+import { useUserContext } from "~/context/UserContext";
+
+const API_URL = import.meta.env.VITE_API_URL_V1;
+
+function EditReservaModal({ reserva, onClose, onSave }) {
+  const [targetDate, setTargetDate] = useState(
+    reserva.target_date ? new Date(reserva.target_date).toISOString().split("T")[0] : ""
+  );
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const updatedData = {};
+    if (new Date(targetDate).getTime() !== new Date(reserva.target_date).getTime()) {
+      updatedData.target_date = new Date(targetDate).toISOString();
+    }
+
+    if (Object.keys(updatedData).length > 0) {
+      onSave(reserva.id, updatedData);
+    } else {
+      onClose();
+    }
+  };
+
+  return (
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>Editar Reserva #{reserva.id}</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="targetDate">Nova Data de Entrega</label>
+            <input
+              type="date"
+              id="targetDate"
+              value={targetDate}
+              onChange={(e) => setTargetDate(e.target.value)}
+            />
+          </div>
+          <div className="modal-actions">
+            <button type="submit" className="btn btn-green">Salvar Alterações</button>
+            <button type="button" onClick={onClose} className="btn btn-secondary">Fechar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
 
 export default function MinhasReservas() {
-  const [orders, setOrders] = useState([]);
+  const { user } = useUserContext();
+  const [reservas, setReservas] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedReserva, setSelectedReserva] = useState(null);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [confirmAction, setConfirmAction] = useState(null);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
+
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchReservas = async () => {
       try {
-        const res = await fetch("http://localhost:3000/api/user/order", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          credentials: "include", // 🔹 MUITO IMPORTANTE para cookies HttpOnly
+        const res = await fetch(`${API_URL}/user/orders/${user.id}`, {
+          credentials: "include",
         });
-
-        if (!res.ok) {
-          throw new Error(`Erro ao buscar suas reservas. Status: ${res.status}`);
-        }
-
+        if (!res.ok) throw new Error("Erro ao buscar reservas.");
         const data = await res.json();
-        setOrders(data.data || []);
+        setReservas(data.data || []);
       } catch (err) {
-        console.error("Erro no fetchOrders:", err);
-        setError("Não foi possível carregar suas reservas.");
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
+    fetchReservas();
+  }, [user.id]);
 
-    fetchOrders();
-  }, []);
+  const openEditModal = (reserva) => {
+    setSelectedReserva(reserva);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setSelectedReserva(null);
+    setIsEditModalOpen(false);
+  };
+
+  const handleUpdateReserva = async (reservaId, updatedData) => {
+    try {
+      const response = await fetch(`${API_URL}/order/${reservaId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(updatedData),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Falha ao atualizar reserva.");
+
+      toast.success("Reserva atualizada com sucesso!");
+      closeEditModal();
+      setReservas((prev) =>
+        prev.map((r) => (r.id === reservaId ? { ...r, ...updatedData } : r))
+      );
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleCancelReserva = (reservaId) => {
+    setModalTitle("Cancelar Reserva");
+    setModalMessage("Tem certeza que deseja CANCELAR esta reserva?");
+    setConfirmAction(() => async () => {
+      try {
+        const response = await fetch(`${API_URL}/order/cancel/${reservaId}`, {
+          method: "PUT",
+          credentials: "include",
+        });
+
+        if (response.ok || response.status === 204) {
+          toast.success("Reserva cancelada com sucesso!");
+          setReservas((prev) =>
+            prev.map((r) => (r.id === reservaId ? { ...r, status: "CANCELLED" } : r))
+          );
+        } else {
+          throw new Error("Falha ao cancelar reserva.");
+        }
+      } catch (err) {
+        toast.error(err.message);
+      }
+    });
+    setIsConfirmModalOpen(true);
+  };
 
   if (loading) return <p className="loading">Carregando reservas...</p>;
   if (error) return <p className="error">{error}</p>;
-  if (orders.length === 0) return <p className="empty">Você não possui reservas.</p>;
+  if (reservas.length === 0) return <p className="empty">Você não possui reservas.</p>;
 
   return (
     <div className="minhas-reservas-container">
+      <ToastContainer theme="dark" position="bottom-right" />
       <h1 className="title">Minhas Reservas</h1>
       <div className="orders-grid">
-        {orders.map((order) => (
-          <div key={order.id} className="order-card">
+        {reservas.map((reserva) => (
+          <div key={reserva.id} className="order-card">
             <div className="order-header">
-              <h2>Pedido #{order.id}</h2>
+              <h2>Pedido #{reserva.id}</h2>
               <span
                 className={`status ${
-                  order.status === "CANCELLED"
+                  reserva.status === "CANCELLED"
                     ? "cancelled"
-                    : order.status === "COMPLETED"
+                    : reserva.status === "COMPLETED"
                     ? "completed"
                     : "pending"
                 }`}
               >
-                {order.status === "CANCELLED" && <FaTimesCircle />}
-                {order.status === "COMPLETED" && <FaCheckCircle />}
-                {order.status !== "CANCELLED" && order.status !== "COMPLETED" && <FaRegCalendarAlt />}
-                {" "}{order.status}
+                {reserva.status === "CANCELLED" && <FaTimesCircle />}
+                {reserva.status === "COMPLETED" && <FaCheckCircle />}
+                {reserva.status !== "CANCELLED" && reserva.status !== "COMPLETED" && <FaRegCalendarAlt />}
+                {" "}{reserva.status}
               </span>
             </div>
-            <p>
-              <FaRegCalendarAlt className="icon" /> <strong>Data do pedido:</strong>{" "}
-              {new Date(order.order_date).toLocaleDateString()}
-            </p>
-            <p>
-              <FaRegCalendarAlt className="icon" /> <strong>Data prevista:</strong>{" "}
-              {new Date(order.target_date).toLocaleDateString()}
-            </p>
+            <p><FaRegCalendarAlt className="icon" /> <strong>Data do pedido:</strong> {new Date(reserva.order_date).toLocaleDateString()}</p>
+            <p><FaRegCalendarAlt className="icon" /> <strong>Entrega:</strong> {new Date(reserva.target_date).toLocaleDateString()}</p>
+
             <div className="products">
               <h3>Produtos:</h3>
               <ul>
-                {order.orderProducts.map((op) => (
+                {reserva.orderProducts.map((op) => (
                   <li key={op.productId}>
                     {op.name} - {op.dimension} - Quantidade: {op.quantity}
                   </li>
                 ))}
               </ul>
             </div>
+
+            <div className="actions">
+              {reserva.status !== "CANCELLED" && (
+                <>
+                  <button className="btn btn-blue" onClick={() => openEditModal(reserva)}>Editar</button>
+                  <button className="btn btn-red" onClick={() => handleCancelReserva(reserva.id)}>Cancelar</button>
+                </>
+              )}
+            </div>
           </div>
         ))}
       </div>
+
+      {isEditModalOpen && selectedReserva && (
+        <EditReservaModal reserva={selectedReserva} onClose={closeEditModal} onSave={handleUpdateReserva} />
+      )}
+      <Modal
+        isOpen={isConfirmModalOpen}
+        title={modalTitle}
+        onResult={(confirmed) => {
+          setIsConfirmModalOpen(false);
+          if (confirmed && confirmAction) confirmAction();
+        }}
+      >
+        <p>{modalMessage}</p>
+      </Modal>
     </div>
   );
 }
