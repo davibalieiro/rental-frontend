@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { FaBox, FaBoxes } from "react-icons/fa";
+import { FaBox, FaBoxes, FaTrash, FaEdit } from "react-icons/fa";
 import "./css/ProductAdmin.css";
 import { useProducts } from "~/hooks/useProducts";
 import { useProductImages } from "~/hooks/useProductImages";
+import Modal from "~/components/Modal";
 
 export default function Products() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
-  const { products } = useProducts();
+  const { products, fetchProducts } = useProducts();
   const { imageUrls } = useProductImages(products);
+
   const [categories, setCategories] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [form, setForm] = useState({
@@ -20,6 +22,17 @@ export default function Products() {
   });
   const [imageFile, setImageFile] = useState(null);
 
+  // Paginação
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 6;
+  const totalPages = Math.ceil(products.length / itemsPerPage);
+
+  // Modal states
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  // ================= FETCH OPTIONS =================
   useEffect(() => {
     async function fetchOptions() {
       try {
@@ -36,6 +49,36 @@ export default function Products() {
     fetchOptions();
   }, []);
 
+  // ================= AUX FUNCTIONS =================
+  async function deleteProductByIDFront(id) {
+    try {
+      const res = await fetch(`${API_URL}/product/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+      });
+      if (!res.ok) throw new Error("Erro ao deletar produto");
+      return await res.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async function updateProductByIdFront(id, data) {
+    try {
+      const res = await fetch(`${API_URL}/product/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(data),
+      });
+      if (!res.ok) throw new Error("Erro ao atualizar produto");
+      return await res.json();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  // ================= HANDLE FORM =================
   async function handleSubmit(e) {
     e.preventDefault();
     try {
@@ -73,10 +116,44 @@ export default function Products() {
     }
   }
 
+  // ================= HANDLE DELETE =================
+  async function handleDeleteConfirm(result) {
+    if (result && selectedProduct) {
+      await deleteProductByIDFront(selectedProduct.id);
+      fetchProducts();
+    }
+    setIsDeleteOpen(false);
+  }
+
+  // ================= HANDLE EDIT =================
+  async function handleEditConfirm(result) {
+    if (result && selectedProduct) {
+      const body = {
+        name: selectedProduct.name,
+        short_description: selectedProduct.short_description,
+        long_description: selectedProduct.long_description,
+        dimension: selectedProduct.dimension,
+        categoryIds: selectedProduct.categories?.map((c) => c.id),
+        materialIds: selectedProduct.materials?.map((m) => m.id),
+      };
+      await updateProductByIdFront(selectedProduct.id, body);
+      fetchProducts();
+    }
+    setIsEditOpen(false);
+  }
+
+  const paginatedProducts = products.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
+
   return (
     <div className="products-page">
-      <h2><FaBoxes /> Gerenciar Produtos</h2>
+      <h2>
+        <FaBoxes /> Gerenciar Produtos
+      </h2>
 
+      {/* ==== FORMULÁRIO ==== */}
       <form onSubmit={handleSubmit} className="admin-form">
         <div className="form-group">
           <label>Nome do produto</label>
@@ -93,7 +170,9 @@ export default function Products() {
           <input
             type="text"
             value={form.short_description}
-            onChange={(e) => setForm({ ...form, short_description: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, short_description: e.target.value })
+            }
             required
           />
         </div>
@@ -102,7 +181,9 @@ export default function Products() {
           <label>Descrição longa</label>
           <textarea
             value={form.long_description}
-            onChange={(e) => setForm({ ...form, long_description: e.target.value })}
+            onChange={(e) =>
+              setForm({ ...form, long_description: e.target.value })
+            }
             required
           />
         </div>
@@ -162,21 +243,18 @@ export default function Products() {
         </div>
 
         <div className="form-group">
-          <div className="form-group">
-            <label>Imagem do produto</label>
-            <div className="file-upload-wrapper">
-              <input
-                type="file"
-                id="file-upload"
-                accept="image/*"
-                onChange={(e) => setImageFile(e.target.files[0])}
-              />
-              <label htmlFor="file-upload" className="file-upload-button">
-                {imageFile ? imageFile.name : "Selecionar arquivo"}
-              </label>
-            </div>
+          <label>Imagem do produto</label>
+          <div className="file-upload-wrapper">
+            <input
+              type="file"
+              id="file-upload"
+              accept="image/*"
+              onChange={(e) => setImageFile(e.target.files[0])}
+            />
+            <label htmlFor="file-upload" className="file-upload-button">
+              {imageFile ? imageFile.name : "Selecionar arquivo"}
+            </label>
           </div>
-
         </div>
 
         <button type="submit" className="btn-primary">
@@ -184,8 +262,9 @@ export default function Products() {
         </button>
       </form>
 
+      {/* ==== LISTAGEM ==== */}
       <div className="cards-container">
-        {products.map((p) => (
+        {paginatedProducts.map((p) => (
           <div className="card" key={p.id}>
             <div className="card-image">
               {imageUrls[p.id] ? (
@@ -194,8 +273,24 @@ export default function Products() {
                 <FaBox className="placeholder-icon" />
               )}
               <div className="overlay">
-                <button className="btn-edit">Editar</button>
-                <button className="btn-delete">Deletar</button>
+                <button
+                  className="icon-btn edit"
+                  onClick={() => {
+                    setSelectedProduct({ ...p });
+                    setIsEditOpen(true);
+                  }}
+                >
+                  <FaEdit />
+                </button>
+                <button
+                  className="icon-btn delete"
+                  onClick={() => {
+                    setSelectedProduct(p);
+                    setIsDeleteOpen(true);
+                  }}
+                >
+                  <FaTrash />
+                </button>
               </div>
             </div>
 
@@ -205,12 +300,124 @@ export default function Products() {
               <p>
                 <strong>Dimensão:</strong> {p.dimension}
               </p>
-              <div className="categories">{p.categories?.map((c) => <span key={c.id}>{c.name}</span>)}</div>
-              <div className="materials">{p.materials?.map((m) => <span key={m.id}>{m.name}</span>)}</div>
+              <div className="categories">
+                {p.categories?.map((c) => (
+                  <span key={c.id}>{c.name}</span>
+                ))}
+              </div>
+              <div className="materials">
+                {p.materials?.map((m) => (
+                  <span key={m.id}>{m.name}</span>
+                ))}
+              </div>
             </div>
           </div>
         ))}
       </div>
+
+      {/* ==== PAGINAÇÃO ==== */}
+      <div className="pagination">
+        <button
+          disabled={page === 1}
+          onClick={() => setPage((p) => p - 1)}
+          className="page-btn"
+        >
+          ◀ Anterior
+        </button>
+
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setPage(i + 1)}
+            className={`page-btn ${page === i + 1 ? "active" : ""}`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          disabled={page === totalPages}
+          onClick={() => setPage((p) => p + 1)}
+          className="page-btn"
+        >
+          Próxima ▶
+        </button>
+      </div>
+
+      {/* ==== MODAIS ==== */}
+      <Modal
+        isOpen={isDeleteOpen}
+        onResult={handleDeleteConfirm}
+        title="Deletar Produto"
+        confirmText="Deletar"
+        cancelText="Cancelar"
+      >
+        <p>
+          Tem certeza que deseja deletar{" "}
+          <strong>{selectedProduct?.name}</strong>?
+        </p>
+      </Modal>
+
+      <Modal
+        isOpen={isEditOpen}
+        onResult={handleEditConfirm}
+        title="Editar Produto"
+        confirmText="Salvar"
+        cancelText="Cancelar"
+      >
+        {selectedProduct && (
+          <>
+            <div className="form-group">
+              <label>Nome</label>
+              <input
+                value={selectedProduct.name}
+                onChange={(e) =>
+                  setSelectedProduct({
+                    ...selectedProduct,
+                    name: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label>Descrição Curta</label>
+              <input
+                value={selectedProduct.short_description}
+                onChange={(e) =>
+                  setSelectedProduct({
+                    ...selectedProduct,
+                    short_description: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label>Descrição Longa</label>
+              <textarea
+                value={selectedProduct.long_description}
+                onChange={(e) =>
+                  setSelectedProduct({
+                    ...selectedProduct,
+                    long_description: e.target.value,
+                  })
+                }
+              />
+            </div>
+            <div className="form-group">
+              <label>Dimensão</label>
+              <input
+                value={selectedProduct.dimension}
+                onChange={(e) =>
+                  setSelectedProduct({
+                    ...selectedProduct,
+                    dimension: e.target.value,
+                  })
+                }
+              />
+            </div>
+          </>
+        )}
+      </Modal>
     </div>
   );
 }
