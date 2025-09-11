@@ -1,6 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 /* ==========================
-   Layout geral
+   Layout Geral
 ========================== */
 .orders-container {
   max-width: 1400px;
@@ -66,6 +67,9 @@
   gap: 1.5rem;
 }
 
+/* ==========================
+   Card do pedido
+========================== */
 .order-card {
   background: #fff;
   border-radius: 16px;
@@ -84,7 +88,7 @@
 }
 
 /* ==========================
-   Cabeçalho do pedido
+   Cabeçalho do card
 ========================== */
 .card-header {
   display: flex;
@@ -109,7 +113,7 @@
 }
 
 /* ==========================
-   Badges de status modernas
+   Badges de status
 ========================== */
 .status-badge {
   padding: 0.35rem 0.9rem;
@@ -174,7 +178,7 @@
 }
 
 /* ==========================
-   Botões modernos
+   Botões
 ========================== */
 .btn {
   border: none;
@@ -256,34 +260,23 @@
 }
 
 /* ==========================
-   Estado vazio
+   Estado vazio, loading e erros
 ========================== */
-.no-orders-found {
-  text-align: center;
-  padding: 2rem;
-  font-size: 1rem;
-  color: #6b7280;
-}
-
-/* ==========================
-   Loading e erros
-========================== */
-.loading {
-  text-align: center;
-  font-size: 1rem;
-  padding: 2rem;
-  color: #374151;
-}
-
+.no-orders-found,
+.loading,
 .error {
   text-align: center;
   padding: 2rem;
+  font-size: 1rem;
+}
+
+.error {
   color: #dc2626;
   font-weight: 600;
 }
 
 /* ==========================
-   Modal moderno
+   Modal
 ========================== */
 .modal-overlay {
   position: fixed;
@@ -363,6 +356,7 @@
     transform: translateY(0);
   }
 }
+
 /* ==========================
    Destaques de prioridade
 ========================== */
@@ -378,7 +372,6 @@
   box-shadow: 0 4px 12px rgba(234, 88, 12, 0.2);
 }
 
-/* Badge de alerta para prazos */
 .priority-badge {
   display: inline-block;
   margin-top: 0.5rem;
