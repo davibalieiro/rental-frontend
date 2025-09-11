@@ -49,7 +49,7 @@ export function useProducts(initialPage = 1, initialPerPage = 12) {
 >>>>>>> cdba2a55fe601a475df33b2656854de2f8a6d7b9
         fetchProducts();
     }, [page, perPage]);
-
+ 
 <<<<<<< HEAD
     return { products, fetchProducts, loading }; // ✅ agora retorna fetchProducts
 }
