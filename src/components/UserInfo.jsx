@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { FaUser, FaEnvelope, FaIdBadge, FaUserShield, FaUserAlt } from "react-icons/fa";
+import React from "react";
+import { FaUser, FaEnvelope, FaUserShield, FaUserAlt } from "react-icons/fa";
 import "../index.css";
 import { useAuth } from "~/hooks/useAuth";
 
 export default function UserInfo() {
   const { user, loading } = useAuth();
+
   if (loading) return <p>Carregando...</p>;
   if (!user) return <p>Você não está autenticado</p>;
-
-
-  if (!user) return null;
 
   return (
     <div className="user-info">
@@ -20,9 +18,9 @@ export default function UserInfo() {
         <li><FaEnvelope /> {user.email}</li>
         <li>
           {user.is_admin ? (
-            <span className="admin"><FaUserShield /> Administrador </span>
+            <span className="role admin"><FaUserShield /> Administrador</span>
           ) : (
-            <span className="common"><FaUserAlt /> Usuário comum</span>
+            <span className="role common"><FaUserAlt /> Usuário comum</span>
           )}
         </li>
       </ul>

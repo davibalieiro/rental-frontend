@@ -19,7 +19,7 @@ export default function CartPage() {
 
   const navigate = useNavigate();
 
-  const { products } = useProducts();
+const { products, loadingProducts } = useProducts();
   const { imageUrls } = useProductImages(products);
 
   useEffect(() => {
