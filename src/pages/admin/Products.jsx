@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { FaBox, FaBoxes, FaTrash, FaEdit } from "react-icons/fa";
 import "./css/ProductAdmin.css";
-import { useProducts } from "~/hooks/useProducts";
+import { useProductsContext } from "~/context/ProductsContext";
 import { useProductImages } from "~/hooks/useProductImages";
 import Modal from "~/components/Modal";
 
 export default function Products() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
-  const { products, fetchProducts } = useProducts();
+  const { products } = useProductsContext();
   const { imageUrls } = useProductImages(products);
 
   const [categories, setCategories] = useState([]);
@@ -110,7 +110,6 @@ export default function Products() {
         materialIds: [],
       });
       setImageFile(null);
-      fetchProducts();
     } catch (err) {
       console.error(err);
     }
@@ -120,7 +119,6 @@ export default function Products() {
   async function handleDeleteConfirm(result) {
     if (result && selectedProduct) {
       await deleteProductByIDFront(selectedProduct.id);
-      fetchProducts();
     }
     setIsDeleteOpen(false);
   }
@@ -137,7 +135,6 @@ export default function Products() {
         materialIds: selectedProduct.materials?.map((m) => m.id),
       };
       await updateProductByIdFront(selectedProduct.id, body);
-      fetchProducts();
     }
     setIsEditOpen(false);
   }
