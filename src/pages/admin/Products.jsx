@@ -7,7 +7,7 @@ import Modal from "~/components/Modal";
 
 export default function Products() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
-  const { products } = useProductsContext();
+  const { products, setProducts } = useProductsContext(); // 🔥 agora usamos setProducts
   const { imageUrls } = useProductImages(products);
 
   const [categories, setCategories] = useState([]);
@@ -89,18 +89,19 @@ export default function Products() {
         body: JSON.stringify(form),
       });
       const json = await res.json();
-      const productId = json.data.id;
+      const newProduct = json.data;
 
       if (imageFile) {
         const formData = new FormData();
         formData.append("image", imageFile);
-        await fetch(`${API_URL}/upload-image/${productId}`, {
+        await fetch(`${API_URL}/upload-image/${newProduct.id}`, {
           method: "POST",
           body: formData,
           credentials: "include",
         });
       }
 
+      // resetar form
       setForm({
         name: "",
         short_description: "",
@@ -110,6 +111,9 @@ export default function Products() {
         materialIds: [],
       });
       setImageFile(null);
+
+      // 🔥 Atualizar contexto sem refetch
+      setProducts([...products, newProduct]);
     } catch (err) {
       console.error(err);
     }
@@ -119,6 +123,8 @@ export default function Products() {
   async function handleDeleteConfirm(result) {
     if (result && selectedProduct) {
       await deleteProductByIDFront(selectedProduct.id);
+      // 🔥 remove da lista local também
+      setProducts(products.filter((p) => p.id !== selectedProduct.id));
     }
     setIsDeleteOpen(false);
   }
@@ -134,7 +140,12 @@ export default function Products() {
         categoryIds: selectedProduct.categories?.map((c) => c.id),
         materialIds: selectedProduct.materials?.map((m) => m.id),
       };
-      await updateProductByIdFront(selectedProduct.id, body);
+      const updated = await updateProductByIdFront(selectedProduct.id, body);
+
+      // 🔥 atualizar no contexto
+      setProducts(
+        products.map((p) => (p.id === selectedProduct.id ? updated.data : p))
+      );
     }
     setIsEditOpen(false);
   }

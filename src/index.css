@@ -301,6 +301,19 @@ header .login-btn:hover {
 .newsletter-form button:hover {
   background: #228b22;
 }
+
+.success-msg {
+  color: #2e8b57;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.error-msg {
+  color: #d9534f;
+  margin-top: 15px;
+  font-weight: bold;
+}
+
 /* ================= CONTACT OPTIONS ================= */
 .contact-section {
   padding: 60px 20px;
