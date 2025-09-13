@@ -49,7 +49,7 @@ export default function Header() {
         {/* Ícone perfil -> só para usuários comuns */}
         {user && !user.is_admin && (
           <button onClick={handleProfileClick} className="profile-btn">
-            <FaUserCircle size={24} />
+            Minha Conta
           </button>
         )}
 

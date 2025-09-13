@@ -22,7 +22,7 @@ import Categories from "./Categories";
 import Materials from "./Materials";
 import Users from "./Users";
 import Coupons from "./Coupons";
-import NotFound from "../NotFound";
+import NotFound from "~/pages/NotFound";
 import {
   LineChart,
   Line,

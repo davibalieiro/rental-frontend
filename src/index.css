@@ -534,6 +534,93 @@ header .login-btn:hover {
   font-size: 13px;
   color: #aaa;
 }
+/* ==========================
+   Página 404 - Not Found
+========================== */
+.notfound-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #32cd32, #228b22);
+  font-family: "Inter", "Segoe UI", sans-serif;
+}
+
+.notfound-card {
+  background: #ffffff;
+  padding: 3rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.notfound-card h1 {
+  font-size: 5rem;
+  font-weight: 800;
+  color: #ef4444;
+  margin-bottom: 1rem;
+}
+
+.notfound-card p {
+  font-size: 1.2rem;
+  color: #374151;
+  margin-bottom: 2rem;
+}
+
+.notfound-button {
+  display: inline-block;
+  padding: 0.8rem 1.5rem;
+  background: #32cd32;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: 12px;
+  transition: all 0.25s ease;
+}
+
+.notfound-button:hover {
+  background: #228b22;
+  transform: translateY(-2px);
+}
+
+.notfound-button:active {
+  transform: translateY(0);
+}
+
+/* ==========================
+   Animação
+========================== */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================
+   Responsividade
+========================== */
+@media (max-width: 500px) {
+  .notfound-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .notfound-card h1 {
+    font-size: 4rem;
+  }
+
+  .notfound-card p {
+    font-size: 1rem;
+  }
+}
+
 /* ================= RESPONSIVIDADE ================= */
 
 /* Telas até 1024px (tablet) */

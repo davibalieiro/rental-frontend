@@ -137,8 +137,8 @@ export default function Orders({ currentUser }) {
     const deliveryDate = new Date(order.target_date);
     const diffDays = Math.ceil((deliveryDate - today) / (1000 * 60 * 60 * 24));
 
-    if (diffDays <= 7) return 2; // vermelho
-    if (diffDays <= 14) return 1; // laranja
+    if (diffDays <= 7) return 2;
+    if (diffDays <= 14) return 1;
     return 0;
   };
 

@@ -206,3 +206,40 @@
   color: #fff;
   border-color: #ff6600;
 }
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  height: 50px;
+  min-width: 220px;
+  max-width: 300px;
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 500;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.4s ease, fadeOut 0.4s ease 3.6s forwards;
+  z-index: 1000;
+}
+
+.toast-success {
+  background: #00913c;
+}
+.toast-error {
+  background: #dc3545;
+}
+.toast-info {
+  background: #007bff;
+}
+.toast-warning {
+  background: #ffc107;
+  color: #333;
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes fadeOut {
+  to { opacity: 0; transform: translateX(100%); }
+}

@@ -1,81 +1,81 @@
 /* ==========================
    Layout principal
-========================== */
+========================= */
 .minhas-reservas-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 30px 20px;
-  font-family: "Inter", sans-serif;
+  padding: 2rem;
+  font-family: "Segoe UI", sans-serif;
+  color: #333;
+  min-height: 100vh;
+  background: #f8fafc;
 }
 
 .title {
   font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 30px;
-  color: #1e293b;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #228B22;
   text-align: center;
 }
 
 /* ==========================
    Grid de pedidos
-========================== */
+========================= */
 .orders-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 /* ==========================
    Card de pedido
-========================== */
+========================= */
 .order-card {
-  background: #ffffff;
+  background: #fff;
   border-radius: 16px;
-  padding: 20px 24px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  padding: 1.2rem 1.4rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  transition: all 0.3s ease;
-  position: relative;
+  gap: 0.8rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .order-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
 
 /* ==========================
    Cabeçalho
-========================== */
+========================= */
 .order-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 8px;
 }
 
 .order-header h2 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #0f172a;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #228B22;
 }
 
 /* ==========================
    Status
-========================== */
+========================= */
 .status {
   display: inline-flex;
   align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  font-size: 0.9rem;
-  padding: 6px 12px;
+  padding: 0.4rem 0.8rem;
   border-radius: 8px;
-  gap: 6px;
   text-transform: capitalize;
 }
 
-/* Status específicos */
 .status.pending {
   background: #fef9c3;
   color: #ca8a04;
@@ -92,54 +92,52 @@
 }
 
 /* ==========================
-   Infos
-========================== */
+   Infos do pedido
+========================= */
 .order-card p {
-  font-size: 0.95rem;
-  color: #334155;
+  font-size: 0.9rem;
+  color: #444;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.5rem;
 }
 
 .order-card strong {
-  color: #1e293b;
+  color: #222;
 }
 
-/* Icones */
 .icon {
-  color: #64748b;
+  color: #888;
   font-size: 1rem;
 }
 
 /* ==========================
    Produtos
-========================== */
+========================= */
 .products {
   background: #f9fafb;
   border-radius: 12px;
-  padding: 14px 16px;
-  margin-top: 6px;
+  padding: 0.8rem 1rem;
 }
 
 .products h3 {
   font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 10px;
-  color: #0f172a;
+  margin-bottom: 0.6rem;
+  color: #222;
 }
 
 .products ul {
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
 .products li {
-  font-size: 0.9rem;
-  color: #475569;
-  padding: 6px 0;
-  border-bottom: 1px solid #e2e8f0;
+  font-size: 0.85rem;
+  color: #555;
+  padding: 0.4rem 0;
+  border-bottom: 1px solid #eee;
 }
 
 .products li:last-child {
@@ -147,37 +145,173 @@
 }
 
 /* ==========================
-   Estados (loading / error / vazio)
-========================== */
+   Ações
+========================= */
+.actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: auto;
+}
+
+button {
+  font-family: inherit;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease;
+}
+
+.btn-blue {
+  background: #1e874b;
+  color: #fff;
+  
+}
+
+.btn-blue:hover {
+  background: #15803d;
+}
+
+.btn-red {
+  background: #ff4d4f;
+  color: #fff;
+}
+
+.btn-red:hover {
+  background: #e03637;
+}
+
+.btn-green {
+  background: #27ae60;
+  color: #fff;
+  padding: 10px;
+}
+
+.btn-green:hover {
+  background: #1e874b;
+}
+
+.btn-secondary {
+  background: #e2e8f0;
+  color: #333;
+  padding: 10px;
+}
+
+.btn-secondary:hover {
+  background: #cbd5e1;
+}
+
+/* ==========================
+   Modal Editar / Confirmar
+========================= */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-content {
+  background: #fff;
+  padding: 1.5rem;
+  border-radius: 16px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  animation: fadeIn 0.25s ease;
+}
+
+.modal-content h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #444;
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+/* ==========================
+   Estados
+========================= */
 .loading,
 .error,
 .empty {
   text-align: center;
-  margin-top: 40px;
-  font-size: 1.1rem;
-  color: #475569;
+  font-size: 1rem;
+  margin-top: 2rem;
+  color: #666;
 }
 
 .error {
-  color: #dc2626;
+  color: #ff4d4f;
   font-weight: 600;
 }
 
 .empty {
-  color: #64748b;
   font-style: italic;
 }
 
 /* ==========================
+   Animações
+========================= */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ==========================
    Responsividade
-========================== */
+========================= */
 @media (max-width: 768px) {
   .title {
     font-size: 1.6rem;
   }
 
   .order-card {
-    padding: 16px;
+    padding: 1rem;
   }
 
   .order-header h2 {
@@ -185,6 +319,11 @@
   }
 
   .products h3 {
-    font-size: 0.95rem;
+    font-size: 0.9rem;
+  }
+
+  .modal-content {
+    max-width: 90%;
+    padding: 1.2rem;
   }
 }

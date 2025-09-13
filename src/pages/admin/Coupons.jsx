@@ -20,6 +20,14 @@ export default function Coupons() {
     allowedUsersInput: "",
   });
 
+  // estado do toast
+  const [toast, setToast] = useState({ message: "", type: "" });
+
+  const showToast = (message, type = "info") => {
+    setToast({ message, type });
+    setTimeout(() => setToast({ message: "", type: "" }), 4000);
+  };
+
   // Busca cupons
   const fetchCoupons = async () => {
     try {
@@ -86,8 +94,9 @@ export default function Coupons() {
       });
       setEditingCoupon(null);
       fetchCoupons();
+      showToast("Cupom salvo com sucesso!", "success");
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, "error");
     }
   };
 
@@ -100,8 +109,9 @@ export default function Coupons() {
       });
       if (!res.ok) throw new Error("Falha ao deletar cupom");
       fetchCoupons();
+      showToast("Cupom deletado com sucesso!", "success");
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, "error");
     }
   };
 
@@ -124,6 +134,13 @@ export default function Coupons() {
     <div className="coupons-container">
       <h2>Cupons</h2>
 
+      {/* Toast inline */}
+      {toast.message && (
+        <div className={`toast toast-${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
+      
       {/* ==== FORM DE CRIAÇÃO/EDIÇÃO ==== */}
       <div className="coupon-form">
         <input

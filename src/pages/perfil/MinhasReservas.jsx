@@ -43,8 +43,8 @@ function EditReservaModal({ reserva, onClose, onSave }) {
             />
           </div>
           <div className="modal-actions">
-            <button type="submit" className="btn btn-green">Salvar Alterações</button>
-            <button type="button" onClick={onClose} className="btn btn-secondary">Fechar</button>
+            <button type="submit" className="btn-green">Salvar Alterações</button>
+            <button type="button" onClick={onClose} className="btn-secondary">Fechar</button>
           </div>
         </form>
       </div>
@@ -184,8 +184,8 @@ export default function MinhasReservas() {
             <div className="actions">
               {reserva.status !== "CANCELLED" && (
                 <>
-                  <button className="btn btn-blue" onClick={() => openEditModal(reserva)}>Editar</button>
-                  <button className="btn btn-red" onClick={() => handleCancelReserva(reserva.id)}>Cancelar</button>
+                  <button onClick={() => openEditModal(reserva)} className="btn-blue">Editar</button>
+                  <button onClick={() => handleCancelReserva(reserva.id)} className="btn-red">Cancelar</button>
                 </>
               )}
             </div>
