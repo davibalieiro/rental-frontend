@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./css/Config.css";
+import { useUserContext } from "~/context/UserContext";
+import { FaAdjust, FaBomb, FaCogs, FaEnvelope, FaExclamationTriangle, FaGrav, FaKey, FaPersonBooth, FaPrescriptionBottle, FaScrewdriver, FaSearchengin, FaVoicemail } from "react-icons/fa";
 
 export default function Config() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
@@ -7,27 +9,16 @@ export default function Config() {
     oldPassword: "",
     newPassword: "",
     confirmPassword: "",
+    newEmail: "",
+    password: "",
     confirmDelete: "",
   });
-
+  const { user } = useUserContext();
   const [message, setMessage] = useState(null);
   const [error, setError] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [countdown, setCountdown] = useState(5);
   const [canDelete, setCanDelete] = useState(false);
-  const [language, setLanguage] = useState("pt");
-  const [timeFormat, setTimeFormat] = useState("24h");
-
-  const [sessions, setSessions] = useState([
-    { id: 1, device: "Chrome - Windows", location: "São Paulo, BR", ip: "192.168.0.12", lastActive: "Hoje, 14:32" },
-    { id: 2, device: "Firefox - Linux", location: "Rio de Janeiro, BR", ip: "192.168.0.33", lastActive: "Ontem, 19:10" },
-  ]);
-
-  const [history, setHistory] = useState([
-    "Senha alterada em 01/09/2025",
-    "Exportou dados da conta em 02/09/2025",
-    "Sessão desconectada em 03/09/2025",
-  ]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -54,7 +45,6 @@ export default function Config() {
         setMessage("Senha alterada com sucesso!");
         setError(null);
         setFormData({ ...formData, oldPassword: "", newPassword: "", confirmPassword: "" });
-        setHistory(prev => [`Senha alterada em ${new Date().toLocaleString()}`, ...prev]);
       } else {
         setError(json.message || "Erro ao alterar senha.");
       }
@@ -63,15 +53,44 @@ export default function Config() {
     }
   };
 
+  // New function to handle email change
+  const handleEmailChange = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch(`${API_URL}/user/change-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          newEmail: formData.newEmail,
+          password: formData.password,
+        }),
+      });
+      const json = await res.json();
+      if (res.ok) {
+        setMessage("E-mail alterado com sucesso!");
+        setError(null);
+        setFormData({ ...formData, newEmail: "", password: "" });
+      } else {
+        setError(json.message || "Erro ao alterar e-mail.");
+      }
+    } catch {
+      setError("Erro inesperado ao alterar e-mail.");
+    }
+  };
+
   const handleDeleteAccount = async () => {
     try {
-      const res = await fetch(`${API_URL}/user/delete`, {
+      const res = await fetch(`${API_URL}/user/${user.id}`, {
         method: "DELETE",
         credentials: "include",
       });
+
       if (res.ok) {
-        alert("Conta excluída com sucesso. Você será deslogado.");
+        alert("Conta desativada com sucesso. Você será deslogado.");
+        await fetch(`${API_URL}/logout`, { method: "POST" });
         window.location.href = "/";
+
       } else {
         const json = await res.json();
         setError(json.message || "Erro ao excluir conta.");
@@ -80,13 +99,16 @@ export default function Config() {
       setError("Erro inesperado ao excluir conta.");
     }
     setShowDeleteModal(false);
-    setCountdown(5);
+    setCountdown(5); // Reset countdown
     setCanDelete(false);
   };
 
   useEffect(() => {
     if (message || error) {
-      const timer = setTimeout(() => { setMessage(null); setError(null); }, 4000);
+      const timer = setTimeout(() => {
+        setMessage(null);
+        setError(null);
+      }, 4000);
       return () => clearTimeout(timer);
     }
   }, [message, error]);
@@ -101,95 +123,54 @@ export default function Config() {
     return () => clearTimeout(timer);
   }, [countdown, showDeleteModal]);
 
-  const handleExportData = () => {
-    const data = JSON.stringify({ sessions, history, language, timeFormat }, null, 2);
-    const blob = new Blob([data], { type: "application/json" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "user_data.json";
-    a.click();
-    URL.revokeObjectURL(url);
-    setMessage("Dados exportados com sucesso!");
-  };
-
   return (
     <div className="config-container">
-      <h2>⚙️ Configurações da Conta</h2>
+      <h2><FaScrewdriver color="#ff5518" /> Configurações da Conta</h2>
 
       {message && <div className="alert success slide-in">{message}</div>}
       {error && <div className="alert error slide-in">{error}</div>}
 
       {/* Alterar Senha */}
       <form className="config-form" onSubmit={handlePasswordChange}>
-        <h3>🔑 Alterar Senha</h3>
+        <h3><FaKey color="#ff5518" /> Alterar Senha</h3>
         <input type="password" placeholder="Senha Atual" name="oldPassword" value={formData.oldPassword} onChange={handleChange} required />
         <input type="password" placeholder="Nova Senha" name="newPassword" value={formData.newPassword} onChange={handleChange} required />
         <input type="password" placeholder="Confirmar Nova Senha" name="confirmPassword" value={formData.confirmPassword} onChange={handleChange} required />
         <button type="submit" className="btn-primary">Salvar Senha</button>
       </form>
 
-      {/* Sessões Ativas */}
-      <div className="sessions-section">
-        <h3>💻 Sessões Ativas</h3>
-        <ul>
-          {sessions.map(s => (
-            <li key={s.id}>{s.device} | {s.location} | IP: {s.ip} | {s.lastActive}</li>
-          ))}
-        </ul>
-        <button className="btn-primary" onClick={() => setMessage("Sessões desconectadas (simulado)!")}>Desconectar Todas</button>
-      </div>
+      {/* Alterar Email */}
+      <form className="config-form" onSubmit={handleEmailChange}>
+        <h3><FaEnvelope color="#ff5518" /> Alterar E-mail</h3>
+        <input type="email" placeholder="Novo E-mail" name="newEmail" value={formData.newEmail} onChange={handleChange} required />
+        <input type="password" placeholder="Confirme com sua Senha Atual" name="password" value={formData.password} onChange={handleChange} required />
+        <button type="submit" className="btn-primary">Salvar E-mail</button>
+      </form>
 
-      {/* Histórico */}
-      <div className="history-section">
-        <h3>📜 Histórico de Atividades</h3>
-        <ul>
-          {history.map((h, i) => <li key={i}>{h}</li>)}
-        </ul>
-      </div>
-
-      {/* Configurações adicionais */}
-      <div className="preferences-section">
-        <h3>⚙️ Preferências</h3>
-        <label>Idioma:</label>
-        <select value={language} onChange={(e) => setLanguage(e.target.value)}>
-          <option value="pt">Português</option>
-          <option value="en">English</option>
-        </select>
-        <label>Formato de Hora:</label>
-        <select value={timeFormat} onChange={(e) => setTimeFormat(e.target.value)}>
-          <option value="24h">24h</option>
-          <option value="12h">12h</option>
-        </select>
-      </div>
-
-      {/* Exportar Dados */}
-      <div className="export-section">
-        <h3>📁 Exportar Dados</h3>
-        <button className="btn-primary" onClick={handleExportData}>Exportar JSON</button>
-      </div>
-
-      {/* Excluir Conta */}
+      {/* Desativar Conta */}
       <div className="delete-section">
-        <h3>⚠️ Excluir Conta</h3>
-        <p>Esta ação é irreversível. Todos os dados serão apagados permanentemente.</p>
-        <button className="btn-danger" onClick={() => setShowDeleteModal(true)}>Excluir Minha Conta</button>
+        <h3> <FaExclamationTriangle color="#ff5518" /> Desativar Conta</h3>
+        <p>
+          Sua conta será desativada e você não poderá mais acessar o sistema. Para reativá-la no futuro, entre em contato com o suporte.
+        </p>
+        <button className="btn-danger" onClick={() => setShowDeleteModal(true)}>
+          Desativar Minha Conta
+        </button>
       </div>
 
-      {/* Modal de exclusão */}
+      {/* Modal de desativação */}
       {showDeleteModal && (
         <div className="modal-overlay fade-in">
           <div className="modal scale-in">
-            <h3>Confirme a exclusão</h3>
-            <p>Digite <strong>DELETE</strong> para confirmar.</p>
+            <h3>Confirme a desativação</h3>
+            <p>Digite <strong>DESATIVAR</strong> para confirmar.</p>
             <p>{!canDelete ? `Aguarde ${countdown}s antes de confirmar` : "Você pode confirmar agora"}</p>
-            <input type="text" name="confirmDelete" value={formData.confirmDelete} onChange={handleChange} placeholder="DELETE" disabled={!canDelete} />
+            <input type="text" name="confirmDelete" value={formData.confirmDelete} onChange={handleChange} placeholder="DESATIVAR" disabled={!canDelete} />
             <div className="modal-actions">
               <button className="btn-cancel" onClick={() => setShowDeleteModal(false)}>Cancelar</button>
-              <button className="btn-danger" disabled={!canDelete} onClick={() => {
-                if (formData.confirmDelete === "DELETE") handleDeleteAccount();
-                else setError("Digite DELETE para confirmar");
-              }}>Confirmar Exclusão</button>
+              <button className="btn-danger" disabled={!canDelete || formData.confirmDelete !== "DESATIVAR"} onClick={handleDeleteAccount}>
+                Confirmar Desativação
+              </button>
             </div>
           </div>
         </div>
