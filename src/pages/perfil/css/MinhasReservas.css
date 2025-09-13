@@ -177,12 +177,12 @@ button {
 }
 
 .btn-red {
-  background: #ff4d4f;
+  background: #FF4518;
   color: #fff;
 }
 
 .btn-red:hover {
-  background: #e03637;
+  background: #FF4500;
 }
 
 .btn-green {

@@ -22,11 +22,11 @@
 .favorites-header h2 {
   font-size: 2rem;
   font-weight: bold;
-  color: #e63978;
+  color: #228b22;
 }
 
 .btn-clear {
-  background: #ff4d4f;
+  background-color: #32cd32;
   color: #fff;
   border: none;
   padding: 0.6rem 1.2rem;
@@ -37,7 +37,7 @@
 }
 
 .btn-clear:hover {
-  background: #e03637;
+  background: #228b22;
 }
 
 .btn-clear:disabled {
@@ -151,21 +151,21 @@
 }
 
 .btn-view {
-  background: #3498db;
+  background: #32cd32;
   color: #fff;
 }
 
 .btn-view:hover {
-  background: #2980b9;
+  background: #228b22;
 }
 
 .btn-remove {
-  background: #ff4d4f;
+  background: #ff5518;
   color: #fff;
 }
 
 .btn-remove:hover {
-  background: #e03637;
+  background: #ff4500;
 }
 
 .btn-remove:disabled {

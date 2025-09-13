@@ -32,7 +32,7 @@ export default function Favorites({ localFavorites, addOrRemoveFavorite }) {
     <div className="favorites-page">
       {/* Cabeçalho */}
       <div className="favorites-header">
-        <h2>💖 Meus Favoritos</h2>
+        <h2>Meus Favoritos</h2>
         {localFavorites.length > 0 && (
           <button className="btn-clear" onClick={handleClearAll} disabled={processing}>
             Remover Todos
