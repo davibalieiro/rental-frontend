@@ -101,17 +101,45 @@ export default function Orders({ currentUser }) {
     return 0;
   };
 
-  const getSortScore = (order) => {
-    if (!order.sellerId) return 0; // Não reivindicado: prioridade máxima
-    if (getPriorityLevel(order) > 0) return 1; // Perto de expirar
+  // NOVO: Helper para verificar se a data de entrega já passou
+  const isExpired = (order) => {
+    if (!order.target_date) return false;
+    const today = new Date();
+    // Zera a hora para comparar apenas a data
+    today.setHours(0, 0, 0, 0);
+    const deliveryDate = new Date(order.target_date);
+    return deliveryDate < today;
+  };
 
-    const statusScores = {
-      'PENDING': 2,
-      'DOING': 3,
-      'APPROVED': 4,
-      'CANCELLED': 5,
-    };
-    return statusScores[order.status] ?? 99;
+
+  // ALTERADO: Lógica de pontuação para ordenação
+  const getSortScore = (order) => {
+    // Prioridade 1: Não reivindicado
+    if (!order.sellerId) return 0;
+
+    // Prioridade 2: Perto de expirar (e não cancelado/aprovado)
+    // A função getPriorityLevel já exclui CANCELLED e APPROVED
+    if (getPriorityLevel(order) > 0) return 1;
+
+    // Prioridade 7: Expirados que já foram Aprovados ou Cancelados
+    // Verificamos isso antes dos status normais para dar menor prioridade
+    if (isExpired(order) && (order.status === 'APPROVED' || order.status === 'CANCELLED')) {
+      return 6;
+    }
+
+    // Prioridades 3 a 6: Ordenação por status para pedidos não urgentes
+    switch (order.status) {
+      case 'PENDING':
+        return 2;
+      case 'DOING':
+        return 3;
+      case 'APPROVED': // Aprovados não expirados
+        return 4;
+      case 'CANCELLED': // Cancelados não expirados
+        return 5;
+      default:
+        return 99; // Fallback para outros casos
+    }
   };
 
   const sortedOrders = useMemo(() => {
