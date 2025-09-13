@@ -32,7 +32,7 @@
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 2rem;
-}   
+}
 
 .search-bar input,
 .search-bar select {
@@ -351,6 +351,7 @@
     opacity: 0;
     transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -406,5 +407,126 @@
 
   .card-footer {
     flex-direction: column;
+  }
+}
+
+/* ========================================= */
+/* ESTILOS PARA O MODAL DE ARQUIVO           */
+/* ========================================= */
+
+/* O modal de arquivo deve ser maior para acomodar filtros e resultados */
+.modal-content.modal-archive {
+  width: 90vw;
+  /* Ocupa 90% da largura da tela */
+  max-width: 1200px;
+  /* Mas no máximo 1200px de largura */
+  height: 90vh;
+  /* Ocupa 90% da altura da tela */
+  max-height: 800px;
+  /* E no máximo 800px de altura */
+
+  /* Usa Flexbox para organizar o conteúdo interno verticalmente */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.modal-archive h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #e0e0e0;
+  flex-shrink: 0;
+  /* Impede que o título encolha */
+}
+
+/* Ajustes na barra de busca dentro do modal */
+.modal-archive .search-bar {
+  margin-bottom: 15px;
+  flex-shrink: 0;
+  /* Impede que a barra de filtros encolha */
+}
+
+/*
+  Esta é a parte principal: a área de conteúdo.
+  - 'flex: 1' faz com que ela cresça para ocupar todo o espaço vertical disponível.
+  - 'overflow-y: auto' adiciona uma barra de rolagem vertical APENAS nesta área
+    se o conteúdo for maior que o espaço disponível.
+*/
+.archive-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  background-color: #282c34;
+  /* Um fundo um pouco mais escuro para a área de rolagem */
+  border-radius: 8px;
+  border: 1px solid #444;
+}
+
+/* Pequeno ajuste para a grade de pedidos dentro do conteúdo do arquivo */
+.archive-content .orders-grid {
+  padding-right: 10px;
+  /* Evita que o conteúdo cole na barra de rolagem */
+}
+
+/* O card dentro do arquivo não precisa de tanta margem inferior */
+.archive-content .order-card {
+  margin-bottom: 15px;
+}
+
+/* A paginação e as ações devem ficar fixas na parte inferior */
+.modal-archive .pagination {
+  margin-top: 15px;
+  padding-top: 10px;
+  border-top: 1px solid #444;
+  flex-shrink: 0;
+  /* Impede que a paginação encolha */
+}
+
+.modal-archive .modal-actions {
+  margin-top: 15px;
+  justify-content: flex-end;
+  /* Alinha o botão "Fechar" à direita */
+  flex-shrink: 0;
+}
+
+/* ========================================= */
+/* MELHORIAS NOS ESTILOS EXISTENTES (Opcional mas recomendado) */
+/* ========================================= */
+
+/* Garante que o modal base tenha um z-index alto e o overlay também */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background-color: #3a3f4a;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  z-index: 1001;
+}
+
+/* Ajustes para telas menores (Responsividade) */
+@media (max-width: 768px) {
+  .modal-content.modal-archive {
+    width: 98vw;
+    /* Em telas pequenas, ocupa quase toda a largura */
+    height: 95vh;
+    /* E quase toda a altura */
+  }
+
+  /* Faz os filtros quebrarem a linha em telas pequenas */
+  .modal-archive .search-bar {
+    flex-direction: column;
+    gap: 10px;
   }
 }
