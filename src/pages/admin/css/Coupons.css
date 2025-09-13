@@ -130,8 +130,10 @@
 
 /* ===== Card Buttons ===== */
 .btn-edit {
-  background-color: #1e90ff;
+  background-color: #00913c;;
   color: #fff;
+  display: inline;
+  
 }
 
 .btn-edit:hover {

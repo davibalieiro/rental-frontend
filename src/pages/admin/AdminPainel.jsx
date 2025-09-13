@@ -39,7 +39,6 @@ import {
   Legend,
 } from "recharts";
 import "./css/Admin.css";
-import { useAuth } from "~/hooks/useAuth";
 import { useUserContext } from "~/context/UserContext";
 import Orders from "./Orders";
 

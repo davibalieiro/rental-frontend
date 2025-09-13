@@ -87,7 +87,7 @@
 }
 
 .file-upload-button {
-  background: #3498db;
+  background: #2ecc71;
   color: #fff;
   padding: 10px 16px;
   border-radius: 8px;
@@ -199,11 +199,17 @@
 }
 
 .icon-btn.edit {
+  background: #2ecc71;
+}
+.icon-btn.edit:hover{
   background: #3498db;
 }
 
 .icon-btn.delete {
   background: #e74c3c;
+}
+.icon-btn.delete:hover{
+  background: #c0392b;
 }
 
 .card-content {
@@ -235,7 +241,7 @@
 
 .categories span,
 .materials span {
-  background: #8e44ad;
+  background: #27ae60;
   /* roxo mais bonito */
   color: #fff;
   padding: 4px 10px;
@@ -276,7 +282,7 @@
 }
 
 .page-btn.active {
-  background: #3498db;
+  background: #2ecc71;
   color: #fff;
   font-weight: bold;
 }

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState(null); // success | error | loading
+  const API_URL = import.meta.env.VITE_API_URL_V1;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -12,10 +13,10 @@ export default function Newsletter() {
     setStatus("loading");
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/newsletter/register`, {
+      const response = await fetch(`${API_URL}/newsletter/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email: email }),
       });
 
       if (response.ok) {

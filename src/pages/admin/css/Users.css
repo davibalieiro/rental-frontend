@@ -71,7 +71,7 @@
 }
 
 .admin-table thead {
-  background: #0984e3;
+  background: #00913c;;
   color: #fff;
 }
 
@@ -111,7 +111,8 @@
 /* botões */
 .btn-edit,
 .btn-delete {
-  padding: 8px 12px;
+  display: inline;
+  padding: 10px;
   border: none;
   border-radius: 10px;
   font-weight: 600;
@@ -120,10 +121,10 @@
   transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
 }
 
-.btn-edit { background: #00b894; color: #fff; }
+.btn-edit { background: #2ecc71; color: #fff; }
 .btn-edit:hover { background: #019875; transform: translateY(-1px); }
 
-.btn-delete { background: #d63031; color: #fff; }
+.btn-delete { background: #d63031; color: #fff; } 
 .btn-delete:hover { background: #c0392b; transform: translateY(-1px); }
 
 /* drawer (form de edição em overlay) */
@@ -281,7 +282,7 @@
 .admin-layout.dark .users-filters select,
 .admin-layout.dark .drawer-card { background: #1b1b1b; }
 
-.admin-layout.dark .admin-table thead { background: #0b64ad; }
+.admin-layout.dark .admin-table thead { background: #00913c;; }
 .admin-layout.dark .admin-table tbody tr.even { background: #171717; }
 .admin-layout.dark .admin-table tbody tr.odd  { background: #1b1b1b; }
 .admin-layout.dark .admin-table tbody tr:hover { background: #1f2937; }
