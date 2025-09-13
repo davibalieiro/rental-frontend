@@ -10,6 +10,7 @@
   border-radius: 12px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
 }
 
 /* =========================
@@ -21,6 +22,7 @@
   color: #fff;
   padding: 30px 20px;
   text-align: center;
+  transition: all 0.3s ease;
 }
 
 .perfil-avatar img {
@@ -60,6 +62,23 @@
   padding-left: 18px;
 }
 
+/* Botão Dark Mode */
+.dark-mode-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.dark-mode-btn:hover {
+  background: rgba(255, 255, 255, 0.35);
+}
+
 /* =========================
    Área Principal
 ========================= */
@@ -67,6 +86,7 @@
   flex: 1;
   padding: 40px;
   background: #fff;
+  transition: all 0.3s ease;
 }
 
 .perfil-content h3 {
@@ -144,6 +164,48 @@
 
 .card button:hover {
   background: #cc3700;
+}
+
+/* =========================
+   Dark Mode
+========================= */
+.perfil-container.dark {
+  background: #1f1f1f;
+  color: #f5f5f5;
+}
+
+.perfil-container.dark .perfil-sidebar {
+  background: #333;
+  color: #fff;
+}
+
+.perfil-container.dark .perfil-tabs button {
+  color: #fff;
+}
+
+.perfil-container.dark .perfil-tabs button.active,
+.perfil-container.dark .perfil-tabs button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.perfil-container.dark .perfil-content {
+  background: #2c2c2c;
+  color: #f5f5f5;
+}
+
+.perfil-container.dark .perfil-info,
+.perfil-container.dark .card {
+  background: #3a3a3a;
+  border-color: #555;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.perfil-container.dark .card button {
+  background: #ff6347;
+}
+
+.perfil-container.dark .card button:hover {
+  background: #e5533d;
 }
 
 /* =========================

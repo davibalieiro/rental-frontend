@@ -6,24 +6,24 @@
   margin: 0 auto;
   padding: 2rem;
   font-family: 'Inter', sans-serif;
-  color: #1f2937;
+  color: var(--text-primary);
 }
 
 .cupons-wrapper h2 {
   font-size: 2rem;
   font-weight: bold;
-  color: #228b22;
+  color: var(--primary-green);
 }
 
 h4 {
-  color: #228b22;
+  color: var(--primary-green);
 }
 
 /* ==========================
    Toast
 ========================== */
 .toast {
-  background-color: #34d399; /* verde */
+  background-color: #34d399;
   color: white;
   padding: 1rem 1.5rem;
   border-radius: 8px;
@@ -51,28 +51,28 @@ h4 {
    Card de Cupom
 ========================== */
 .cupom-card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 12px;
   padding: 1.5rem;
   box-shadow: 0 4px 6px rgba(0,0,0,0.05);
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .cupom-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.12);
 }
 
 /* ==========================
    Cupom Expirando
 ========================== */
 .cupom-card.expiring {
-  border-color: #ff4518; 
+  border-color: #ff4518;
 }
 
 .badge-alert {
@@ -91,9 +91,10 @@ h4 {
    Cupom Usado
 ========================== */
 .cupom-card.used {
-  background: #f3f4f6;
+  background: var(--card-used-bg);
   border-color: #d1d5db;
   color: #6b7280;
+  text-decoration: line-through;
 }
 
 .cupom-card.used button {
@@ -106,7 +107,7 @@ h4 {
    Botão
 ========================== */
 .cupom-card button {
-  margin-top: 1rem;
+  margin-top: 0.8rem;
   padding: 0.6rem 1.2rem;
   border: none;
   border-radius: 8px;
@@ -119,6 +120,25 @@ h4 {
 
 .cupom-card button:hover:not(:disabled) {
   background-color: #228b22;
+}
+
+/* ==========================
+   Dark Mode
+========================== */
+:root {
+  --primary-green: #228b22;
+  --text-primary: #1f2937;
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --card-used-bg: #f3f4f6;
+}
+
+.dark {
+  --primary-green: #32cd32;
+  --text-primary: #f3f4f6;
+  --card-bg: #1f2937;
+  --card-border: #374151;
+  --card-used-bg: #2d2d2d;
 }
 
 /* ==========================

@@ -22,7 +22,7 @@ export default function PerfilInfo({ user, favorites = [] }) {
 
   return (
     <div className="perfil-info-card">
-      <h3 className="perfil-title">Informações do Usuário</h3>
+      <h2 className="perfil-title">Informações do Usuário</h2>
 
       <div className="perfil-info">
         <div className="perfil-row">

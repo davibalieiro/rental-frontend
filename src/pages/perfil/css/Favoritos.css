@@ -1,4 +1,33 @@
 /* =========================
+   Variáveis de Tema
+========================= */
+:root {
+  --primary-green: #228b22;
+  --secondary-green: #32cd32;
+  --danger-red: #ff5518;
+  --danger-red-dark: #ff4500;
+  --text-primary: #333;
+  --text-secondary: #555;
+  --text-muted: #666;
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --image-bg: #f6f6f6;
+}
+
+.dark {
+  --primary-green: #32cd32;
+  --secondary-green: #27ae60;
+  --danger-red: #ff6347;
+  --danger-red-dark: #e74c3c;
+  --text-primary: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --card-bg: #12171d;
+  --card-border: #374151;
+  --image-bg: #2d2d2d;
+}
+
+/* =========================
    Layout da página
 ========================= */
 .favorites-page {
@@ -6,7 +35,7 @@
   margin: 0 auto;
   padding: 2rem;
   font-family: "Segoe UI", sans-serif;
-  color: #333;
+  color: var(--text-primary);
 }
 
 /* =========================
@@ -22,22 +51,22 @@
 .favorites-header h2 {
   font-size: 2rem;
   font-weight: bold;
-  color: #228b22;
+  color: var(--primary-green);
 }
 
 .btn-clear {
-  background-color: #32cd32;
+  background-color: var(--secondary-green);
   color: #fff;
   border: none;
   padding: 0.6rem 1.2rem;
   border-radius: 8px;
   font-size: 0.9rem;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: background 0.2s ease;
 }
 
 .btn-clear:hover {
-  background: #228b22;
+  background: var(--primary-green);
 }
 
 .btn-clear:disabled {
@@ -58,7 +87,8 @@
    Card individual
 ========================= */
 .favorite-card {
-  background: #fff;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   display: flex;
@@ -84,7 +114,7 @@
   margin-bottom: 1rem;
   overflow: hidden;
   border-radius: 12px;
-  background: #f6f6f6;
+  background: var(--image-bg);
 }
 
 .product-image {
@@ -99,12 +129,12 @@
 .favorite-card h3 {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;
-  color: #222;
+  color: var(--text-primary);
 }
 
 .short-description {
   font-size: 0.9rem;
-  color: #555;
+  color: var(--text-secondary);
   margin-bottom: 0.8rem;
   min-height: 40px;
 }
@@ -112,13 +142,13 @@
 .price {
   font-size: 1.1rem;
   font-weight: bold;
-  color: #27ae60;
+  color: var(--primary-green);
   margin-bottom: 0.5rem;
 }
 
 .fav-count {
   font-size: 0.85rem;
-  color: #666;
+  color: var(--text-muted);
   display: flex;
   align-items: center;
   gap: 0.4rem;
@@ -151,21 +181,21 @@
 }
 
 .btn-view {
-  background: #32cd32;
+  background: var(--secondary-green);
   color: #fff;
 }
 
 .btn-view:hover {
-  background: #228b22;
+  background: var(--primary-green);
 }
 
 .btn-remove {
-  background: #ff5518;
+  background: var(--danger-red);
   color: #fff;
 }
 
 .btn-remove:hover {
-  background: #ff4500;
+  background: var(--danger-red-dark);
 }
 
 .btn-remove:disabled {
@@ -179,6 +209,6 @@
 .empty-message {
   text-align: center;
   font-size: 1rem;
-  color: #666;
+  color: var(--text-muted);
   margin-top: 3rem;
 }
