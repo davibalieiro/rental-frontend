@@ -1,34 +1,11 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./css/MeusCupons.css";
 
 function MeusCupons({ cupons }) {
-  const navigate = useNavigate();
   const [usedCupons, setUsedCupons] = useState([]);
   const [toast, setToast] = useState(null);
 
-  const usarCupom = (cupom) => {
-    const code = cupom.code;
-    if (!usedCupons.includes(code)) {
-      // Mostra toast
-      setToast(`✅ Cupom "${code}" aplicado!`);
-      setTimeout(() => setToast(null), 2500);
-
-      // Move cupom para usados
-      setUsedCupons((prev) => [...prev, code]);
-
-      // Redireciona após 1s
-      setTimeout(() => navigate("/catalogo"), 1000);
-    }
-  };
-
-  if (!cupons || cupons.length === 0) {
-    return <p>Você não possui cupons disponíveis.</p>;
-  }
-
   const today = new Date();
-  const ativos = cupons.filter((c) => !usedCupons.includes(c.code));
-  const usados = cupons.filter((c) => usedCupons.includes(c.code));
 
   const isExpiringSoon = (expiresIn) => {
     const expDate = new Date(expiresIn);
@@ -36,13 +13,44 @@ function MeusCupons({ cupons }) {
     return diffDays <= 3;
   };
 
+  const usarCupom = (cupom) => {
+    const code = cupom.code;
+    if (!usedCupons.includes(code)) {
+      setToast(`✅ Cupom "${code}" aplicado!`);
+      setTimeout(() => setToast(null), 2500);
+      setUsedCupons((prev) => [...prev, code]);
+    }
+  };
+
+  if (!cupons || cupons.length === 0) {
+    return <p>Você não possui cupons disponíveis.</p>;
+  }
+
+  // Ordenação de cupons ativos: primeiro expiring, depois por data
+  const ativos = cupons
+    .filter((c) => !usedCupons.includes(c.code))
+    .sort((a, b) => {
+      const aExp = isExpiringSoon(a.expiresIn);
+      const bExp = isExpiringSoon(b.expiresIn);
+
+      if (aExp && !bExp) return -1;
+      if (!aExp && bExp) return 1;
+
+      return new Date(a.expiresIn) - new Date(b.expiresIn);
+    });
+
+  // Cupons usados ordenados por data
+  const usados = cupons
+    .filter((c) => usedCupons.includes(c.code))
+    .sort((a, b) => new Date(a.expiresIn) - new Date(b.expiresIn));
+
   return (
     <div className="cupons-wrapper">
       {toast && <div className="toast">{toast}</div>}
 
       {ativos.length > 0 && (
         <>
-          <h3>Cupons disponíveis</h3>
+          <h2>Cupons disponíveis</h2>
           <div className="cupons-container">
             {ativos.map((cupom) => {
               const expiring = isExpiringSoon(cupom.expiresIn);
@@ -61,35 +69,13 @@ function MeusCupons({ cupons }) {
                     <strong>Expira em:</strong>{" "}
                     {new Date(cupom.expiresIn).toLocaleDateString("pt-BR")}
                   </p>
-                  <button onClick={() => usarCupom(cupom)}>Usar Cupom</button>
-                </div>
+                  </div>
               );
             })}
           </div>
         </>
       )}
 
-      {usados.length > 0 && (
-        <>
-          <h3>Cupons usados</h3>
-          <div className="cupons-container">
-            {usados.map((cupom) => (
-              <div key={cupom.id} className="cupom-card used fade-in">
-                <h4>{cupom.code}</h4>
-                <p>{cupom.text}</p>
-                <p>
-                  <strong>Benefício:</strong> {cupom.benefit}
-                </p>
-                <p>
-                  <strong>Expira em:</strong>{" "}
-                  {new Date(cupom.expiresIn).toLocaleDateString("pt-BR")}
-                </p>
-                <button disabled>Cupom usado</button>
-              </div>
-            ))}
-          </div>
-        </>
-      )}
     </div>
   );
 }
