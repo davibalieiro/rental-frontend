@@ -21,48 +21,52 @@ import Favorites from "./pages/perfil/Favoritos";
 import { UserProvider } from "./context/UserContext";
 import ConcludeOrder from "./pages/ConcludeOrder";
 import { ProductsProvider } from "./context/ProductsContext";
+import { OrdersProvider } from "./context/OrdersContext";
 
 
 function App() {
   return (
     <UserProvider>
       <ProductsProvider>
-        <FavoritesProvider>
-          <Router>
-            <div className="font-sans">
-              <Header />
-              <main>
-                <Routes>
-                  {/* Home */}
-                  <Route path="/" element={<Home />} />
-                  <Route path="/home" element={<Home />} />
+        <OrdersProvider>
+          <FavoritesProvider>
+            <Router>
+              <div className="font-sans">
+                <Header />
+                <main>
+                  <Routes>
+                    {/* Home */}
+                    <Route path="/" element={<Home />} />
+                    <Route path="/home" element={<Home />} />
 
-                  {/* Páginas principais */}
-                  <Route path="/empresa" element={<Empresa />} />
-                  <Route path="/catalogo" element={<Catalogo />} />
-                  <Route path="/contato" element={<Contato />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/perfil" element={<Perfil />} />
-                  <Route path="/admin" element={<AdminPainel />} />
+                    {/* Páginas principais */}
+                    <Route path="/empresa" element={<Empresa />} />
+                    <Route path="/catalogo" element={<Catalogo />} />
+                    <Route path="/contato" element={<Contato />} />
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/perfil" element={<Perfil />} />
+                    <Route path="/admin" element={<AdminPainel />} />
 
-                  {/* Extras */}
-                  <Route path="/InfoCard" element={<InfoCard />} />
-                  <Route path="/termos" element={<Termos />} />
-                  <Route path="/privacidade" element={<Privacidade />} />
-                  <Route path="/faq" element={<FAQ />} />
-                  <Route path="/regulamento" element={<Regulamento />} />
+                    {/* Extras */}
+                    <Route path="/InfoCard" element={<InfoCard />} />
+                    <Route path="/termos" element={<Termos />} />
+                    <Route path="/privacidade" element={<Privacidade />} />
+                    <Route path="/faq" element={<FAQ />} />
+                    <Route path="/regulamento" element={<Regulamento />} />
 
-                  <Route path="/cartpage" element={<CartPage />} />
-                  <Route path="/produto/:slug" element={<Produto />} />
-                  <Route path="/favoritos" element={<Favorites />} /> {/* ✅ rota para favoritos */}
-                  <Route path="/concluir-pedido" element={<ConcludeOrder />} />
-                </Routes>
-              </main>
-              <Footer />
-            </div>
-          </Router>
-        </FavoritesProvider>
+                    <Route path="/cartpage" element={<CartPage />} />
+                    <Route path="/produto/:slug" element={<Produto />} />
+                    <Route path="/favoritos" element={<Favorites />} /> {/* ✅ rota para favoritos */}
+                    <Route path="/concluir-pedido" element={<ConcludeOrder />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </div>
+            </Router>
+          </FavoritesProvider>
+        </OrdersProvider>
       </ProductsProvider>
+
     </UserProvider>
 
   );

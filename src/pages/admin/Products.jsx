@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FaBox, FaBoxes, FaTrash, FaEdit } from "react-icons/fa";
+import { FaBox, FaBoxes, FaTrash, FaEdit, FaPlus } from "react-icons/fa";
 import "./css/ProductAdmin.css";
 import { useProductsContext } from "~/context/ProductsContext";
 import { useProductImages } from "~/hooks/useProductImages";
@@ -266,7 +266,7 @@ export default function Products() {
         </div>
 
         <button type="submit" className="btn-primary">
-          ➕ Adicionar Produto
+          <FaPlus /> <span style={{ marginLeft: '10px' }}>Adicionar Produto</span>
         </button>
       </form>
 
