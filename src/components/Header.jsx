@@ -1,12 +1,21 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import logo from "../assets/logo_clisare_loca.png";
-import { FaUserCircle } from "react-icons/fa"; // ícone perfil
+import { FaMoon, FaSun } from "react-icons/fa"; // ícones tema
 
 export default function Header() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    if (darkMode) {
+      document.body.classList.add("dark-mode");
+    } else {
+      document.body.classList.remove("dark-mode");
+    }
+  }, [darkMode]);
 
   if (loading) return null;
 
@@ -24,9 +33,9 @@ export default function Header() {
 
   const handleProfileClick = () => {
     if (!user) {
-      navigate("/login"); // se não estiver logado -> login
+      navigate("/login");
     } else {
-      navigate("/perfil"); // se estiver logado -> perfil
+      navigate("/perfil");
     }
   };
 
@@ -41,19 +50,16 @@ export default function Header() {
         <button onClick={() => navigate("/contato")}>Contato</button>
         <button onClick={() => navigate("/cartpage")}>Carrinho</button>
 
-        {/* Painel Admin só para admin */}
         {user?.is_admin && (
           <button onClick={() => navigate("/admin")}>Painel Admin</button>
         )}
 
-        {/* Ícone perfil -> só para usuários comuns */}
         {user && !user.is_admin && (
           <button onClick={handleProfileClick} className="profile-btn">
             Minha Conta
           </button>
         )}
 
-        {/* Login / Logout */}
         {!user ? (
           <button onClick={() => navigate("/login")} className="login-btn">
             Login
@@ -63,6 +69,14 @@ export default function Header() {
             Sair
           </button>
         )}
+
+        {/* Botão de tema */}
+        <button
+          className="theme-toggle"
+          onClick={() => setDarkMode((prev) => !prev)}
+        >
+          {darkMode ? <FaSun /> : <FaMoon />}
+        </button>
       </nav>
     </header>
   );

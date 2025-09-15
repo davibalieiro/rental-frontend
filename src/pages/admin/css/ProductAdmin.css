@@ -1,4 +1,35 @@
 /* ==========================
+   Variáveis Globais
+========================== */
+:root {
+  --color-primary: #32cd32;
+  --color-primary-dark: #228b22;
+  --color-secondary: #ff4500;
+
+  --color-bg: #f8f9fa;
+  --color-bg-alt: #ffffff;
+  --color-text: #333;
+  --color-card-bg: #fff;
+  --color-card-shadow: rgba(0,0,0,0.08);
+
+  --transition: all 0.3s ease;
+  --radius: 14px;
+  --shadow-md: 0 4px 15px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 25px rgba(0,0,0,0.12);
+}
+
+/* ==========================
+   Dark Mode
+========================== */
+.products-page.dark {
+  --color-bg: #121212;
+  --color-bg-alt: #1e1e1e;
+  --color-text: #f4f4f4;
+  --color-card-bg: #1e1e1e;
+  --color-card-shadow: rgba(255,255,255,0.05);
+}
+
+/* ==========================
    Layout Geral
 ========================== */
 .products-page {
@@ -6,120 +37,114 @@
   margin: 0 auto;
   padding: 20px;
   font-family: "Roboto", sans-serif;
-  color: #333;
-  background: #f8f9fa;
+  background: var(--color-bg);
+  color: var(--color-text);
+  transition: var(--transition);
 }
 
 .products-page h2 {
+  font-size: 2rem;
+  margin-bottom: 25px;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 2rem;
-  margin-bottom: 25px;
-  color: #2c3e50;
 }
 
 /* ==========================
    Formulário
 ========================== */
 .admin-form {
-  background: #fff;
-  padding: 25px;
-  border-radius: 14px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  margin-bottom: 35px;
-  transition: box-shadow 0.3s ease;
-}
-
-.admin-form:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  background: var(--color-card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 30px;
+  transition: var(--transition);
 }
 
 .admin-form .form-group {
-  margin-bottom: 18px;
+  margin-bottom: 15px;
 }
 
 .admin-form label {
   display: block;
-  margin-bottom: 6px;
   font-weight: 500;
-  font-size: 0.95rem;
+  margin-bottom: 5px;
 }
 
 .admin-form input,
 .admin-form textarea {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
   font-size: 0.95rem;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.admin-form input:focus,
-.admin-form textarea:focus {
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
-  outline: none;
+  transition: var(--transition);
+  background: var(--color-bg-alt);
+  color: var(--color-text);
 }
 
 .admin-form textarea {
-  min-height: 90px;
   resize: vertical;
+  min-height: 60px;
 }
 
-.checkbox-group {
+.admin-form .checkbox-group {
   display: flex;
   flex-wrap: wrap;
-  gap: 14px;
+  gap: 10px;
 }
 
-.checkbox-item {
-  font-size: 0.9rem;
+.admin-form .checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .file-upload-wrapper {
   position: relative;
+  display: inline-block;
+  width: 100%;
 }
 
-#file-upload {
+.file-upload-wrapper input[type="file"] {
   display: none;
 }
 
 .file-upload-button {
-  background: #2ecc71;
-  color: #fff;
-  padding: 10px 16px;
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
   border-radius: 8px;
+  background: var(--color-primary);
+  color: #fff;
+  text-align: center;
   cursor: pointer;
-  font-size: 0.9rem;
-  transition: background 0.2s, transform 0.1s;
+  font-weight: 500;
+  transition: var(--transition);
 }
 
 .file-upload-button:hover {
-  background: #2980b9;
-  transform: translateY(-1px);
+  background: var(--color-primary-dark);
 }
 
 .btn-primary {
-  background: #2ecc71;
+  padding: 10px 16px;
+  background: var(--color-secondary);
   color: #fff;
-  padding: 12px 18px;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-  transition: background 0.3s, transform 0.15s;
+  font-weight: 500;
+  transition: var(--transition);
 }
 
 .btn-primary:hover {
-  background: #27ae60;
-  transform: translateY(-2px);
+  background: #cc3700;
 }
 
 /* ==========================
-   Cards de Produtos
+   Cards
 ========================== */
 .cards-container {
   display: grid;
@@ -128,10 +153,10 @@
 }
 
 .card {
-  background: #fff;
-  border-radius: 14px;
+  background: var(--color-card-bg);
+  border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: var(--shadow-md);
   transition: transform 0.3s, box-shadow 0.3s;
   display: flex;
   flex-direction: column;
@@ -139,7 +164,7 @@
 
 .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-lg);
 }
 
 .card-image {
@@ -149,6 +174,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.products-page.dark .card-image {
+  background: #2a2a3a;
 }
 
 .card-image img {
@@ -194,33 +223,30 @@
   transition: background 0.3s, transform 0.15s;
 }
 
-.icon-btn:hover {
-  transform: translateY(-1px);
+.icon-btn.edit {
+  background: var(--color-primary);
 }
 
-.icon-btn.edit {
-  background: #2ecc71;
-}
-.icon-btn.edit:hover{
-  background: #3498db;
+.icon-btn.edit:hover {
+  background: var(--color-primary-dark);
 }
 
 .icon-btn.delete {
-  background: #e74c3c;
+  background: var(--color-secondary);
 }
-.icon-btn.delete:hover{
-  background: #c0392b;
+
+.icon-btn.delete:hover {
+  background: #cc3700;
 }
 
 .card-content {
   padding: 16px;
-  flex: 1;
 }
 
 .card-content h3 {
   margin: 0 0 10px;
   font-size: 1.2rem;
-  color: #2c3e50;
+  color: var(--color-text);
 }
 
 .card-content p {
@@ -229,62 +255,47 @@
   color: #555;
 }
 
-.categories,
-.materials {
-  display: inline;
-  flex-wrap: wrap;
-  padding: 0px;
-  margin-left: 10px;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.categories span,
-.materials span {
-  background: #27ae60;
-  /* roxo mais bonito */
+.card-content .categories span,
+.card-content .materials span {
+  background: var(--color-primary);
   color: #fff;
   padding: 4px 10px;
   border-radius: 8px;
   font-size: 0.85rem;
-  white-space: nowrap;
-  /* impede que quebre o texto */
+  margin-right: 5px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
 }
 
-
 /* ==========================
    Paginação
 ========================== */
 .pagination {
-  margin-top: 30px;
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
+  margin: 25px 0;
 }
 
 .page-btn {
-  border: none;
-  padding: 10px 16px;
-  border-radius: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: var(--color-card-bg);
   cursor: pointer;
-  font-size: 0.95rem;
-  background: #ecf0f1;
-  color: #2c3e50;
-  transition: background 0.3s, transform 0.15s;
-}
-
-.page-btn:hover {
-  background: #d0d7de;
-  transform: translateY(-1px);
+  transition: var(--transition);
 }
 
 .page-btn.active {
-  background: #2ecc71;
+  background: var(--color-primary);
   color: #fff;
-  font-weight: bold;
+  border-color: var(--color-primary-dark);
+}
+
+.page-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 /* ==========================
@@ -293,31 +304,25 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(0,0,0,0.65);
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: fadeIn 0.25s ease;
   z-index: 1000;
 }
 
 .modal {
-  background: #fff;
+  background: var(--color-card-bg);
   padding: 25px;
-  border-radius: 14px;
+  border-radius: var(--radius);
   max-width: 450px;
   width: 100%;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-  animation: scaleIn 0.25s ease;
-}
-
-.modal h3 {
-  margin-top: 0;
-  color: #2c3e50;
+  box-shadow: var(--shadow-lg);
+  color: var(--color-text);
 }
 
 .modal-actions {
-  margin-top: 22px;
+  margin-top: 20px;
   display: flex;
   justify-content: flex-end;
   gap: 12px;
@@ -329,17 +334,16 @@
   border: none;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background 0.3s, transform 0.15s;
+  transition: all 0.2s;
 }
 
 .modal-btn.confirm {
-  background: #e74c3c;
+  background: var(--color-secondary);
   color: #fff;
 }
 
 .modal-btn.confirm:hover {
-  background: #c0392b;
-  transform: translateY(-1px);
+  background: #cc3700;
 }
 
 .modal-btn.cancel {
@@ -349,32 +353,26 @@
 
 .modal-btn.cancel:hover {
   background: #95a5a6;
-  transform: translateY(-1px);
 }
 
 /* ==========================
-   Animações
+   Loading
 ========================== */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.2rem;
+  color: var(--color-text);
 }
 
-@keyframes scaleIn {
-  from {
-    transform: scale(0.9);
-    opacity: 0;
-  }
+.spinner {
+  animation: spin 1s linear infinite;
+}
 
-  to {
-    transform: scale(1);
-    opacity: 1;
-  }
+@keyframes spin {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
 }
 
 /* ==========================
@@ -383,15 +381,5 @@
 @media (max-width: 768px) {
   .cards-container {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-
-  .admin-form {
-    padding: 18px;
-  }
-
-  .file-upload-button,
-  .btn-primary {
-    width: 100%;
-    text-align: center;
   }
 }

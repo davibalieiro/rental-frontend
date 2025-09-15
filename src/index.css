@@ -23,6 +23,7 @@ header {
   position: sticky;
   top: 0;
   z-index: 100;
+  transition: background 0.3s, color 0.3s;
 }
 
 header img.logo {
@@ -33,6 +34,7 @@ header img.logo {
 header nav {
   display: flex;
   gap: 25px;
+  align-items: center;
 }
 
 header nav button {
@@ -62,6 +64,41 @@ header .login-btn {
 
 header .login-btn:hover {
   background: #228b22;
+}
+
+.theme-toggle {
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  color: inherit;
+  transition: transform 0.2s;
+}
+.theme-toggle:hover {
+  transform: scale(1.2);
+}
+
+/* ================= DARK MODE ================= */
+body.dark-mode header {
+  background: #1e1e1e;
+  color: #f1f1f1;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+body.dark-mode header nav button {
+  color: #ddd;
+}
+
+body.dark-mode header nav button:hover {
+  color: #ff7b39;
+}
+
+body.dark-mode .login-btn {
+  background: #27ae60;
+}
+
+body.dark-mode .login-btn:hover {
+  background: #1e8449;
 }
 
 /* ================= CAROUSEL ================= */
