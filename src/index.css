@@ -100,6 +100,163 @@ body.dark-mode .login-btn {
 body.dark-mode .login-btn:hover {
   background: #1e8449;
 }
+/* ================= GLOBAL DARK MODE ================= */
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+/* Header já tem dark-mode definido (mantido) */
+
+/* ================= DARK MODE CAROUSEL ================= */
+body.dark-mode .carousel-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .carousel-overlay h2 {
+  color: #f9f9f9;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+}
+
+body.dark-mode .carousel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+body.dark-mode .carousel-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+body.dark-mode .carousel-indicators span {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .carousel-indicators span.active {
+  background: #ff7b39;
+}
+
+/* ================= DARK MODE CATEGORIES ================= */
+body.dark-mode .categories {
+  background: #1e1e1e;
+}
+
+body.dark-mode .category-card {
+  background: #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .category-card h4 {
+  color: #90ee90; /* verde mais claro */
+}
+
+/* ================= DARK MODE HIGHLIGHTS ================= */
+body.dark-mode .highlights {
+  background: #1c1c1c;
+}
+
+body.dark-mode .highlight-card {
+  background: #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .highlight-card h4 {
+  color: #90ee90;
+}
+
+/* ================= DARK MODE NEWSLETTER ================= */
+body.dark-mode .newsletter {
+  background: #1e2a28;
+  color: #f1f1f1;
+}
+
+body.dark-mode .newsletter p {
+  color: #ccc;
+}
+
+body.dark-mode .newsletter-form input {
+  background: #333;
+  border: 1px solid #555;
+  color: #f1f1f1;
+}
+
+body.dark-mode .newsletter-form button {
+  background: #27ae60;
+}
+
+body.dark-mode .newsletter-form button:hover {
+  background: #1e8449;
+}
+
+/* ================= DARK MODE USERINFO ================= */
+body.dark-mode .user-info {
+  background: linear-gradient(135deg, #2d3a3a, #1b2626);
+  color: #f1f1f1;
+}
+
+body.dark-mode .user-title {
+  color: #90ee90;
+}
+
+body.dark-mode .user-details li {
+  color: #ddd;
+}
+
+/* ================= DARK MODE CONTACT ================= */
+body.dark-mode .contact-section {
+  background: #1e1e1e;
+  color: #f1f1f1;
+}
+
+body.dark-mode .contact-card {
+  background: #2b2b2b;
+  border: 1px solid #444;
+}
+
+body.dark-mode .contact-card p,
+body.dark-mode .contact-card a,
+body.dark-mode .contact-card strong {
+  color: #ccc;
+}
+
+/* ================= DARK MODE FOOTER ================= */
+body.dark-mode .footer {
+  background: #111;
+  color: #ccc;
+}
+
+body.dark-mode .footer-grid a {
+  color: #bbb;
+}
+
+body.dark-mode .footer-grid a:hover {
+  color: #ff7b39;
+}
+
+body.dark-mode .footer-bottom {
+  color: #888;
+}
+
+/* ================= DARK MODE NOTFOUND ================= */
+body.dark-mode .notfound-container {
+  background: linear-gradient(135deg, #222, #111);
+}
+
+body.dark-mode .notfound-card {
+  background: #2a2a2a;
+  color: #f1f1f1;
+}
+
+body.dark-mode .notfound-card p {
+  color: #ccc;
+}
+
+body.dark-mode .notfound-button {
+  background: #27ae60;
+}
+
+body.dark-mode .notfound-button:hover {
+  background: #1e8449;
+}
 
 /* ================= CAROUSEL ================= */
 .carousel {
