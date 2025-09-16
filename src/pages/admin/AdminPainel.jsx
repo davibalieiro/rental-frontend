@@ -57,6 +57,7 @@ export default function AdminPainel() {
     }
     return false;
   });
+  
   // Efeito para sincronizar com mudanças de tema
   useEffect(() => {
     const handleThemeChange = (event) => {
