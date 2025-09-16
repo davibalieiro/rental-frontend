@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   FaBox,
   FaList,
@@ -42,6 +42,7 @@ import Orders from "./Orders";
 
 export default function AdminPainel() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
+  const adminLayoutRef = useRef(null);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [menuOpen, setMenuOpen] = useState(true);
   const [status, setStatus] = useState("loading");
