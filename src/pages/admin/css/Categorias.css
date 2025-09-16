@@ -9,20 +9,11 @@
   transition: background 0.3s, color 0.3s;
 }
 
-.categories-page.dark {
-  background: #121212;
-  color: #eee;
-}
-
 .categories-page h2 {
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 25px;
   color: #2d3436;
-}
-
-.categories-page.dark h2 {
-  color: #fff;
 }
 
 /* =========================
@@ -41,11 +32,6 @@
   transition: all 0.3s ease;
 }
 
-.categories-page.dark .admin-form {
-  background: #1e1e1e;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-}
-
 .admin-form input {
   grid-column: 1 / 2;
   padding: 14px;
@@ -56,12 +42,6 @@
   transition: border 0.2s, box-shadow 0.2s;
   background: #fafafa;
   color: #2d3436;
-}
-
-.categories-page.dark .admin-form input {
-  background: #2b2b2b;
-  color: #eee;
-  border: 1px solid #444;
 }
 
 .admin-form input:focus {
@@ -132,10 +112,6 @@
   background: #f8f9fa;
 }
 
-.categories-page.dark .category-item {
-  background: #1b1b1b;
-}
-
 .category-item:hover {
   transform: translateY(-3px);
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
@@ -148,10 +124,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.categories-page.dark .category-item span {
-  color: #eee;
 }
 
 /* Botões de ação */

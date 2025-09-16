@@ -19,17 +19,6 @@
 }
 
 /* ==========================
-   Dark Mode
-========================== */
-.products-page.dark {
-  --color-bg: #121212;
-  --color-bg-alt: #1e1e1e;
-  --color-text: #f4f4f4;
-  --color-card-bg: #1e1e1e;
-  --color-card-shadow: rgba(255,255,255,0.05);
-}
-
-/* ==========================
    Layout Geral
 ========================== */
 .products-page {
@@ -39,7 +28,6 @@
   font-family: "Roboto", sans-serif;
   background: var(--color-bg);
   color: var(--color-text);
-  transition: var(--transition);
 }
 
 .products-page h2 {
@@ -59,7 +47,6 @@
   border-radius: var(--radius);
   box-shadow: var(--shadow-md);
   margin-bottom: 30px;
-  transition: var(--transition);
 }
 
 .admin-form .form-group {
@@ -79,7 +66,6 @@
   border-radius: 8px;
   border: 1px solid #ccc;
   font-size: 0.95rem;
-  transition: var(--transition);
   background: var(--color-bg-alt);
   color: var(--color-text);
 }
@@ -121,7 +107,6 @@
   text-align: center;
   cursor: pointer;
   font-weight: 500;
-  transition: var(--transition);
 }
 
 .file-upload-button:hover {
@@ -136,7 +121,6 @@
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
-  transition: var(--transition);
 }
 
 .btn-primary:hover {
@@ -174,10 +158,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.products-page.dark .card-image {
-  background: #2a2a3a;
 }
 
 .card-image img {
@@ -220,7 +200,6 @@
   align-items: center;
   justify-content: center;
   font-size: 0.95rem;
-  transition: background 0.3s, transform 0.15s;
 }
 
 .icon-btn.edit {
@@ -284,7 +263,6 @@
   border: 1px solid #ccc;
   background: var(--color-card-bg);
   cursor: pointer;
-  transition: var(--transition);
 }
 
 .page-btn.active {
@@ -334,7 +312,6 @@
   border: none;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: all 0.2s;
 }
 
 .modal-btn.confirm {

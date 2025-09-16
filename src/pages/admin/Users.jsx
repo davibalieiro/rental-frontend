@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./css/Users.css";
-import { FaUser, FaUserEdit } from "react-icons/fa";
+import { FaUserEdit } from "react-icons/fa";
 
 export default function Users() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
@@ -170,7 +170,7 @@ export default function Users() {
       // --- PASSO 3: Finalização ---
       toast.success("Usuário e cupons atualizados com sucesso!");
       setEditingUser(null);
-      // Recarrega ambos para garantir que a UI fique 100% sincronizada
+      // Recarrega ambos para garantir que la UI fique 100% sincronizada
       fetchUsers();
       fetchPrivateCoupons();
 

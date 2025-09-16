@@ -71,7 +71,7 @@
 }
 
 .admin-table thead {
-  background: #00913c;;
+  background: #00913c;
   color: #fff;
 }
 
@@ -275,18 +275,27 @@
 .btn-cancel { background: #e5e7eb; color: #111827; }
 .btn-cancel:hover { background: #d1d5db; }
 
-/* dark mode – herda da sua classe .admin-layout.dark */
-.admin-layout.dark .users-header h2 { color: #e5e7eb; }
-.admin-layout.dark .table-wrapper,
-.admin-layout.dark .users-filters input,
-.admin-layout.dark .users-filters select,
-.admin-layout.dark .drawer-card { background: #1b1b1b; }
+/* Estilos para os checkboxes de cupons */
+.coupons-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
 
-.admin-layout.dark .admin-table thead { background: #00913c;; }
-.admin-layout.dark .admin-table tbody tr.even { background: #171717; }
-.admin-layout.dark .admin-table tbody tr.odd  { background: #1b1b1b; }
-.admin-layout.dark .admin-table tbody tr:hover { background: #1f2937; }
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-.admin-layout.dark .form-row input {
-  background: #111827; color: #e5e7eb; border-color: #2d2f33;
+.checkbox-item input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+.checkbox-item label {
+  font-size: 14px;
+  color: #374151;
+  margin: 0;
 }

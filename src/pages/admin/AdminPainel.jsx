@@ -5,8 +5,6 @@ import {
   FaCubes,
   FaUsers,
   FaChartBar,
-  FaMoon,
-  FaSun,
   FaSignOutAlt,
   FaBars,
   FaTrashAlt,
@@ -45,7 +43,6 @@ import Orders from "./Orders";
 export default function AdminPainel() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [darkMode, setDarkMode] = useState(false);
   const [menuOpen, setMenuOpen] = useState(true);
   const [status, setStatus] = useState("loading");
 
@@ -61,12 +58,7 @@ export default function AdminPainel() {
     users: 0,
   });
 
-  // const [coupons, setCoupons] = useState([]);
-  // const [loadingCoupons, setLoadingCoupons] = useState(true);
-  // const [errorCoupons, setErrorCoupons] = useState(null);
-
   const { user, isReady } = useUserContext();
-
 
   const navigate = useNavigate();
 
@@ -171,7 +163,7 @@ export default function AdminPainel() {
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: darkMode ? "#2b2b2b" : "#fff",
+                backgroundColor: "#fff",
                 borderRadius: 6,
                 fontSize: 12,
                 padding: 8,
@@ -208,7 +200,7 @@ export default function AdminPainel() {
             <YAxis type="category" dataKey="name" stroke="#8884d8" width={150} />
             <Tooltip
               contentStyle={{
-                backgroundColor: darkMode ? "#2b2b2b" : "#fff",
+                backgroundColor: "#fff",
                 borderRadius: 6,
                 fontSize: 12,
                 padding: 8,
@@ -288,7 +280,7 @@ export default function AdminPainel() {
   if (!user || !user.is_admin) return <NotFound />;
 
   return (
-    <div className={`admin-layout ${darkMode ? "dark" : ""}`}>
+    <div className="admin-layout">
       <aside className={`admin-sidebar ${menuOpen ? "" : "collapsed"}`}>
         <div className="sidebar-header">
           <h2>{menuOpen ? "Painel" : ""}</h2>
@@ -346,10 +338,6 @@ export default function AdminPainel() {
           </button>
         </nav>
         <div className="sidebar-footer">
-          <button onClick={() => setDarkMode(!darkMode)}>
-            {darkMode ? <FaSun /> : <FaMoon />}
-            {menuOpen && (darkMode ? "Claro" : "Escuro")}
-          </button>
           <button className="logout" onClick={handleLogout}>
             <FaSignOutAlt />
             {menuOpen && "Sair"}

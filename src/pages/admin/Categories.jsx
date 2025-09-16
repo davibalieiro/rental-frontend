@@ -4,7 +4,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./css/Categorias.css";
 
-export default function Categories({ darkMode }) {
+export default function Categories() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
   const [categories, setCategories] = useState([]);
   const [form, setForm] = useState({ name: "" });
@@ -86,7 +86,7 @@ export default function Categories({ darkMode }) {
   }, []);
 
   return (
-    <div className={`categories-page ${darkMode ? "dark" : ""}`}>
+    <div className="categories-page">
       <h2><FaTags /> Gerenciar Categorias</h2>
 
       {/* FORM ADD / EDIT */}
@@ -146,7 +146,7 @@ export default function Categories({ darkMode }) {
         pauseOnFocusLoss
         draggable
         pauseOnHover
-        theme={darkMode ? "dark" : "light"}
+        theme="light"
       />
     </div>
   );

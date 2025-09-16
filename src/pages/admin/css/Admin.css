@@ -6,7 +6,7 @@
   --color-primary-dark: #228b22;
   --color-secondary: #ff4500;
 
-  /* Light */
+  /* Light Theme */
   --color-bg: #f4f6f8;
   --color-bg-alt: #ffffff;
   --color-text: #333333;
@@ -17,17 +17,6 @@
   --radius: 12px;
   --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
   --shadow-lg: 0 6px 20px rgba(0,0,0,0.15);
-}
-
-/* ==========================
-   Tema Escuro
-========================== */
-.admin-layout.dark {
-  --color-bg: #121212;
-  --color-bg-alt: #1e1e1e;
-  --color-text: #f4f4f4;
-  --color-card-bg: #1e1e1e;
-  --color-card-shadow: rgba(255, 255, 255, 0.05);
 }
 
 /* ==========================
@@ -97,7 +86,7 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: 0px  ;
+  margin: 0px;
   width: 100%;
   background: none;
   border: none;

@@ -7,7 +7,7 @@ import Modal from "~/components/Modal";
 
 export default function Products() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
-  const { products, setProducts } = useProductsContext(); // 🔥 agora usamos setProducts
+  const { products, setProducts } = useProductsContext();
   const { imageUrls } = useProductImages(products);
 
   const [categories, setCategories] = useState([]);
@@ -112,7 +112,7 @@ export default function Products() {
       });
       setImageFile(null);
 
-      // 🔥 Atualizar contexto sem refetch
+      // Atualizar contexto sem refetch
       setProducts([...products, newProduct]);
     } catch (err) {
       console.error(err);
@@ -123,7 +123,7 @@ export default function Products() {
   async function handleDeleteConfirm(result) {
     if (result && selectedProduct) {
       await deleteProductByIDFront(selectedProduct.id);
-      // 🔥 remove da lista local também
+      // remove da lista local também
       setProducts(products.filter((p) => p.id !== selectedProduct.id));
     }
     setIsDeleteOpen(false);
@@ -142,7 +142,7 @@ export default function Products() {
       };
       const updated = await updateProductByIdFront(selectedProduct.id, body);
 
-      // 🔥 atualizar no contexto
+      // atualizar no contexto
       setProducts(
         products.map((p) => (p.id === selectedProduct.id ? updated.data : p))
       );

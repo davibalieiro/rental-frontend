@@ -10,7 +10,6 @@
   color: #333;
 }
 
-
 .coupons-container h2 {
   font-size: 2rem;
   font-weight: 700;
@@ -130,10 +129,9 @@
 
 /* ===== Card Buttons ===== */
 .btn-edit {
-  background-color: #00913c;;
+  background-color: #00913c;
   color: #fff;
   display: inline;
-  
 }
 
 .btn-edit:hover {
@@ -206,6 +204,7 @@
   color: #fff;
   border-color: #ff6600;
 }
+
 .toast {
   position: fixed;
   bottom: 20px;
@@ -225,12 +224,15 @@
 .toast-success {
   background: #00913c;
 }
+
 .toast-error {
   background: #dc3545;
 }
+
 .toast-info {
   background: #007bff;
 }
+
 .toast-warning {
   background: #ffc107;
   color: #333;
@@ -240,6 +242,7 @@
   from { transform: translateX(100%); opacity: 0; }
   to { transform: translateX(0); opacity: 1; }
 }
+
 @keyframes fadeOut {
   to { opacity: 0; transform: translateX(100%); }
 }

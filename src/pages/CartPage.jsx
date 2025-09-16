@@ -19,8 +19,8 @@ export default function CartPage() {
 
   const navigate = useNavigate();
 
-const { products, loadingProducts } = useProducts();
-  const { imageUrls } = useProductImages(products);
+const { products } = useProducts();
+  const {imageUrls } = useProductImages(products);
 
   useEffect(() => {
     if (!loading && !user) {
