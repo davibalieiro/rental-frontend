@@ -50,6 +50,42 @@ export default function AdminPainel() {
   const [categoriesData, setCategoriesData] = useState([]);
   const [materialsData, setMaterialsData] = useState([]);
   const [favoritesData, setFavoritesData] = useState([]);
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('darkMode');
+      return saved ? JSON.parse(saved) : false;
+    }
+    return false;
+  });
+
+  // Efeito para sincronizar com mudanças de tema
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      setDarkMode(event.detail);
+    };
+
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
+
+  // Efeito para aplicar o tema
+  useEffect(() => {
+    if (adminLayoutRef.current) {
+      if (darkMode) {
+        adminLayoutRef.current.classList.add('dark-mode');
+      } else {
+        adminLayoutRef.current.classList.remove('dark-mode');
+      }
+    }
+  }, [darkMode]);
+
+  // Função para toggle do tema (se quiser manter o botão no Admin também)
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: newDarkMode }));
+  };
 
   const [cardStats, setCardStats] = useState({
     products: 0,

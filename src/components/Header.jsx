@@ -2,20 +2,47 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import logo from "../assets/logo_clisare_loca.png";
-import { FaMoon, FaSun } from "react-icons/fa"; // ícones tema
+import { FaMoon, FaSun } from "react-icons/fa";
 
 export default function Header() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => {
+    // Carregar do localStorage
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('darkMode');
+      return saved ? JSON.parse(saved) : false;
+    }
+    return false;
+  });
 
   useEffect(() => {
+    // Salvar no localStorage e aplicar ao body
+    localStorage.setItem('darkMode', JSON.stringify(darkMode));
+    
     if (darkMode) {
-      document.body.classList.add("dark-mode");
+      document.body.classList.add('dark-mode');
     } else {
-      document.body.classList.remove("dark-mode");
+      document.body.classList.remove('dark-mode');
     }
+    
+    // Disparar evento personalizado para notificar outros componentes
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: darkMode }));
   }, [darkMode]);
+
+  const toggleDarkMode = () => {
+    setDarkMode(prev => !prev);
+  };
+
+  // Escutar mudanças de tema de outros componentes
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      setDarkMode(event.detail);
+    };
+    
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
 
   if (loading) return null;
 
@@ -70,10 +97,9 @@ export default function Header() {
           </button>
         )}
 
-        {/* Botão de tema */}
         <button
           className="theme-toggle"
-          onClick={() => setDarkMode((prev) => !prev)}
+          onClick={toggleDarkMode}
         >
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
