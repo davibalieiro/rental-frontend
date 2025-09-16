@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { useProductsContext } from "~/context/ProductsContext";
 import { useProductImages } from "~/hooks/useProductImages";
 import "./css/Catalogo.css";
-import { FaCheckCircle, FaShoppingBag } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaCaretLeft, FaCaretRight, FaCheckCircle, FaShoppingBag } from "react-icons/fa";
 
 export default function Catalog() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
@@ -146,12 +146,30 @@ export default function Catalog() {
 
           {/* Paginação */}
           <div className="pagination">
-            <button onClick={() => handlePageChange(page - 1)} disabled={page === 1}>
-              ◀️ Anterior
+            <button
+              disabled={page === 1}
+              onClick={() => setPage((p) => p - 1)}
+              className="page-btn"
+            >
+              <FaCaretLeft style={{ marginRight: '5px' }} /> Anterior
             </button>
-            <span>Página {page} de {totalPages}</span>
-            <button onClick={() => handlePageChange(page + 1)} disabled={page === totalPages}>
-              Próxima ▶️
+
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setPage(i + 1)}
+                className={`page-btn ${page === i + 1 ? "active" : ""}`}
+              >
+                {i + 1}
+              </button>
+            ))}
+
+            <button
+              disabled={page === totalPages}
+              onClick={() => setPage((p) => p + 1)}
+              className="page-btn"
+            >
+              Próxima <FaCaretRight style={{ marginLeft: '5px' }} />
             </button>
           </div>
         </>
