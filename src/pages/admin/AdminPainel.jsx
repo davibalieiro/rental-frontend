@@ -38,7 +38,6 @@ import Orders from "./Orders";
 
 export default function AdminPainel() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
-  const adminLayoutRef = useRef(null);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [menuOpen, setMenuOpen] = useState(true);
   const [status, setStatus] = useState("loading");
@@ -374,6 +373,15 @@ export default function AdminPainel() {
           </button>
         </nav>
         <div className="sidebar-footer">
+          {/* Botão de alternância de tema sincronizado */}
+          <button 
+            className="theme-toggle"
+            onClick={toggleDarkMode}
+            style={{ background: 'transparent', boxShadow: 'none' }}
+          >
+            {darkMode ? <FaSun /> : <FaMoon />}
+            {menuOpen && (darkMode ? " Modo Claro" : " Modo Escuro")}
+          </button>
           
           <button className="logout" onClick={handleLogout}>
             <FaSignOutAlt />

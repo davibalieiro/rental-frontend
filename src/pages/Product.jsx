@@ -24,7 +24,7 @@ export default function ProductPage() {
   const [avgRating, setAvgRating] = useState(0);
   const [userRating, setUserRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
-  const [quantity, setQuantity] = useState(1); // quantidade inicial
+  const [quantity, setQuantity] = useState(1);
 
   const notify = (msg) => {
     setNotification(msg);
@@ -79,8 +79,29 @@ export default function ProductPage() {
     fetchProduct();
   }, [slug, productImgUrl, user]);
 
-  if (loadingProduct) return <p>Carregando produto...</p>;
-  if (!product) return <p>Produto não encontrado</p>;
+  if (loadingProduct) return (
+    <div className="product-page-loading">
+      <div className="decorative-stripes">
+        <div className="stripe orange"></div>
+        <div className="stripe green"></div>
+        <div className="stripe orange second"></div>
+        <div className="stripe green second"></div>
+      </div>
+      <p>Carregando produto...</p>
+    </div>
+  );
+  
+  if (!product) return (
+    <div className="product-page-error">
+      <div className="decorative-stripes">
+        <div className="stripe orange"></div>
+        <div className="stripe green"></div>
+        <div className="stripe orange second"></div>
+        <div className="stripe green second"></div>
+      </div>
+      <p>Produto não encontrado</p>
+    </div>
+  );
 
   const isFavorite = localFavorites.some(f => f.product?.id === product.id);
 
@@ -156,20 +177,19 @@ export default function ProductPage() {
 
   return (
     <div className="product-page">
+      {/* Faixas decorativas - Apenas verde e laranja */}
+      <div className="decorative-stripes">
+        <div className="stripe orange"></div>
+        <div className="stripe green"></div>
+        <div className="stripe orange second"></div>
+        <div className="stripe green second"></div>
+        <div className="stripe orange third"></div>
+        <div className="stripe green third"></div>
+      </div>
+
       {/* Imagem do Produto */}
       <div className="product-image">
         <img src={mainImg || "https://via.placeholder.com/400x400"} alt={product.name} />
-        <div className="thumbnail-list">
-          {(product.gallery?.length ? product.gallery : [mainImg]).map((img, i) => (
-            <img
-              key={i}
-              src={img}
-              alt={`thumb-${i}`}
-              onClick={() => setMainImg(img)}
-              className={mainImg === img ? "active" : ""}
-            />
-          ))}
-        </div>
 
         <div className="image-actions">
           <button
@@ -206,7 +226,26 @@ export default function ProductPage() {
         </div>
 
         <p className="short-description">{product.short_description}</p>
+        
+        {/* Ações: quantidade + adicionar ao carrinho - MOVIDO PARA CIMA */}
+        <div className="actions-top">
+          <div className="quantity-control product-page-quantity">
+            <button onClick={() => handleQuantityChange(-1)}><FaMinus /></button>
+            <input
+              type="number"
+              min="1"
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+            />
+            <button onClick={() => handleQuantityChange(1)}><FaPlus /></button>
+          </div>
+
+          <button className="buy-btn" onClick={handleAddToCart}>Fazer Orçamento</button>
+        </div>
+
         <p className="long-description">{product.long_description}</p>
+        
+        {/* Dimensão mantida no lugar original */}
         <p><strong>Dimensão:</strong> {product.dimension}</p>
 
         {product.categories?.length > 0 && (
@@ -232,29 +271,17 @@ export default function ProductPage() {
           </div>
         )}
 
-        {/* Ações: quantidade + adicionar ao carrinho */}
-        <div className="actions">
-          <div className="quantity-control product-page-quantity">
-            <button onClick={() => handleQuantityChange(-1)}><FaMinus /></button>
-            <input
-              type="number"
-              min="1"
-              value={quantity}
-              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-            />
-            <button onClick={() => handleQuantityChange(1)}><FaPlus /></button>
-          </div>
-
-          <button className="buy-btn" onClick={handleAddToCart}>Fazer Orçamento</button>
-        </div>
-
         {notification && <div className="notification">{notification}</div>}
       </div>
 
       {/* Produtos Relacionados */}
       {relatedProducts.length > 0 && (
         <div className="related-products">
-          <h2>Produtos Relacionados</h2>
+          <div className="section-header">
+            <h2>Produtos Relacionados</h2>
+            <div className="stripe-accent orange"></div>
+            <div className="stripe-accent green"></div>
+          </div>
           <div className="related-list">
             {relatedProducts.slice(0, 4).map(p => (
               <div key={p.id} className="related-card">
@@ -262,6 +289,7 @@ export default function ProductPage() {
                   <img src={p.image || "https://via.placeholder.com/200"} alt={p.name} />
                   <p>{p.name}</p>
                 </Link>
+                <div className="stripe-accent green"></div>
               </div>
             ))}
           </div>
