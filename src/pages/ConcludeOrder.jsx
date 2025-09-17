@@ -156,7 +156,7 @@ export default function ConcludeOrder() {
 
       const encodedMessage = encodeURIComponent(message);
 
-      const phoneNumber = import.meta.env.PHONE_NUMBER;
+      const phoneNumber = import.meta.env.VITE_PHONE_NUMBER;
 
       const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
