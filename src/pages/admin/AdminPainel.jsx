@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   FaBox,
   FaList,
@@ -7,12 +7,10 @@ import {
   FaChartBar,
   FaSignOutAlt,
   FaBars,
-  FaTrashAlt,
-  FaToggleOn,
-  FaToggleOff,
   FaCalculator,
-  FaSpinner,
   FaShoppingBag,
+  FaMoon,
+  FaSun
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Products from "./Products";
@@ -22,15 +20,13 @@ import Users from "./Users";
 import Coupons from "./Coupons";
 import NotFound from "~/pages/NotFound";
 import {
-  LineChart,
-  Line,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
   ResponsiveContainer,
   CartesianGrid,
-  BarChart,
-  Bar,
   PieChart,
   Pie,
   Cell,
@@ -45,11 +41,11 @@ export default function AdminPainel() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [menuOpen, setMenuOpen] = useState(true);
   const [status, setStatus] = useState("loading");
-
-  const [usersData, setUsersData] = useState([]);
-  const [categoriesData, setCategoriesData] = useState([]);
-  const [materialsData, setMaterialsData] = useState([]);
-  const [favoritesData, setFavoritesData] = useState([]);
+  
+  // Referência para o elemento do layout
+  const adminLayoutRef = useRef(null);
+  
+  // Estado para o tema escuro
   const [darkMode, setDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('darkMode');
@@ -58,34 +54,10 @@ export default function AdminPainel() {
     return false;
   });
 
-  // Efeito para sincronizar com mudanças de tema
-  useEffect(() => {
-    const handleThemeChange = (event) => {
-      setDarkMode(event.detail);
-    };
-
-    window.addEventListener('themeChanged', handleThemeChange);
-    return () => window.removeEventListener('themeChanged', handleThemeChange);
-  }, []);
-
-  // Efeito para aplicar o tema
-  useEffect(() => {
-    if (adminLayoutRef.current) {
-      if (darkMode) {
-        adminLayoutRef.current.classList.add('dark-mode');
-      } else {
-        adminLayoutRef.current.classList.remove('dark-mode');
-      }
-    }
-  }, [darkMode]);
-
-  // Função para toggle do tema (se quiser manter o botão no Admin também)
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
-    window.dispatchEvent(new CustomEvent('themeChanged', { detail: newDarkMode }));
-  };
+  const [usersData, setUsersData] = useState([]);
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [materialsData, setMaterialsData] = useState([]);
+  const [favoritesData, setFavoritesData] = useState([]);
 
   const [cardStats, setCardStats] = useState({
     products: 0,
@@ -97,6 +69,35 @@ export default function AdminPainel() {
   const { user, isReady } = useUserContext();
 
   const navigate = useNavigate();
+
+  // Efeito para sincronizar com mudanças de tema do Header
+  useEffect(() => {
+    const handleThemeChange = (event) => {
+      setDarkMode(event.detail);
+    };
+    
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
+
+  // Efeito para aplicar o tema ao layout do admin
+  useEffect(() => {
+    if (adminLayoutRef.current) {
+      if (darkMode) {
+        adminLayoutRef.current.classList.add('dark-mode');
+      } else {
+        adminLayoutRef.current.classList.remove('dark-mode');
+      }
+    }
+  }, [darkMode]);
+
+  // Função para alternar o tema (se quiser manter o botão no Admin também)
+  const toggleDarkMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
+    window.dispatchEvent(new CustomEvent('themeChanged', { detail: newDarkMode }));
+  };
 
   // --- FETCH DASHBOARD STATS ---
   useEffect(() => {
@@ -153,10 +154,6 @@ export default function AdminPainel() {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (user?.token && activeTab === "coupons") fetchCoupons();
-  }, [user, activeTab]);
-
   // --- LOGOUT ---
   const handleLogout = async () => {
     try {
@@ -173,7 +170,7 @@ export default function AdminPainel() {
 
   // --- GRÁFICOS ---
   const renderPieChart = (title, data) => {
-    const COLORS = ["#32cd32", "#ff4500"]; // Ativos = verde, Inativos = vermelho
+    const COLORS = ["#32cd32", "#ff4500"];
     const pieData = [
       { name: "Ativos", value: data[0]?.Ativos || 0 },
       { name: "Inativos", value: data[0]?.Inativos || 0 },
@@ -199,7 +196,8 @@ export default function AdminPainel() {
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: "#fff",
+                backgroundColor: darkMode ? "#2d2d2d" : "#fff",
+                color: darkMode ? "#e0e0e0" : "#333",
                 borderRadius: 6,
                 fontSize: 12,
                 padding: 8,
@@ -231,12 +229,13 @@ export default function AdminPainel() {
             data={formattedData}
             margin={{ top: 5, right: 20, left: 150, bottom: 5 }}
           >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" stroke="#8884d8" />
-            <YAxis type="category" dataKey="name" stroke="#8884d8" width={150} />
+            <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#444" : "#e0e0e0"} />
+            <XAxis type="number" stroke={darkMode ? "#e0e0e0" : "#8884d8"} />
+            <YAxis type="category" dataKey="name" stroke={darkMode ? "#e0e0e0" : "#8884d8"} width={150} />
             <Tooltip
               contentStyle={{
-                backgroundColor: "#fff",
+                backgroundColor: darkMode ? "#2d2d2d" : "#fff",
+                color: darkMode ? "#e0e0e0" : "#333",
                 borderRadius: 6,
                 fontSize: 12,
                 padding: 8,
@@ -316,7 +315,7 @@ export default function AdminPainel() {
   if (!user || !user.is_admin) return <NotFound />;
 
   return (
-    <div className="admin-layout">
+    <div className="admin-layout" ref={adminLayoutRef}>
       <aside className={`admin-sidebar ${menuOpen ? "" : "collapsed"}`}>
         <div className="sidebar-header">
           <h2>{menuOpen ? "Painel" : ""}</h2>
@@ -374,6 +373,7 @@ export default function AdminPainel() {
           </button>
         </nav>
         <div className="sidebar-footer">
+          
           <button className="logout" onClick={handleLogout}>
             <FaSignOutAlt />
             {menuOpen && "Sair"}

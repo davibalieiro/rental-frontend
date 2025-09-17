@@ -157,7 +157,7 @@ export default function Products() {
 
   return (
     <div className="products-page">
-      <h2>
+      <h2 className="products-title">
         <FaBoxes /> Gerenciar Produtos
       </h2>
 
@@ -266,7 +266,7 @@ export default function Products() {
         </div>
 
         <button type="submit" className="btn-primary">
-          <FaPlus /> <span style={{ marginLeft: '10px' }}>Adicionar Produto</span>
+          <FaPlus /> <span className="btn-add-text">Adicionar Produto</span>
         </button>
       </form>
 
@@ -305,17 +305,17 @@ export default function Products() {
             <div className="card-content">
               <h3>{p.name}</h3>
               <p>{p.short_description}</p>
-              <p>
+              <p className="dimension-text">
                 <strong>Dimensão:</strong> {p.dimension}
               </p>
               <div className="categories">
                 {p.categories?.map((c) => (
-                  <span key={c.id}>{c.name}</span>
+                  <span key={c.id} className="category-tag">{c.name}</span>
                 ))}
               </div>
               <div className="materials">
                 {p.materials?.map((m) => (
-                  <span key={m.id}>{m.name}</span>
+                  <span key={m.id} className="material-tag">{m.name}</span>
                 ))}
               </div>
             </div>
