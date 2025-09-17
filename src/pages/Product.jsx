@@ -25,6 +25,21 @@ export default function ProductPage() {
   const [userRating, setUserRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
   const [quantity, setQuantity] = useState(1);
+  const [darkMode, setDarkMode] = useState(false);
+
+  // Verificar o tema ao carregar
+  useEffect(() => {
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    setDarkMode(savedDarkMode);
+    
+    // Escutar mudanças de tema
+    const handleThemeChange = (event) => {
+      setDarkMode(event.detail);
+    };
+    
+    window.addEventListener('themeChanged', handleThemeChange);
+    return () => window.removeEventListener('themeChanged', handleThemeChange);
+  }, []);
 
   const notify = (msg) => {
     setNotification(msg);
@@ -80,7 +95,7 @@ export default function ProductPage() {
   }, [slug, productImgUrl, user]);
 
   if (loadingProduct) return (
-    <div className="product-page-loading">
+    <div className={`product-page-loading ${darkMode ? 'dark-mode' : ''}`}>
       <div className="decorative-stripes">
         <div className="stripe orange"></div>
         <div className="stripe green"></div>
@@ -92,7 +107,7 @@ export default function ProductPage() {
   );
   
   if (!product) return (
-    <div className="product-page-error">
+    <div className={`product-page-error ${darkMode ? 'dark-mode' : ''}`}>
       <div className="decorative-stripes">
         <div className="stripe orange"></div>
         <div className="stripe green"></div>
@@ -176,7 +191,7 @@ export default function ProductPage() {
   };
 
   return (
-    <div className="product-page">
+    <div className={`product-page ${darkMode ? 'dark-mode' : ''}`}>
       {/* Faixas decorativas - Apenas verde e laranja */}
       <div className="decorative-stripes">
         <div className="stripe orange"></div>

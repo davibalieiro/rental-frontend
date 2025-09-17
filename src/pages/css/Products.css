@@ -11,7 +11,85 @@
   font-family: "Inter", "Segoe UI", sans-serif;
   position: relative;
 }
+/* ========================
+   Modo Escuro
+======================== */
+.dark-mode .product-page {
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
 
+.dark-mode .product-details {
+  background: #2d2d2d;
+  color: #e0e0e0;
+}
+
+.dark-mode .product-details h1 {
+  color: #ffffff;
+}
+
+.dark-mode .short-description,
+.dark-mode .long-description,
+.dark-mode .product-categories,
+.dark-mode .product-materials {
+  color: #cccccc;
+}
+
+.dark-mode .actions-top {
+  background: #3d3d3d;
+  border-left-color: #6366f1;
+}
+
+.dark-mode .product-page-quantity input {
+  background: #2d2d2d;
+  color: #ffffff;
+  border-color: #555;
+}
+
+.dark-mode .related-card {
+  background: #2d2d2d;
+  color: #e0e0e0;
+}
+
+.dark-mode .related-card p {
+  color: #e0e0e0;
+}
+
+.dark-mode .catalog-container h1 {
+  color: #ff8c00;
+}
+
+.dark-mode .product-card {
+  background: #2d2d2d;
+}
+
+.dark-mode .product-card h4 {
+  color: #3cb371;
+}
+
+.dark-mode .catalog-filters input,
+.dark-mode .catalog-filters select {
+  background: #2d2d2d;
+  color: #e0e0e0;
+  border-color: #555;
+}
+
+.dark-mode .page-btn {
+  background: #3d3d3d;
+  color: #e0e0e0;
+  border-color: #555;
+}
+
+.dark-mode .page-btn.active {
+  background: #6366f1;
+  color: white;
+}
+
+.dark-mode .product-page-loading,
+.dark-mode .product-page-error {
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
 /* ========================
    Faixas Decorativas - APENAS VERDE E LARANJA
 ======================== */
