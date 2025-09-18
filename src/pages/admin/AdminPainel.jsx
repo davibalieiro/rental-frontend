@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import {
   FaBox,
   FaList,
@@ -9,8 +9,6 @@ import {
   FaBars,
   FaCalculator,
   FaShoppingBag,
-  FaMoon,
-  FaSun
 } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import Products from "./Products";
@@ -18,6 +16,7 @@ import Categories from "./Categories";
 import Materials from "./Materials";
 import Users from "./Users";
 import Coupons from "./Coupons";
+import Orders from "./Orders";
 import NotFound from "~/pages/NotFound";
 import {
   BarChart,
@@ -32,32 +31,19 @@ import {
   Cell,
   Legend,
 } from "recharts";
-import "./css/Admin.css";
 import { useUserContext } from "~/context/UserContext";
-import Orders from "./Orders";
+import { useTheme } from "~/context/ThemeContext";
+import "./css/Admin.css";
 
 export default function AdminPainel() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
   const [activeTab, setActiveTab] = useState("dashboard");
   const [menuOpen, setMenuOpen] = useState(true);
   const [status, setStatus] = useState("loading");
-  
-  // Referência para o elemento do layout
-  const adminLayoutRef = useRef(null);
-  
-  // Estado para o tema escuro
-  const [darkMode, setDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('darkMode');
-      return saved ? JSON.parse(saved) : false;
-    }
-    return false;
-  });
 
-  const [usersData, setUsersData] = useState([]);
-  const [categoriesData, setCategoriesData] = useState([]);
-  const [materialsData, setMaterialsData] = useState([]);
-  const [favoritesData, setFavoritesData] = useState([]);
+  const { darkMode } = useTheme();
+  const { user, isReady } = useUserContext();
+  const navigate = useNavigate();
 
   const [cardStats, setCardStats] = useState({
     products: 0,
@@ -66,47 +52,17 @@ export default function AdminPainel() {
     users: 0,
   });
 
-  const { user, isReady } = useUserContext();
-
-  const navigate = useNavigate();
-
-  // Efeito para sincronizar com mudanças de tema do Header
-  useEffect(() => {
-    const handleThemeChange = (event) => {
-      setDarkMode(event.detail);
-    };
-    
-    window.addEventListener('themeChanged', handleThemeChange);
-    return () => window.removeEventListener('themeChanged', handleThemeChange);
-  }, []);
-
-  // Efeito para aplicar o tema ao layout do admin
-  useEffect(() => {
-    if (adminLayoutRef.current) {
-      if (darkMode) {
-        adminLayoutRef.current.classList.add('dark-mode');
-      } else {
-        adminLayoutRef.current.classList.remove('dark-mode');
-      }
-    }
-  }, [darkMode]);
-
-  // Função para alternar o tema (se quiser manter o botão no Admin também)
-  const toggleDarkMode = () => {
-    const newDarkMode = !darkMode;
-    setDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
-    window.dispatchEvent(new CustomEvent('themeChanged', { detail: newDarkMode }));
-  };
+  const [usersData, setUsersData] = useState([]);
+  const [categoriesData, setCategoriesData] = useState([]);
+  const [materialsData, setMaterialsData] = useState([]);
+  const [favoritesData, setFavoritesData] = useState([]);
 
   // --- FETCH DASHBOARD STATS ---
   useEffect(() => {
     const fetchData = async () => {
       setStatus("loading");
       try {
-        const res = await fetch(`${API_URL}/stats`, {
-          credentials: "include",
-        });
+        const res = await fetch(`${API_URL}/stats`, { credentials: "include" });
         const json = await res.json();
         const data = json?.data;
 
@@ -119,30 +75,10 @@ export default function AdminPainel() {
           users: data.totalUsers || 0,
         });
 
-        setUsersData([
-          { name: "Usuários", Ativos: data.users?.active || 0, Inativos: data.users?.inactive || 0 },
-        ]);
-
-        setCategoriesData(
-          data.categories?.map((c) => ({
-            name: c.name,
-            value: c.totalProducts || 0,
-          })) || []
-        );
-
-        setMaterialsData(
-          data.materials?.map((m) => ({
-            name: m.name,
-            value: m.totalProducts || 0,
-          })) || []
-        );
-
-        setFavoritesData(
-          data.favorites?.map((f) => ({
-            name: f.name,
-            value: f.totalFavorites || 0,
-          })) || []
-        );
+        setUsersData([{ name: "Usuários", Ativos: data.users?.active || 0, Inativos: data.users?.inactive || 0 }]);
+        setCategoriesData(data.categories?.map((c) => ({ name: c.name, value: c.totalProducts || 0 })) || []);
+        setMaterialsData(data.materials?.map((m) => ({ name: m.name, value: m.totalProducts || 0 })) || []);
+        setFavoritesData(data.favorites?.map((f) => ({ name: f.name, value: f.totalFavorites || 0 })) || []);
 
         setStatus("success");
       } catch (err) {
@@ -157,10 +93,7 @@ export default function AdminPainel() {
   // --- LOGOUT ---
   const handleLogout = async () => {
     try {
-      await fetch(`${API_URL}/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
+      await fetch(`${API_URL}/logout`, { method: "POST", credentials: "include" });
     } catch (err) {
       console.error("Erro no logout", err);
     } finally {
@@ -177,7 +110,7 @@ export default function AdminPainel() {
     ];
 
     return (
-      <div className="chart-card">
+      <div className={`chart-card ${darkMode ? "dark-mode" : ""}`}>
         <h3>{title}</h3>
         <ResponsiveContainer width="100%" height={250}>
           <PieChart>
@@ -218,17 +151,10 @@ export default function AdminPainel() {
     }));
 
     return (
-      <div
-        className="chart-card"
-        style={{ overflowY: data.length > 20 ? "auto" : "visible" }}
-      >
+      <div className={`chart-card ${darkMode ? "dark-mode" : ""}`} style={{ overflowY: data.length > 20 ? "auto" : "visible" }}>
         <h3>{title}</h3>
         <ResponsiveContainer width="100%" height={chartHeight}>
-          <BarChart
-            layout="vertical"
-            data={formattedData}
-            margin={{ top: 5, right: 20, left: 150, bottom: 5 }}
-          >
+          <BarChart layout="vertical" data={formattedData} margin={{ top: 5, right: 20, left: 150, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={darkMode ? "#444" : "#e0e0e0"} />
             <XAxis type="number" stroke={darkMode ? "#e0e0e0" : "#8884d8"} />
             <YAxis type="category" dataKey="name" stroke={darkMode ? "#e0e0e0" : "#8884d8"} width={150} />
@@ -254,45 +180,39 @@ export default function AdminPainel() {
     if (status === "error") return <p>Erro ao carregar dados. Tente novamente.</p>;
 
     switch (activeTab) {
-      case "products":
-        return <Products />;
-      case "categories":
-        return <Categories />;
-      case "materials":
-        return <Materials />;
-      case "users":
-        return <Users />;
-      case "coupons":
-        return <Coupons />;
-      case "orders":
-        return <Orders currentUser={user} />;
+      case "products": return <Products />;
+      case "categories": return <Categories />;
+      case "materials": return <Materials />;
+      case "users": return <Users />;
+      case "coupons": return <Coupons />;
+      case "orders": return <Orders currentUser={user} />;
       default:
         return (
           <div className="dashboard">
             <h2>Visão Geral</h2>
             <div className="cards">
-              <div className="card">
+              <div className={`card ${darkMode ? "dark-mode" : ""}`}>
                 <FaBox />
                 <div>
                   <h3>{cardStats.products}</h3>
                   <p>Produtos</p>
                 </div>
               </div>
-              <div className="card">
+              <div className={`card ${darkMode ? "dark-mode" : ""}`}>
                 <FaList />
                 <div>
                   <h3>{cardStats.categories}</h3>
                   <p>Categorias</p>
                 </div>
               </div>
-              <div className="card">
+              <div className={`card ${darkMode ? "dark-mode" : ""}`}>
                 <FaCubes />
                 <div>
                   <h3>{cardStats.materials}</h3>
                   <p>Materiais</p>
                 </div>
               </div>
-              <div className="card">
+              <div className={`card ${darkMode ? "dark-mode" : ""}`}>
                 <FaUsers />
                 <div>
                   <h3>{cardStats.users}</h3>
@@ -315,78 +235,37 @@ export default function AdminPainel() {
   if (!user || !user.is_admin) return <NotFound />;
 
   return (
-    <div className="admin-layout" ref={adminLayoutRef}>
+    <div className={`admin-layout ${darkMode ? "dark-mode" : ""}`}>
       <aside className={`admin-sidebar ${menuOpen ? "" : "collapsed"}`}>
         <div className="sidebar-header">
           <h2>{menuOpen ? "Painel" : ""}</h2>
-          <button className="toggle-menu" onClick={() => setMenuOpen(!menuOpen)}>
-            <FaBars />
-          </button>
+          <button className="toggle-menu" onClick={() => setMenuOpen(!menuOpen)}>☰</button>
         </div>
         <nav>
-          <button
-            className={activeTab === "dashboard" ? "active" : ""}
-            onClick={() => setActiveTab("dashboard")}
-          >
-            <FaChartBar />
-            {menuOpen && "Dashboard"}
+          <button className={activeTab === "dashboard" ? "active" : ""} onClick={() => setActiveTab("dashboard")}>
+            <FaChartBar /> {menuOpen && "Dashboard"}
           </button>
-          <button
-            className={activeTab === "products" ? "active" : ""}
-            onClick={() => setActiveTab("products")}
-          >
-            <FaBox />
-            {menuOpen && "Produtos"}
+          <button className={activeTab === "products" ? "active" : ""} onClick={() => setActiveTab("products")}>
+            <FaBox /> {menuOpen && "Produtos"}
           </button>
-          <button
-            className={activeTab === "categories" ? "active" : ""}
-            onClick={() => setActiveTab("categories")}
-          >
-            <FaList />
-            {menuOpen && "Categorias"}
+          <button className={activeTab === "categories" ? "active" : ""} onClick={() => setActiveTab("categories")}>
+            <FaList /> {menuOpen && "Categorias"}
           </button>
-          <button
-            className={activeTab === "materials" ? "active" : ""}
-            onClick={() => setActiveTab("materials")}
-          >
-            <FaCubes />
-            {menuOpen && "Materiais"}
+          <button className={activeTab === "materials" ? "active" : ""} onClick={() => setActiveTab("materials")}>
+            <FaCubes /> {menuOpen && "Materiais"}
           </button>
-          <button className={activeTab === "orders" ? "active" : ""}
-            onClick={() => setActiveTab("orders")}>
-            <FaShoppingBag />
-            {menuOpen && "Pedidos"}
+          <button className={activeTab === "orders" ? "active" : ""} onClick={() => setActiveTab("orders")}>
+            <FaShoppingBag /> {menuOpen && "Pedidos"}
           </button>
-          <button
-            className={activeTab === "users" ? "active" : ""}
-            onClick={() => setActiveTab("users")}
-          >
-            <FaUsers />
-            {menuOpen && "Usuários"}
+          <button className={activeTab === "users" ? "active" : ""} onClick={() => setActiveTab("users")}>
+            <FaUsers /> {menuOpen && "Usuários"}
           </button>
-          <button
-            className={activeTab === "coupons" ? "active" : ""}
-            onClick={() => setActiveTab("coupons")}
-          >
-            <FaCalculator />
-            {menuOpen && "Cupons"}
+          <button className={activeTab === "coupons" ? "active" : ""} onClick={() => setActiveTab("coupons")}>
+            <FaCalculator /> {menuOpen && "Cupons"}
           </button>
         </nav>
         <div className="sidebar-footer">
-          {/* Botão de alternância de tema sincronizado */}
-          <button 
-            className="theme-toggle"
-            onClick={toggleDarkMode}
-            style={{ background: 'transparent', boxShadow: 'none' }}
-          >
-            {darkMode ? <FaSun /> : <FaMoon />}
-            {menuOpen && (darkMode ? " Modo Claro" : " Modo Escuro")}
-          </button>
-          
-          <button className="logout" onClick={handleLogout}>
-            <FaSignOutAlt />
-            {menuOpen && "Sair"}
-          </button>
+          <button className="logout" onClick={handleLogout}>Sair</button>
         </div>
       </aside>
       <main className="admin-content">{renderContent()}</main>

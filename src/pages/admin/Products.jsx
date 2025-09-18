@@ -4,11 +4,13 @@ import "./css/ProductAdmin.css";
 import { useProductsContext } from "~/context/ProductsContext";
 import { useProductImages } from "~/hooks/useProductImages";
 import Modal from "~/components/Modal";
+import { useTheme } from "~/context/ThemeContext"; // <- Importa o hook
 
 export default function Products() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
   const { products, setProducts } = useProductsContext();
   const { imageUrls } = useProductImages(products);
+  const { darkMode } = useTheme(); // <- Pega o estado global
 
   const [categories, setCategories] = useState([]);
   const [materials, setMaterials] = useState([]);
@@ -21,18 +23,14 @@ export default function Products() {
     materialIds: [],
   });
   const [imageFile, setImageFile] = useState(null);
-
-  // Paginação
   const [page, setPage] = useState(1);
   const itemsPerPage = 6;
   const totalPages = Math.ceil(products.length / itemsPerPage);
 
-  // Modal states
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // ================= FETCH OPTIONS =================
   useEffect(() => {
     async function fetchOptions() {
       try {
@@ -49,7 +47,6 @@ export default function Products() {
     fetchOptions();
   }, []);
 
-  // ================= AUX FUNCTIONS =================
   async function deleteProductByIDFront(id) {
     try {
       const res = await fetch(`${API_URL}/product/${id}`, {
@@ -78,7 +75,6 @@ export default function Products() {
     }
   }
 
-  // ================= HANDLE FORM =================
   async function handleSubmit(e) {
     e.preventDefault();
     try {
@@ -101,7 +97,6 @@ export default function Products() {
         });
       }
 
-      // resetar form
       setForm({
         name: "",
         short_description: "",
@@ -112,24 +107,20 @@ export default function Products() {
       });
       setImageFile(null);
 
-      // Atualizar contexto sem refetch
       setProducts([...products, newProduct]);
     } catch (err) {
       console.error(err);
     }
   }
 
-  // ================= HANDLE DELETE =================
   async function handleDeleteConfirm(result) {
     if (result && selectedProduct) {
       await deleteProductByIDFront(selectedProduct.id);
-      // remove da lista local também
       setProducts(products.filter((p) => p.id !== selectedProduct.id));
     }
     setIsDeleteOpen(false);
   }
 
-  // ================= HANDLE EDIT =================
   async function handleEditConfirm(result) {
     if (result && selectedProduct) {
       const body = {
@@ -141,8 +132,6 @@ export default function Products() {
         materialIds: selectedProduct.materials?.map((m) => m.id),
       };
       const updated = await updateProductByIdFront(selectedProduct.id, body);
-
-      // atualizar no contexto
       setProducts(
         products.map((p) => (p.id === selectedProduct.id ? updated.data : p))
       );
@@ -154,7 +143,7 @@ export default function Products() {
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
-
+  
   return (
     <div className="products-page">
       <h2 className="products-title">
