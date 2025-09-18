@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProductImages } from "~/hooks/useProductImages";
 import { useProducts } from "~/hooks/useProducts";
-import { FaPlus, FaMinus, FaTrashAlt, FaSpinner } from "react-icons/fa";
+import { FaPlus, FaMinus, FaTrashAlt } from "react-icons/fa";
 import "./css/CartPage.css";
 import { useUserContext } from "~/context/UserContext";
 
@@ -18,9 +18,8 @@ export default function CartPage() {
   const { user, loading } = useUserContext();
 
   const navigate = useNavigate();
-
-const { products } = useProducts();
-  const {imageUrls } = useProductImages(products);
+  const { products } = useProducts();
+  const { imageUrls } = useProductImages(products);
 
   useEffect(() => {
     if (!loading && !user) {
@@ -108,23 +107,30 @@ const { products } = useProducts();
       const couponData = data?.data;
       if (!couponData) {
         setCouponMessage(data?.error || "Cupom inválido ou não encontrado.");
-
         setAppliedCoupon(null);
         return;
       }
-      const allowedUsers = Array.isArray(couponData?.allowedUsers) ? couponData.allowedUsers : [];
-      const usersThatUsedCoupon = Array.isArray(couponData?.usersThatUsedCoupon) ? couponData.usersThatUsedCoupon : [];
-      console.log(allowedUsers);
-      console.log(res);
 
-      if (!res.ok ||
-        (!couponData.isPublic && !allowedUsers.some(u => u.id === user.id))
-        || !couponData.isActive) {
+      const allowedUsers = Array.isArray(couponData?.allowedUsers)
+        ? couponData.allowedUsers
+        : [];
+      const usersThatUsedCoupon = Array.isArray(
+        couponData?.usersThatUsedCoupon
+      )
+        ? couponData.usersThatUsedCoupon
+        : [];
+
+      if (
+        !res.ok ||
+        (!couponData.isPublic &&
+          !allowedUsers.some((u) => u.id === user.id)) ||
+        !couponData.isActive
+      ) {
         setCouponMessage(data?.error || "Cupom inválido ou não encontrado.");
         setAppliedCoupon(null);
         return;
       }
-      if (usersThatUsedCoupon.some(u => u.id === user.id)) {
+      if (usersThatUsedCoupon.some((u) => u.id === user.id)) {
         setCouponMessage("Você já usou esse cupom.");
         setAppliedCoupon(null);
         return;
@@ -144,9 +150,7 @@ const { products } = useProducts();
       }
 
       setAppliedCoupon(coupon);
-      // GUARDA ESSE CUPOM EM ALGUM CANTO, SÓ VAI VALIDAR (/use/couponId) QUANDO CONFIRMAR A COMPRA
-      localStorage.setItem('coupon', JSON.stringify(coupon));
-
+      localStorage.setItem("coupon", JSON.stringify(coupon));
     } catch (err) {
       console.error("Erro ao aplicar cupom:", err);
       setCouponMessage("Erro ao validar cupom.");
@@ -161,7 +165,7 @@ const { products } = useProducts();
       <div className="cart-content">
         <div className="cart-items">
           <div className="card">
-            <h2>Detalhe do Pedido</h2>
+            <h2>Detalhes do Pedido</h2>
             {message && <p className="feedback-msg">{message}</p>}
             {cart.length === 0 ? (
               <p>Seu carrinho está vazio.</p>
@@ -175,6 +179,7 @@ const { products } = useProducts();
                       onClick={() => navigate(`/produto/${item.slug}`)}
                       style={{ cursor: "pointer" }}
                     />
+
                     <div className="cart-details">
                       <h4>{item.name}</h4>
                       <p>{item.short_description}</p>
@@ -187,7 +192,9 @@ const { products } = useProducts();
                           type="number"
                           value={item.quantity || 1}
                           min="1"
-                          onChange={(e) => handleQuantityChange(index, e.target.value)}
+                          onChange={(e) =>
+                            handleQuantityChange(index, e.target.value)
+                          }
                         />
                         <button onClick={() => increaseQuantity(index)}>
                           <FaPlus />
@@ -221,7 +228,9 @@ const { products } = useProducts();
                   <div className="modal-confirm">
                     <p>Tem certeza que deseja limpar o carrinho?</p>
                     <button onClick={clearCart}>Sim</button>
-                    <button onClick={() => setShowClearConfirm(false)}>Não</button>
+                    <button onClick={() => setShowClearConfirm(false)}>
+                      Não
+                    </button>
                   </div>
                 )}
               </>
@@ -282,30 +291,6 @@ const { products } = useProducts();
               </div>
             </div>
           )}
-        </div>
-
-        <div className="cart-form">
-          <div className="card">
-            <h2>Detalhes do Evento</h2>
-            <form className="checkout-form">
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Data do Evento</label>
-                  <input type="date" required />
-                </div>
-                <div className="form-group">
-                  <label>Horário do Evento</label>
-                  <input type="time" required />
-                </div>
-              </div>
-              <div className="form-row">
-                <div className="form-group">
-                  <label>Local do Evento</label>
-                  <input type="text" required placeholder="Digite o local" />
-                </div>
-              </div>
-            </form>
-          </div>
         </div>
       </div>
     </div>
