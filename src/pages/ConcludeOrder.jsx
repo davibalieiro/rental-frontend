@@ -17,7 +17,7 @@ export default function ConcludeOrder() {
   const [cartNotes, setCartNotes] = useState("");
 
   const [targetDate, setTargetDate] = useState("");
-  const [initialDate, setInitialDate] = useState("");
+  const [eventLocal, setEventLocal] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState(null);
@@ -96,9 +96,6 @@ export default function ConcludeOrder() {
         quantity: p.quantity || 1,
       })),
     };
-    if (initialDate) {
-      orderPayload.initial_date = new Date(initialDate).toISOString();
-    }
 
     try {
       const orderResponse = await fetch(`${API_URL}/order`, {
@@ -136,13 +133,44 @@ export default function ConcludeOrder() {
       localStorage.removeItem("coupon");
       localStorage.removeItem("cartNotes");
 
-      toast.success("Pedido realizado com sucesso!");
-      navigate("/pedidos");
+      toast.success("Pedido registrado! Redirecionando para o WhatsApp...");
+
+      const productListText = cartProducts
+        .map((p) => `   - ${p.quantity || 1}x ${p.name}`)
+        .join("\n");
+
+      let message = `Olá! Gostaria de confirmar meu pedido:\n\n` +
+        `*Cliente:* ${user?.name || "Não identificado"}\n\n` +
+        `*Produtos:*\n${productListText}\n\n` +
+        `*Data de Entrega/Retirada:* ${formatDateTimeForDisplay(targetDate)}\n` +
+        `*Local do evento:* ${eventLocal}\n`;
+
+      if (coupon?.code) {
+        message += `*Cupom Aplicado:* ${coupon.code}\n`;
+      }
+      if (cartNotes) {
+        message += `*Observações:* ${cartNotes}\n`;
+      }
+
+      message += "\nObrigado!";
+
+      const encodedMessage = encodeURIComponent(message);
+
+      const phoneNumber = import.meta.env.VITE_PHONE_NUMBER;
+
+      const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+      setTimeout(() => {
+        window.location.href = whatsappUrl;
+      }, 2500);
+
+
+      // --- FIM DA LÓGICA DO WHATSAPP ---
+
     } catch (err) {
       setError(err.message || "Ocorreu um erro inesperado.");
       toast.error(err.message || "Erro ao finalizar pedido.");
     } finally {
-      setIsLoading(false);
       setIsModalOpen(false);
     }
   };
@@ -154,12 +182,6 @@ export default function ConcludeOrder() {
       setIsModalOpen(false);
     }
   };
-
-  const totalValue = cartProducts.reduce((acc, p) => {
-    const price = p.price || 0;
-    const qty = p.quantity || 1;
-    return acc + price * qty;
-  }, 0);
 
   if (cartProducts.length === 0 && !isLoading) {
     return (
@@ -191,7 +213,7 @@ export default function ConcludeOrder() {
               <li key={product.id}>
                 <span>{product.name}</span>
                 <span>Qtd: {product.quantity || 1}</span>
-               </li>
+              </li>
             ))}
           </ul>
           <hr />
@@ -201,7 +223,7 @@ export default function ConcludeOrder() {
           <p>
             <strong>Observações:</strong> {cartNotes || "Nenhuma"}
           </p>
-          
+
         </div>
 
         <div className="delivery-details">
@@ -218,15 +240,16 @@ export default function ConcludeOrder() {
             />
           </div>
           <div className="form-group">
-            <label htmlFor="initial_date">
-              Disponível para Entrega a partir de (Opcional)
+            <label htmlFor="local">
+              Local
             </label>
             <input
-              type="datetime-local"
-              id="initial_date"
-              value={initialDate}
-              onChange={(e) => setInitialDate(e.target.value)}
+              type="text"
+              id="local"
+              value={eventLocal}
+              onChange={(e) => setEventLocal(e.target.value)}
               min={getMinDateTime()}
+              required
             />
           </div>
         </div>
@@ -257,17 +280,11 @@ export default function ConcludeOrder() {
             <strong>Data de Entrega:</strong>{" "}
             {formatDateTimeForDisplay(targetDate)}
           </p>
-          {initialDate && (
-            <p>
-              <strong>Disponível a partir de:</strong>{" "}
-              {formatDateTimeForDisplay(initialDate)}
-            </p>
-          )}
           <p>
             <strong>Total de Itens:</strong>{" "}
             {cartProducts.reduce((acc, p) => acc + (p.quantity || 1), 0)}
           </p>
-         
+
         </div>
         <p>Ao confirmar, o pedido será enviado para processamento.</p>
       </Modal>
