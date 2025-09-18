@@ -1,4 +1,4 @@
-/* Reset */
+/* ================= RESET & BASE ================= */
 * {
   margin: 0;
   padding: 0;
@@ -10,6 +10,13 @@ body {
   background: #f9f9f9;
   color: #333;
   line-height: 1.6;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* ================= DARK MODE GLOBAL ================= */
+body.dark-mode {
+  background: #121212;
+  color: #e0e0e0;
 }
 
 /* ================= HEADER ================= */
@@ -74,11 +81,12 @@ header .login-btn:hover {
   color: inherit;
   transition: transform 0.2s;
 }
+
 .theme-toggle:hover {
   transform: scale(1.2);
 }
 
-/* ================= DARK MODE ================= */
+/* DARK MODE - HEADER */
 body.dark-mode header {
   background: #1e1e1e;
   color: #f1f1f1;
@@ -98,163 +106,6 @@ body.dark-mode .login-btn {
 }
 
 body.dark-mode .login-btn:hover {
-  background: #1e8449;
-}
-/* ================= GLOBAL DARK MODE ================= */
-body.dark-mode {
-  background: #121212;
-  color: #e0e0e0;
-}
-
-/* Header já tem dark-mode definido (mantido) */
-
-/* ================= DARK MODE CAROUSEL ================= */
-body.dark-mode .carousel-overlay {
-  background: rgba(0, 0, 0, 0.6);
-}
-
-body.dark-mode .carousel-overlay h2 {
-  color: #f9f9f9;
-  text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
-}
-
-body.dark-mode .carousel-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-body.dark-mode .carousel-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-body.dark-mode .carousel-indicators span {
-  background: rgba(255, 255, 255, 0.3);
-}
-
-body.dark-mode .carousel-indicators span.active {
-  background: #ff7b39;
-}
-
-/* ================= DARK MODE CATEGORIES ================= */
-body.dark-mode .categories {
-  background: #1e1e1e;
-}
-
-body.dark-mode .category-card {
-  background: #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-}
-
-body.dark-mode .category-card h4 {
-  color: #90ee90; /* verde mais claro */
-}
-
-/* ================= DARK MODE HIGHLIGHTS ================= */
-body.dark-mode .highlights {
-  background: #1c1c1c;
-}
-
-body.dark-mode .highlight-card {
-  background: #2a2a2a;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
-}
-
-body.dark-mode .highlight-card h4 {
-  color: #90ee90;
-}
-
-/* ================= DARK MODE NEWSLETTER ================= */
-body.dark-mode .newsletter {
-  background: #1e2a28;
-  color: #f1f1f1;
-}
-
-body.dark-mode .newsletter p {
-  color: #ccc;
-}
-
-body.dark-mode .newsletter-form input {
-  background: #333;
-  border: 1px solid #555;
-  color: #f1f1f1;
-}
-
-body.dark-mode .newsletter-form button {
-  background: #27ae60;
-}
-
-body.dark-mode .newsletter-form button:hover {
-  background: #1e8449;
-}
-
-/* ================= DARK MODE USERINFO ================= */
-body.dark-mode .user-info {
-  background: linear-gradient(135deg, #2d3a3a, #1b2626);
-  color: #f1f1f1;
-}
-
-body.dark-mode .user-title {
-  color: #90ee90;
-}
-
-body.dark-mode .user-details li {
-  color: #ddd;
-}
-
-/* ================= DARK MODE CONTACT ================= */
-body.dark-mode .contact-section {
-  background: #1e1e1e;
-  color: #f1f1f1;
-}
-
-body.dark-mode .contact-card {
-  background: #2b2b2b;
-  border: 1px solid #444;
-}
-
-body.dark-mode .contact-card p,
-body.dark-mode .contact-card a,
-body.dark-mode .contact-card strong {
-  color: #ccc;
-}
-
-/* ================= DARK MODE FOOTER ================= */
-body.dark-mode .footer {
-  background: #111;
-  color: #ccc;
-}
-
-body.dark-mode .footer-grid a {
-  color: #bbb;
-}
-
-body.dark-mode .footer-grid a:hover {
-  color: #ff7b39;
-}
-
-body.dark-mode .footer-bottom {
-  color: #888;
-}
-
-/* ================= DARK MODE NOTFOUND ================= */
-body.dark-mode .notfound-container {
-  background: linear-gradient(135deg, #222, #111);
-}
-
-body.dark-mode .notfound-card {
-  background: #2a2a2a;
-  color: #f1f1f1;
-}
-
-body.dark-mode .notfound-card p {
-  color: #ccc;
-}
-
-body.dark-mode .notfound-button {
-  background: #27ae60;
-}
-
-body.dark-mode .notfound-button:hover {
   background: #1e8449;
 }
 
@@ -300,7 +151,6 @@ body.dark-mode .notfound-button:hover {
   text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
 }
 
-/* Botões */
 .carousel-btn {
   position: absolute;
   top: 50%;
@@ -320,14 +170,9 @@ body.dark-mode .notfound-button:hover {
   background: rgba(0, 0, 0, 0.8);
 }
 
-.carousel-btn.prev {
-  left: 15px;
-}
-.carousel-btn.next {
-  right: 15px;
-}
+.carousel-btn.prev { left: 15px; }
+.carousel-btn.next { right: 15px; }
 
-/* Indicadores */
 .carousel-indicators {
   position: absolute;
   bottom: 15px;
@@ -348,20 +193,49 @@ body.dark-mode .notfound-button:hover {
 }
 
 .carousel-indicators span.active {
-  background: #ff4500; /* cor do site */
+  background: #ff4500;
+}
+
+/* DARK MODE - CAROUSEL */
+body.dark-mode .carousel-overlay {
+  background: rgba(0, 0, 0, 0.6);
+}
+
+body.dark-mode .carousel-overlay h2 {
+  color: #f9f9f9;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
+}
+
+body.dark-mode .carousel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+body.dark-mode .carousel-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+body.dark-mode .carousel-indicators span {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+body.dark-mode .carousel-indicators span.active {
+  background: #ff7b39;
 }
 
 /* ================= CATEGORIES ================= */
-.categories {
-  padding: 60px 20px;
-  text-align: center;
-}
 
-.categories h3 {
+.categorias {
+  padding: 60px 20px;
+  text-align: center; 
+  background: #f9f9f9;
+}
+.section-title {
   font-size: 2rem;
   font-weight: bold;
-  color: #ff4500;
+  color: #ff7b39;
   margin-bottom: 30px;
+  text-align: center;   /* <-- isso centraliza */
 }
 
 .categories-grid {
@@ -371,13 +245,12 @@ body.dark-mode .notfound-button:hover {
   max-width: 1000px;
   margin: auto;
 }
-
 .category-card {
   background: #fff;
   border-radius: 10px;
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s;
+  transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
 }
 
 .category-card:hover {
@@ -397,10 +270,46 @@ body.dark-mode .notfound-button:hover {
   font-weight: 600;
   color: #32cd32;
 }
+
+.category-card p {
+  margin-top: 8px;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* DARK MODE - CATEGORIES */
+body.dark-mode .categorias {
+  background: #1e1e1e;
+}
+
+body.dark-mode .categories h3 {
+  color: #ff7b39;
+}
+
+body.dark-mode .category-card {
+  background: #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  border: 1px solid #3a3a3a;
+}
+
+body.dark-mode .category-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  border-color: #4a4a4a;
+}
+
+body.dark-mode .category-card h4 {
+  color: #90ee90;
+}
+
+body.dark-mode .category-card p {
+  color: #ccc;
+}
+
 /* ================= HIGHLIGHTS ================= */
 .highlights {
   padding: 60px 20px;
   text-align: center;
+  background: #f9f9f9;
 }
 
 .highlights h3 {
@@ -423,7 +332,7 @@ body.dark-mode .notfound-button:hover {
   border-radius: 10px;
   padding: 15px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s;
+  transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
 }
 
 .highlight-card:hover {
@@ -442,6 +351,40 @@ body.dark-mode .notfound-button:hover {
   font-size: 1.2rem;
   font-weight: 600;
   color: #32cd32;
+}
+
+.highlight-card p {
+  margin-top: 8px;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+/* DARK MODE - HIGHLIGHTS */
+body.dark-mode .highlights {
+  background: #1c1c1c;
+}
+
+body.dark-mode .highlights h3 {
+  color: #ff7b39;
+}
+
+body.dark-mode .highlight-card {
+  background: #2a2a2a;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  border: 1px solid #3a3a3a;
+}
+
+body.dark-mode .highlight-card:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.6);
+  border-color: #4a4a4a;
+}
+
+body.dark-mode .highlight-card h4 {
+  color: #90ee90;
+}
+
+body.dark-mode .highlight-card p {
+  color: #ccc;
 }
 
 /* ================= NEWSLETTER ================= */
@@ -508,59 +451,47 @@ body.dark-mode .notfound-button:hover {
   font-weight: bold;
 }
 
-/* ================= CONTACT OPTIONS ================= */
-.contact-section {
-  padding: 60px 20px;
-  text-align: center;
-  background: #f8f8f8;
+/* DARK MODE - NEWSLETTER */
+body.dark-mode .newsletter {
+  background: #1e2a28;
+  color: #f1f1f1;
 }
 
-.contact-section h3 {
-  font-size: 26px;
-  font-weight: bold;
-  color: #ff4500; /* título laranja */
-  margin-bottom: 40px;
+body.dark-mode .newsletter h3 {
+  color: #ff7b39;
 }
 
-.contact-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 25px;
-  max-width: 900px;
-  margin: 0 auto;
+body.dark-mode .newsletter p {
+  color: #ccc;
 }
 
-.contact-card {
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 25px 20px;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
-  transition: transform 0.3s, border 0.3s;
+body.dark-mode .newsletter-form input {
+  background: #333;
+  border: 1px solid #555;
+  color: #f1f1f1;
 }
 
-.contact-card:hover {
-  transform: translateY(-5px);
-  border-color: #32cd32; /* verde no hover */
+body.dark-mode .newsletter-form input::placeholder {
+  color: #aaa;
 }
 
-.contact-card h4 {
-  font-size: 20px;
-  font-weight: bold;
-  color: #32cd32; /* verde nos subtítulos */
-  margin: 15px 0 10px;
+body.dark-mode .newsletter-form button {
+  background: #27ae60;
 }
 
-.contact-card p, 
-.contact-card a, 
-.contact-card span, 
-.contact-card strong {
-  font-size: 15px;
-  color: #444;
-  display: block;
-  margin-top: 5px;
-  text-decoration: none;
-}/* ===== USERINFO ===== */
+body.dark-mode .newsletter-form button:hover {
+  background: #1e8449;
+}
+
+body.dark-mode .success-msg {
+  color: #90ee90;
+}
+
+body.dark-mode .error-msg {
+  color: #ff6b6b;
+}
+
+/* ================= USER INFO ================= */
 .user-info {
   background: linear-gradient(135deg, #e6f7f5, #d1f0eb);
   padding: 24px;
@@ -619,10 +550,215 @@ body.dark-mode .notfound-button:hover {
   color: #555;
 }
 
-/* Suavidade ao aparecer */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* DARK MODE - USER INFO */
+body.dark-mode .user-info {
+  background: linear-gradient(135deg, #2d3a3a, #1b2626);
+  color: #f1f1f1;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .user-title {
+  color: #90ee90;
+}
+
+body.dark-mode .user-title strong {
+  color: #90ee90;
+}
+
+body.dark-mode .user-details li {
+  color: #ddd;
+}
+
+body.dark-mode .user-details li svg {
+  color: #90ee90;
+}
+
+body.dark-mode .role.admin {
+  color: #90ee90;
+}
+
+body.dark-mode .role.common {
+  color: #ccc;
+}
+
+/* ================= INFO PAGES (TERMOS, PRIVACIDADE, REGULAMENTO) ================= */
+.info-page {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 40px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  line-height: 1.8;
+}
+
+.info-page h1 {
+  font-size: 2.5rem;
+  color: #ff4500;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.info-page h2 {
+  font-size: 1.5rem;
+  color: #32cd32;
+  margin: 30px 0 15px 0;
+  font-weight: 600;
+  border-left: 4px solid #32cd32;
+  padding-left: 15px;
+}
+
+.info-page p {
+  margin-bottom: 15px;
+  color: #444;
+  text-align: justify;
+  font-size: 1.05rem;
+}
+
+.info-page a {
+  color: #ff4500;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.info-page a:hover {
+  color: #cc3700;
+  text-decoration: underline;
+}
+
+.info-page .last-update {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 2px solid #e0e0e0;
+  font-style: italic;
+  color: #666;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+/* DARK MODE - INFO PAGES */
+body.dark-mode .info-page {
+  background: #2a2a2a;
+  color: #e0e0e0;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .info-page h1 {
+  color: #ff7b39;
+}
+
+body.dark-mode .info-page h2 {
+  color: #90ee90;
+  border-left-color: #90ee90;
+}
+
+body.dark-mode .info-page p {
+  color: #ccc;
+}
+
+body.dark-mode .info-page a {
+  color: #ff7b39;
+}
+
+body.dark-mode .info-page a:hover {
+  color: #ffab70;
+}
+
+body.dark-mode .info-page .last-update {
+  border-top-color: #444;
+  color: #999;
+}
+
+/* ================= CONTACT SECTION ================= */
+.contact-section {
+  padding: 60px 20px;
+  text-align: center;
+  background: #f8f8f8;
+}
+
+.contact-section h3 {
+  font-size: 26px;
+  font-weight: bold;
+  color: #ff4500;
+  margin-bottom: 40px;
+}
+
+.contact-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.contact-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 25px 20px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+  transition: transform 0.3s, border 0.3s, background 0.3s, box-shadow 0.3s;
+}
+
+.contact-card:hover {
+  transform: translateY(-5px);
+  border-color: #32cd32;
+}
+
+.contact-card h4 {
+  font-size: 20px;
+  font-weight: bold;
+  color: #32cd32;
+  margin: 15px 0 10px;
+}
+
+.contact-card p, 
+.contact-card a, 
+.contact-card span, 
+.contact-card strong {
+  font-size: 15px;
+  color: #444;
+  display: block;
+  margin-top: 5px;
+  text-decoration: none;
+}
+
+/* DARK MODE - CONTACT */
+body.dark-mode .contact-section {
+  background: #1e1e1e;
+  color: #f1f1f1;
+}
+
+body.dark-mode .contact-section h3 {
+  color: #ff7b39;
+}
+
+body.dark-mode .contact-card {
+  background: #2b2b2b;
+  border: 1px solid #444;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .contact-card:hover {
+  border-color: #90ee90;
+  box-shadow: 0 5px 12px rgba(0,0,0,0.5);
+}
+
+body.dark-mode .contact-card h4 {
+  color: #90ee90;
+}
+
+body.dark-mode .contact-card p,
+body.dark-mode .contact-card a,
+body.dark-mode .contact-card span,
+body.dark-mode .contact-card strong {
+  color: #ccc;
+}
+
+body.dark-mode .contact-card a:hover {
+  color: #90ee90;
 }
 
 /* ================= FOOTER ================= */
@@ -674,31 +810,12 @@ body.dark-mode .notfound-button:hover {
   border-radius: 8px;
 }
 
-.footer-bottom {
-  text-align: center;
-  border-top: 1px solid #444;
-  margin-top: 30px;
-  padding-top: 15px;
-  font-size: 13px;
-  color: #aaa;
-}
-
-/* Responsividade */
-@media (max-width: 600px) {
-  .footer {
-    text-align: center;
-  }
-  .footer h4 {
-    justify-content: center;
-  }
-}
-
-.newsletter {
+.footer .newsletter {
   display: flex;
   margin-top: 10px;
 }
 
-.newsletter input {
+.footer .newsletter input {
   flex: 1;
   padding: 10px;
   border: none;
@@ -706,8 +823,8 @@ body.dark-mode .notfound-button:hover {
   outline: none;
 }
 
-.newsletter button {
-  background: #ff4500; /* botão laranja */
+.footer .newsletter button {
+  background: #ff4500;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -716,7 +833,7 @@ body.dark-mode .notfound-button:hover {
   transition: background 0.3s;
 }
 
-.newsletter button:hover {
+.footer .newsletter button:hover {
   background: #cc3700;
 }
 
@@ -728,9 +845,38 @@ body.dark-mode .notfound-button:hover {
   font-size: 13px;
   color: #aaa;
 }
-/* ==========================
-   Página 404 - Not Found
-========================== */
+
+/* DARK MODE - FOOTER */
+body.dark-mode .footer {
+  background: #111;
+  color: #ccc;
+}
+
+body.dark-mode .footer h4 {
+  color: #90ee90;
+}
+
+body.dark-mode .footer-grid a {
+  color: #bbb;
+}
+
+body.dark-mode .footer-grid a:hover {
+  color: #ff7b39;
+}
+
+body.dark-mode .footer .newsletter button {
+  background: #ff7b39;
+}
+
+body.dark-mode .footer .newsletter button:hover {
+  background: #e6633a;
+}
+
+body.dark-mode .footer-bottom {
+  color: #888;
+}
+
+/* ================= 404 NOT FOUND ================= */
 .notfound-container {
   display: flex;
   align-items: center;
@@ -784,9 +930,34 @@ body.dark-mode .notfound-button:hover {
   transform: translateY(0);
 }
 
-/* ==========================
-   Animação
-========================== */
+/* DARK MODE - NOT FOUND */
+body.dark-mode .notfound-container {
+  background: linear-gradient(135deg, #222, #111);
+}
+
+body.dark-mode .notfound-card {
+  background: #2a2a2a;
+  color: #f1f1f1;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+body.dark-mode .notfound-card h1 {
+  color: #ff6b6b;
+}
+
+body.dark-mode .notfound-card p {
+  color: #ccc;
+}
+
+body.dark-mode .notfound-button {
+  background: #27ae60;
+}
+
+body.dark-mode .notfound-button:hover {
+  background: #1e8449;
+}
+
+/* ================= ANIMATIONS ================= */
 @keyframes fadeIn {
   from {
     opacity: 0;
@@ -798,26 +969,9 @@ body.dark-mode .notfound-button:hover {
   }
 }
 
-/* ==========================
-   Responsividade
-========================== */
-@media (max-width: 500px) {
-  .notfound-card {
-    padding: 2rem 1.5rem;
-  }
+/* ================= RESPONSIVE DESIGN ================= */
 
-  .notfound-card h1 {
-    font-size: 4rem;
-  }
-
-  .notfound-card p {
-    font-size: 1rem;
-  }
-}
-
-/* ================= RESPONSIVIDADE ================= */
-
-/* Telas até 1024px (tablet) */
+/* Tablets (até 1024px) */
 @media (max-width: 1024px) {
   header {
     padding: 15px 20px;
@@ -832,12 +986,17 @@ body.dark-mode .notfound-button:hover {
   .footer-grid {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
+
+  .info-page {
+    padding: 30px;
+    margin: 20px;
+  }
 }
 
-/* Telas até 768px (tablet pequeno/celular grande) */
+/* Tablets pequenos e celulares grandes (até 768px) */
 @media (max-width: 768px) {
   header nav {
-    display: none; /* esconde menu normal */
+    display: none;
   }
 
   header {
@@ -871,12 +1030,21 @@ body.dark-mode .notfound-button:hover {
     width: 100%;
   }
 
-  .contact-form {
-    padding: 0 10px;
+  .info-page {
+    padding: 25px;
+    margin: 15px;
+  }
+
+  .info-page h1 {
+    font-size: 2rem;
+  }
+
+  .info-page h2 {
+    font-size: 1.3rem;
   }
 }
 
-/* Telas até 480px (celulares pequenos) */
+/* Celulares pequenos (até 480px) */
 @media (max-width: 480px) {
   header {
     flex-direction: column;
@@ -912,5 +1080,34 @@ body.dark-mode .notfound-button:hover {
   .footer-grid {
     grid-template-columns: 1fr;
     text-align: center;
+  }
+
+  .notfound-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .notfound-card h1 {
+    font-size: 4rem;
+  }
+
+  .notfound-card p {
+    font-size: 1rem;
+  }
+
+  .info-page {
+    padding: 20px;
+    margin: 10px;
+  }
+
+  .info-page h1 {
+    font-size: 1.8rem;
+  }
+
+  .info-page h2 {
+    font-size: 1.2rem;
+  }
+
+  .info-page p {
+    font-size: 1rem;
   }
 }
