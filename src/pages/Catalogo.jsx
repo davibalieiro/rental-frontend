@@ -112,7 +112,7 @@ export default function Catalog() {
                     {product.categories?.[0]?.name || ""}
                   </div>
                   <img
-                    src={imageUrls[product.id] || "https://via.placeholder.com/300x200"}
+                    src={imageUrls[product.id] ?? '/placeholder.svg'}
                     alt={product.name}
                     loading="lazy"
                     onClick={() => navigate(`/produto/${product.slug}`)}

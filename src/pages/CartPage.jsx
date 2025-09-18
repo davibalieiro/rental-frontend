@@ -174,7 +174,7 @@ export default function CartPage() {
                 {cart.map((item, index) => (
                   <div key={index} className="cart-item">
                     <img
-                      src={imageUrls[item.id]}
+                      src={imageUrls[item.id] ?? '/placeholder.svg'}
                       alt={item.name}
                       onClick={() => navigate(`/produto/${item.slug}`)}
                       style={{ cursor: "pointer" }}

@@ -31,12 +31,12 @@ export default function ProductPage() {
   useEffect(() => {
     const savedDarkMode = localStorage.getItem('darkMode') === 'true';
     setDarkMode(savedDarkMode);
-    
+
     // Escutar mudanças de tema
     const handleThemeChange = (event) => {
       setDarkMode(event.detail);
     };
-    
+
     window.addEventListener('themeChanged', handleThemeChange);
     return () => window.removeEventListener('themeChanged', handleThemeChange);
   }, []);
@@ -105,7 +105,7 @@ export default function ProductPage() {
       <p>Carregando produto...</p>
     </div>
   );
-  
+
   if (!product) return (
     <div className={`product-page-error ${darkMode ? 'dark-mode' : ''}`}>
       <div className="decorative-stripes">
@@ -204,7 +204,7 @@ export default function ProductPage() {
 
       {/* Imagem do Produto */}
       <div className="product-image">
-        <img src={mainImg || "https://via.placeholder.com/400x400"} alt={product.name} />
+        <img src={mainImg || '/placeholder.svg'} alt={product.name} />
 
         <div className="image-actions">
           <button
@@ -241,7 +241,7 @@ export default function ProductPage() {
         </div>
 
         <p className="short-description">{product.short_description}</p>
-        
+
         {/* Ações: quantidade + adicionar ao carrinho - MOVIDO PARA CIMA */}
         <div className="actions-top">
           <div className="quantity-control product-page-quantity">
@@ -259,7 +259,7 @@ export default function ProductPage() {
         </div>
 
         <p className="long-description">{product.long_description}</p>
-        
+
         {/* Dimensão mantida no lugar original */}
         <p><strong>Dimensão:</strong> {product.dimension}</p>
 
