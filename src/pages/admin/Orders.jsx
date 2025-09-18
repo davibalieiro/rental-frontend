@@ -1,6 +1,6 @@
 // Orders.jsx
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./css/Orders.css";
@@ -80,7 +80,6 @@ export default function Orders({ currentUser }) {
   const { state, setPage, setFilters, updateOrder } = useOrders();
   const { orders, pagination, loading, error, page: currentPage, filters } = state;
 
-  // Estados dos Modais
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
@@ -89,7 +88,6 @@ export default function Orders({ currentUser }) {
   const [modalMessage, setModalMessage] = useState("");
 
   // --- Funções de Lógica e Formatação ---
-
   const getPriorityLevel = (order) => {
     if (!order.target_date || order.status === "APPROVED" || order.status === "CANCELLED") return 0;
     const today = new Date();
@@ -101,57 +99,6 @@ export default function Orders({ currentUser }) {
     return 0;
   };
 
-  // NOVO: Helper para verificar se a data de entrega já passou
-  const isExpired = (order) => {
-    if (!order.target_date) return false;
-    const today = new Date();
-    // Zera a hora para comparar apenas a data
-    today.setHours(0, 0, 0, 0);
-    const deliveryDate = new Date(order.target_date);
-    return deliveryDate < today;
-  };
-
-
-  // ALTERADO: Lógica de pontuação para ordenação
-  const getSortScore = (order) => {
-    // Prioridade 1: Não reivindicado
-    if (!order.sellerId) return 0;
-
-    // Prioridade 2: Perto de expirar (e não cancelado/aprovado)
-    // A função getPriorityLevel já exclui CANCELLED e APPROVED
-    if (getPriorityLevel(order) > 0) return 1;
-
-    // Prioridade 7: Expirados que já foram Aprovados ou Cancelados
-    // Verificamos isso antes dos status normais para dar menor prioridade
-    if (isExpired(order) && (order.status === 'APPROVED' || order.status === 'CANCELLED')) {
-      return 6;
-    }
-
-    // Prioridades 3 a 6: Ordenação por status para pedidos não urgentes
-    switch (order.status) {
-      case 'PENDING':
-        return 2;
-      case 'DOING':
-        return 3;
-      case 'APPROVED': // Aprovados não expirados
-        return 4;
-      case 'CANCELLED': // Cancelados não expirados
-        return 5;
-      default:
-        return 99; // Fallback para outros casos
-    }
-  };
-
-  const sortedOrders = useMemo(() => {
-    if (!orders || orders.length === 0) return [];
-    return [...orders].sort((a, b) => {
-      const scoreA = getSortScore(a);
-      const scoreB = getSortScore(b);
-      if (scoreA !== scoreB) return scoreA - scoreB;
-      return new Date(b.order_date) - new Date(a.order_date);
-    });
-  }, [orders]);
-
   const formatDate = (dateString) => {
     if (!dateString) return "N/A";
     return new Date(dateString).toLocaleDateString("pt-BR", {
@@ -162,7 +109,6 @@ export default function Orders({ currentUser }) {
   };
 
   // --- Handlers de Interação ---
-
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
@@ -190,7 +136,6 @@ export default function Orders({ currentUser }) {
   };
 
   // --- Funções de API ---
-
   const claimOrder = async (order) => {
     try {
       const updatedFields = { sellerId: currentUser.id, sellerName: currentUser.name };
@@ -246,15 +191,21 @@ export default function Orders({ currentUser }) {
 
   const handleDeleteOrder = (orderId) => {
     openConfirmModal("Excluir Pedido", "Atenção! Esta ação é irreversível. Deseja realmente EXCLUIR este pedido?", async () => {
-      // Implementar a lógica de exclusão aqui. Pode ser necessário refetch dos dados.
       toast.info("Funcionalidade de exclusão a ser implementada.");
     });
   };
 
   if (!currentUser) return <div className="loading">Carregando informações do usuário...</div>;
 
-  // --- Renderização do Componente ---
+  // --- FILTRO APLICADO ---
+  const filteredOrders = orders.filter((order) => {
+    const matchesEmail = order.clientEmail?.toLowerCase().includes(filters.clientEmail.toLowerCase());
+    const matchesName = order.clientName?.toLowerCase().includes(filters.clientName.toLowerCase());
+    const matchesStatus = filters.status ? order.status === filters.status : true;
+    return matchesEmail && matchesName && matchesStatus;
+  });
 
+  // --- Renderização do Componente ---
   return (
     <>
       <ToastContainer theme="dark" position="bottom-right" />
@@ -281,10 +232,10 @@ export default function Orders({ currentUser }) {
 
         {!loading && !error && (
           <>
-            {sortedOrders && sortedOrders.length > 0 ? (
+            {filteredOrders && filteredOrders.length > 0 ? (
               <>
                 <div className="orders-grid">
-                  {sortedOrders.map((order) => (
+                  {filteredOrders.map((order) => (
                     <div key={order.id} className={`order-card ${getPriorityLevel(order) === 2 ? "priority-red" : getPriorityLevel(order) === 1 ? "priority-orange" : ""}`}>
                       <div className="card-header">
                         <div>
@@ -345,14 +296,11 @@ export default function Orders({ currentUser }) {
         )}
       </div>
 
-      {/* --- Renderização dos Modais --- */}
       {isEditModalOpen && selectedOrder && (<EditOrderModal order={selectedOrder} onClose={closeEditModal} onSave={handleUpdateOrder} />)}
 
       <Modal isOpen={isConfirmModalOpen} title={modalTitle} onResult={(confirmed) => { setIsConfirmModalOpen(false); if (confirmed && confirmAction) confirmAction(); }}>
         <p>{modalMessage}</p>
       </Modal>
-
-
     </>
   );
 }

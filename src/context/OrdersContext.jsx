@@ -11,7 +11,7 @@ const initialState = {
     error: null,
     // Estado de controle da UI agora vive aqui
     page: 1,
-    perPage: 6,
+    perPage: 8,
     filters: {
         clientEmail: "",
         clientName: "",
