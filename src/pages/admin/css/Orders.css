@@ -10,7 +10,6 @@
   font-family: "Inter", "Segoe UI", sans-serif;
   background: #f9fafb;
   color: #1f2937;
-  /* Adiciona margem no topo para evitar sobreposição com a navbar */
   margin-top: 20px; /* Ajuste este valor conforme a altura da sua navbar */
 }
 
@@ -18,9 +17,8 @@
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
-  /* Garante que o header fique abaixo da navbar */
   position: relative;
-  z-index: 10; /* Um z-index menor que o da navbar */
+  z-index: 10;
 }
 
 .header h1 {
@@ -356,7 +354,6 @@
     opacity: 0;
     transform: translateY(-8px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -404,7 +401,7 @@
 @media (max-width: 768px) {
   .orders-container {
     padding: 1rem;
-    margin-top: 70px; /* Ajuste para mobile se necessário */
+    margin-top: 70px;
   }
 
   .search-bar {
@@ -419,8 +416,6 @@
 /* ========================================= */
 /* ESTILOS PARA O MODAL DE ARQUIVO           */
 /* ========================================= */
-
-/* O modal de arquivo deve ser maior para acomodar filtros e resultados */
 .modal-content.modal-archive {
   width: 90vw;
   max-width: 1200px;
@@ -438,7 +433,6 @@
   flex-shrink: 0;
 }
 
-/* Ajustes na barra de busca dentro do modal */
 .modal-archive .search-bar {
   margin-bottom: 15px;
   flex-shrink: 0;
@@ -477,7 +471,6 @@
 /* ========================================= */
 /* MELHORIAS NOS ESTILOS EXISTENTES          */
 /* ========================================= */
-
 .modal-overlay {
   position: fixed;
   top: 0;

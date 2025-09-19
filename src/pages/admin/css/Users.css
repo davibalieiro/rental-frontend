@@ -1,3 +1,6 @@
+/* =============================
+   USERS PAGE - LIGHT MODE (default)
+============================= */
 .users-page {
   display: flex;
   flex-direction: column;
@@ -33,6 +36,7 @@
   outline: none;
   transition: border 0.2s, box-shadow 0.2s;
   background: #fff;
+  color: #111;
 }
 
 .users-filters input:focus,
@@ -80,6 +84,7 @@
   padding: 12px 14px;
   text-align: left;
   font-size: 14px;
+  color: #2d3436;
 }
 
 .admin-table tbody tr.even { background: #fafbfc; }
@@ -127,7 +132,7 @@
 .btn-delete { background: #d63031; color: #fff; } 
 .btn-delete:hover { background: #c0392b; transform: translateY(-1px); }
 
-/* drawer (form de edição em overlay) */
+/* drawer */
 .drawer {
   position: fixed;
   inset: 0;
@@ -204,6 +209,8 @@
   border-radius: 10px;
   outline: none;
   font-size: 14px;
+  background: #fff;
+  color: #111;
 }
 
 .form-row input:focus {
@@ -275,7 +282,7 @@
 .btn-cancel { background: #e5e7eb; color: #111827; }
 .btn-cancel:hover { background: #d1d5db; }
 
-/* Estilos para os checkboxes de cupons */
+/* checkboxes */
 .coupons-checkbox-group {
   display: flex;
   flex-direction: column;
@@ -299,3 +306,67 @@
   color: #374151;
   margin: 0;
 }
+
+/* =============================
+   DARK MODE
+============================= */
+body.dark-mode .users-header h2 { color: #f5f5f5; }
+
+body.dark-mode .users-filters input,
+body.dark-mode .users-filters select {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #e5e7eb;
+}
+
+body.dark-mode .table-wrapper {
+  background: #1e293b;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+}
+
+body.dark-mode .admin-table th,
+body.dark-mode .admin-table td {
+  color: #e5e7eb;
+}
+
+body.dark-mode .admin-table tbody tr.even { background: #111827; }
+body.dark-mode .admin-table tbody tr.odd  { background: #1f2937; }
+
+body.dark-mode .admin-table tbody tr:hover { background: #374151; }
+
+body.dark-mode .admin-table .empty { color: #9ca3af; }
+
+body.dark-mode .drawer-card {
+  background: #111827;
+  color: #f3f4f6;
+}
+
+body.dark-mode .drawer-header { border-bottom: 1px solid #374151; }
+body.dark-mode .drawer-header h3 { color: #f3f4f6; }
+
+body.dark-mode .drawer-body label { color: #d1d5db; }
+
+body.dark-mode .form-row input[type="text"],
+body.dark-mode .form-row input[type="email"] {
+  background: #1f2937;
+  border: 1px solid #374151;
+  color: #e5e7eb;
+}
+
+body.dark-mode .form-row input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+}
+
+body.dark-mode .switch-label { color: #d1d5db; }
+
+body.dark-mode .drawer-footer { border-top: 1px solid #374151; }
+
+body.dark-mode .btn-cancel {
+  background: #374151;
+  color: #f9fafb;
+}
+
+body.dark-mode .btn-cancel:hover { background: #4b5563; }
+
+body.dark-mode .checkbox-item label { color: #d1d5db; }
