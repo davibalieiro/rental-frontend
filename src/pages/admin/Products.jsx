@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { FaBox, FaBoxes, FaTrash, FaEdit, FaPlus } from "react-icons/fa";
+import { FaBox, FaBoxes, FaTrash, FaEdit, FaPlus, FaSpinner } from "react-icons/fa";
 import "./css/ProductAdmin.css";
 import { useProductsContext } from "~/context/ProductsContext";
 import { useProductImages } from "~/hooks/useProductImages";
 import Modal from "~/components/Modal";
-import { useTheme } from "~/context/ThemeContext"; // <- Importa o hook
+import { useTheme } from "~/context/ThemeContext";
 
 export default function Products() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
   const { products, setProducts } = useProductsContext();
-  const { imageUrls } = useProductImages(products);
-  const { darkMode } = useTheme(); // <- Pega o estado global
+  const { imageUrls, refetchImages } = useProductImages(products); // Assume que tem refetchImages
+  const { darkMode } = useTheme();
 
   const [categories, setCategories] = useState([]);
   const [materials, setMaterials] = useState([]);
@@ -31,6 +31,12 @@ export default function Products() {
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+  // Estados de loading e notificações
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [notification, setNotification] = useState(null);
+
   useEffect(() => {
     async function fetchOptions() {
       try {
@@ -42,10 +48,32 @@ export default function Products() {
         setMaterials(matData.data || []);
       } catch (err) {
         console.error(err);
+        showNotification("Erro ao carregar categorias e materiais", "error");
       }
     }
     fetchOptions();
   }, []);
+
+  // Função para mostrar notificações
+  const showNotification = (message, type = "info") => {
+    setNotification({ message, type });
+    setTimeout(() => setNotification(null), 4000);
+  };
+
+  // Função para recarregar produtos
+  const refreshProducts = async () => {
+    try {
+      const res = await fetch(`${API_URL}/product/all`);
+      const data = await res.json();
+      setProducts(data.data || []);
+      if (refetchImages) {
+        await refetchImages();
+      }
+    } catch (err) {
+      console.error("Erro ao recarregar produtos:", err);
+      showNotification("Erro ao recarregar produtos", "error");
+    }
+  };
 
   async function deleteProductByIDFront(id) {
     try {
@@ -57,6 +85,7 @@ export default function Products() {
       return await res.json();
     } catch (err) {
       console.error(err);
+      throw err;
     }
   }
 
@@ -72,11 +101,14 @@ export default function Products() {
       return await res.json();
     } catch (err) {
       console.error(err);
+      throw err;
     }
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setIsLoading(true);
+    
     try {
       const res = await fetch(`${API_URL}/product`, {
         method: "POST",
@@ -84,6 +116,9 @@ export default function Products() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
+      
+      if (!res.ok) throw new Error("Erro ao criar produto");
+      
       const json = await res.json();
       const newProduct = json.data;
 
@@ -97,6 +132,7 @@ export default function Products() {
         });
       }
 
+      // Reset do formulário
       setForm({
         name: "",
         short_description: "",
@@ -107,36 +143,81 @@ export default function Products() {
       });
       setImageFile(null);
 
-      setProducts([...products, newProduct]);
+      // Atualizar lista de produtos
+      await refreshProducts();
+      
+      showNotification("Produto adicionado com sucesso!", "success");
+
     } catch (err) {
       console.error(err);
+      showNotification("Erro ao adicionar produto", "error");
+    } finally {
+      setIsLoading(false);
     }
   }
 
   async function handleDeleteConfirm(result) {
     if (result && selectedProduct) {
-      await deleteProductByIDFront(selectedProduct.id);
-      setProducts(products.filter((p) => p.id !== selectedProduct.id));
+      setIsDeleting(true);
+      try {
+        await deleteProductByIDFront(selectedProduct.id);
+        
+        // Atualizar lista removendo o produto
+        setProducts(products.filter((p) => p.id !== selectedProduct.id));
+        
+        showNotification(`Produto "${selectedProduct.name}" deletado com sucesso!`, "success");
+        
+        // Se a página atual ficar vazia, voltar para a anterior
+        const newTotalPages = Math.ceil((products.length - 1) / itemsPerPage);
+        if (page > newTotalPages && newTotalPages > 0) {
+          setPage(newTotalPages);
+        }
+        
+      } catch (err) {
+        console.error(err);
+        showNotification("Erro ao deletar produto", "error");
+      } finally {
+        setIsDeleting(false);
+      }
     }
     setIsDeleteOpen(false);
+    setSelectedProduct(null);
   }
 
   async function handleEditConfirm(result) {
     if (result && selectedProduct) {
-      const body = {
-        name: selectedProduct.name,
-        short_description: selectedProduct.short_description,
-        long_description: selectedProduct.long_description,
-        dimension: selectedProduct.dimension,
-        categoryIds: selectedProduct.categories?.map((c) => c.id),
-        materialIds: selectedProduct.materials?.map((m) => m.id),
-      };
-      const updated = await updateProductByIdFront(selectedProduct.id, body);
-      setProducts(
-        products.map((p) => (p.id === selectedProduct.id ? updated.data : p))
-      );
+      setIsEditing(true);
+      try {
+        const body = {
+          name: selectedProduct.name,
+          short_description: selectedProduct.short_description,
+          long_description: selectedProduct.long_description,
+          dimension: selectedProduct.dimension,
+          categoryIds: selectedProduct.categories?.map((c) => c.id) || [],
+          materialIds: selectedProduct.materials?.map((m) => m.id) || [],
+        };
+        
+        const updated = await updateProductByIdFront(selectedProduct.id, body);
+        
+        // Atualizar produto na lista
+        setProducts(
+          products.map((p) => (p.id === selectedProduct.id ? updated.data : p))
+        );
+        
+        showNotification(`Produto "${selectedProduct.name}" atualizado com sucesso!`, "success");
+        
+        // Recarregar para garantir dados atualizados
+        setTimeout(() => refreshProducts(), 500);
+        
+      } catch (err) {
+        console.error(err);
+        showNotification("Erro ao atualizar produto", "error");
+      } finally {
+        setIsEditing(false);
+      }
     }
     setIsEditOpen(false);
+    setSelectedProduct(null);
   }
 
   const paginatedProducts = products.slice(
@@ -145,19 +226,27 @@ export default function Products() {
   );
   
   return (
-    <div className="products-page">
+    <div className={`products-page ${darkMode ? 'dark-mode' : ''}`}>
       <h2 className="products-title">
         <FaBoxes /> Gerenciar Produtos
       </h2>
 
+      {/* Notificação */}
+      {notification && (
+        <div className={`notification ${notification.type}`}>
+          {notification.message}
+        </div>
+      )}
+
       {/* ==== FORMULÁRIO ==== */}
-      <form onSubmit={handleSubmit} className="admin-form">
+      <form onSubmit={handleSubmit} className={`admin-form ${darkMode ? 'dark-mode' : ''}`}>
         <div className="form-group">
           <label>Nome do produto</label>
           <input
             type="text"
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
+            disabled={isLoading}
             required
           />
         </div>
@@ -170,6 +259,7 @@ export default function Products() {
             onChange={(e) =>
               setForm({ ...form, short_description: e.target.value })
             }
+            disabled={isLoading}
             required
           />
         </div>
@@ -181,6 +271,7 @@ export default function Products() {
             onChange={(e) =>
               setForm({ ...form, long_description: e.target.value })
             }
+            disabled={isLoading}
             required
           />
         </div>
@@ -191,6 +282,7 @@ export default function Products() {
             type="text"
             value={form.dimension}
             onChange={(e) => setForm({ ...form, dimension: e.target.value })}
+            disabled={isLoading}
             required
           />
         </div>
@@ -204,6 +296,7 @@ export default function Products() {
                   type="checkbox"
                   value={c.id}
                   checked={form.categoryIds.includes(c.id)}
+                  disabled={isLoading}
                   onChange={(e) => {
                     const updated = e.target.checked
                       ? [...form.categoryIds, c.id]
@@ -226,6 +319,7 @@ export default function Products() {
                   type="checkbox"
                   value={m.id}
                   checked={form.materialIds.includes(m.id)}
+                  disabled={isLoading}
                   onChange={(e) => {
                     const updated = e.target.checked
                       ? [...form.materialIds, m.id]
@@ -246,6 +340,7 @@ export default function Products() {
               type="file"
               id="file-upload"
               accept="image/*"
+              disabled={isLoading}
               onChange={(e) => setImageFile(e.target.files[0])}
             />
             <label htmlFor="file-upload" className="file-upload-button">
@@ -254,112 +349,143 @@ export default function Products() {
           </div>
         </div>
 
-        <button type="submit" className="btn-primary">
-          <FaPlus /> <span className="btn-add-text">Adicionar Produto</span>
+        <button type="submit" className="btn-primary" disabled={isLoading}>
+          {isLoading ? (
+            <FaSpinner className="spinner" />
+          ) : (
+            <FaPlus />
+          )}
+          <span className="btn-add-text">
+            {isLoading ? "Adicionando..." : "Adicionar Produto"}
+          </span>
         </button>
       </form>
 
       {/* ==== LISTAGEM ==== */}
       <div className="cards-container">
-        {paginatedProducts.map((p) => (
-          <div className="card" key={p.id}>
-            <div className="card-image">
-              {imageUrls[p.id] ? (
-                <img src={imageUrls[p.id]} alt={p.name} />
-              ) : (
-                <FaBox className="placeholder-icon" />
-              )}
-              <div className="overlay">
-                <button
-                  className="icon-btn edit"
-                  onClick={() => {
-                    setSelectedProduct({ ...p });
-                    setIsEditOpen(true);
-                  }}
-                >
-                  <FaEdit />
-                </button>
-                <button
-                  className="icon-btn delete"
-                  onClick={() => {
-                    setSelectedProduct(p);
-                    setIsDeleteOpen(true);
-                  }}
-                >
-                  <FaTrash />
-                </button>
-              </div>
-            </div>
-
-            <div className="card-content">
-              <h3>{p.name}</h3>
-              <p>{p.short_description}</p>
-              <p className="dimension-text">
-                <strong>Dimensão:</strong> {p.dimension}
-              </p>
-              <div className="categories">
-                {p.categories?.map((c) => (
-                  <span key={c.id} className="category-tag">{c.name}</span>
-                ))}
-              </div>
-              <div className="materials">
-                {p.materials?.map((m) => (
-                  <span key={m.id} className="material-tag">{m.name}</span>
-                ))}
-              </div>
-            </div>
+        {paginatedProducts.length === 0 ? (
+          <div className="empty-state">
+            <FaBox size={64} />
+            <p>Nenhum produto encontrado</p>
           </div>
-        ))}
+        ) : (
+          paginatedProducts.map((p) => (
+            <div className={`card ${darkMode ? 'dark-mode' : ''}`} key={p.id}>
+              <div className="card-image">
+                {imageUrls[p.id] ? (
+                  <img src={imageUrls[p.id]} alt={p.name} />
+                ) : (
+                  <FaBox className="placeholder-icon" />
+                )}
+                <div className="overlay">
+                  <button
+                    className="icon-btn edit"
+                    onClick={() => {
+                      setSelectedProduct({ ...p });
+                      setIsEditOpen(true);
+                    }}
+                    disabled={isEditing || isDeleting}
+                  >
+                    {isEditing && selectedProduct?.id === p.id ? (
+                      <FaSpinner className="spinner" />
+                    ) : (
+                      <FaEdit />
+                    )}
+                  </button>
+                  <button
+                    className="icon-btn delete"
+                    onClick={() => {
+                      setSelectedProduct(p);
+                      setIsDeleteOpen(true);
+                    }}
+                    disabled={isEditing || isDeleting}
+                  >
+                    {isDeleting && selectedProduct?.id === p.id ? (
+                      <FaSpinner className="spinner" />
+                    ) : (
+                      <FaTrash />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              <div className={`card-content ${darkMode ? 'dark-mode' : ''}`}>
+                <h3>{p.name}</h3>
+                <p>{p.short_description}</p>
+                <p className="dimension-text">
+                  <strong>Dimensão:</strong> {p.dimension}
+                </p>
+                <div className="categories">
+                  {p.categories?.map((c) => (
+                    <span key={c.id} className="category-tag">{c.name}</span>
+                  ))}
+                </div>
+                <div className="materials">
+                  {p.materials?.map((m) => (
+                    <span key={m.id} className="material-tag">{m.name}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))
+        )}
       </div>
 
       {/* ==== PAGINAÇÃO ==== */}
-      <div className="pagination">
-        <button
-          disabled={page === 1}
-          onClick={() => setPage((p) => p - 1)}
-          className="page-btn"
-        >
-          ◀ Anterior
-        </button>
-
-        {Array.from({ length: totalPages }, (_, i) => (
+      {totalPages > 1 && (
+        <div className="pagination">
           <button
-            key={i}
-            onClick={() => setPage(i + 1)}
-            className={`page-btn ${page === i + 1 ? "active" : ""}`}
+            disabled={page === 1}
+            onClick={() => setPage((p) => p - 1)}
+            className="page-btn"
           >
-            {i + 1}
+            ◀ Anterior
           </button>
-        ))}
 
-        <button
-          disabled={page === totalPages}
-          onClick={() => setPage((p) => p + 1)}
-          className="page-btn"
-        >
-          Próxima ▶
-        </button>
-      </div>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setPage(i + 1)}
+              className={`page-btn ${page === i + 1 ? "active" : ""}`}
+            >
+              {i + 1}
+            </button>
+          ))}
+
+          <button
+            disabled={page === totalPages}
+            onClick={() => setPage((p) => p + 1)}
+            className="page-btn"
+          >
+            Próxima ▶
+          </button>
+        </div>
+      )}
 
       {/* ==== MODAIS ==== */}
       <Modal
         isOpen={isDeleteOpen}
         onResult={handleDeleteConfirm}
         title="Deletar Produto"
-        confirmText="Deletar"
+        confirmText={isDeleting ? "Deletando..." : "Deletar"}
         cancelText="Cancelar"
       >
         <p>
           Tem certeza que deseja deletar{" "}
           <strong>{selectedProduct?.name}</strong>?
         </p>
+        {isDeleting && (
+          <p style={{ marginTop: '10px', color: '#666' }}>
+            <FaSpinner className="spinner" /> Processando...
+          </p>
+        )}
       </Modal>
 
       <Modal
         isOpen={isEditOpen}
         onResult={handleEditConfirm}
         title="Editar Produto"
-        confirmText="Salvar"
+        confirmText={isEditing ? "Salvando..." : "Salvar"}
         cancelText="Cancelar"
       >
         {selectedProduct && (
@@ -368,6 +494,7 @@ export default function Products() {
               <label>Nome</label>
               <input
                 value={selectedProduct.name}
+                disabled={isEditing}
                 onChange={(e) =>
                   setSelectedProduct({
                     ...selectedProduct,
@@ -380,6 +507,7 @@ export default function Products() {
               <label>Descrição Curta</label>
               <input
                 value={selectedProduct.short_description}
+                disabled={isEditing}
                 onChange={(e) =>
                   setSelectedProduct({
                     ...selectedProduct,
@@ -392,6 +520,7 @@ export default function Products() {
               <label>Descrição Longa</label>
               <textarea
                 value={selectedProduct.long_description}
+                disabled={isEditing}
                 onChange={(e) =>
                   setSelectedProduct({
                     ...selectedProduct,
@@ -404,6 +533,7 @@ export default function Products() {
               <label>Dimensão</label>
               <input
                 value={selectedProduct.dimension}
+                disabled={isEditing}
                 onChange={(e) =>
                   setSelectedProduct({
                     ...selectedProduct,
@@ -412,6 +542,11 @@ export default function Products() {
                 }
               />
             </div>
+            {isEditing && (
+              <p style={{ marginTop: '15px', color: '#666' }}>
+                <FaSpinner className="spinner" /> Salvando alterações...
+              </p>
+            )}
           </>
         )}
       </Modal>
