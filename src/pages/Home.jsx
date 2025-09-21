@@ -3,21 +3,18 @@ import Carousel from "../components/Carousel";
 import Categories from "../components/Categorias";
 import Highlights from "../components/Highlights";
 import Newsletter from "../components/Newsletter";
-import UserInfo from "../components/UserInfo";
 import InfoCard from "../components/InfoCard";
 
 export default function Home() {
   return (
     <main>
-      {/* Informações do usuário */}
-      <UserInfo />
 
       {/* Hero / Carousel */}
       <Carousel />
 
       {/* Destaques */}
       <Highlights />
-      
+
       {/* Categorias */}
       <Categories />
 

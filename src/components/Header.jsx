@@ -1,20 +1,23 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { useTheme } from "../context/ThemeContext"; // Importar o contexto
+import { useTheme } from "../context/ThemeContext";
 import logo from "../assets/logo_clisare_loca.png";
 import { FaMoon, FaSun } from "react-icons/fa";
+
+
+const API_URL = import.meta.env.VITE_API_URL_V1;
 
 export default function Header() {
   const navigate = useNavigate();
   const { user, loading } = useAuth();
-  const { darkMode, toggleDarkMode } = useTheme(); // Usar o contexto
+  const { darkMode, toggleDarkMode } = useTheme();
 
   if (loading) return null;
 
   const handleLogout = async () => {
     try {
-      await fetch("http://localhost:3000/api/logout", {
+      await fetch(`${API_URL}/logout`, {
         method: "POST",
         credentials: "include",
       });

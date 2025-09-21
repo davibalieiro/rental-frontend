@@ -37,7 +37,7 @@
   background: #fff;
   border-radius: 10px;
   padding: 15px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s;
   position: relative;
 }
@@ -112,6 +112,40 @@
 .cart-btn:hover {
   background: #228b22;
   transform: translateY(-2px);
+}
+
+.catalog-container {
+  .pagination {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 20px 0;
+    margin: 0;
+  }
+
+  .page-item {
+    margin: 0 5px;
+  }
+
+  .page-link {
+    color: #007bff;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color .3s;
+    border: 1px solid #ddd;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .page-link:hover {
+    background-color: #ea580c;
+  }
+
+  .page-item.active .page-link {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+  }
 }
 
 /* ================= RESPONSIVIDADE ================= */

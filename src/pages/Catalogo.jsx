@@ -3,35 +3,25 @@ import { useNavigate } from "react-router";
 import { useProductsContext } from "~/context/ProductsContext";
 import { useProductImages } from "~/hooks/useProductImages";
 import "./css/Catalogo.css";
-import { FaArrowLeft, FaArrowRight, FaCaretLeft, FaCaretRight, FaCheckCircle, FaShoppingBag } from "react-icons/fa";
+import { FaCaretLeft, FaCaretRight, FaCheckCircle, FaShoppingBag } from "react-icons/fa";
 
 export default function Catalog() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
-
-  const {
-    products,
-    pagination,
-    loading,
-    page,
-    setPage,
-    perPage,
-    setPerPage
-  } = useProductsContext();
-
+  const { products, pagination, loading, page, setPage, setFilters, filters } = useProductsContext();
   const [categories, setCategories] = useState([]);
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
+
+  // Estados locais para controlar os inputs de forma independente
+  const [searchInput, setSearchInput] = useState(filters.name || "");
+  const [categoryInput, setCategoryInput] = useState(filters.category || "");
+
   const [added, setAdded] = useState({});
   const navigate = useNavigate();
   const { imageUrls } = useProductImages(products);
 
-  // Fetch categories
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${API_URL}/category/all`, {
-          credentials: "include",
-        });
+        const res = await fetch(`${API_URL}/category/all`, { credentials: "include" });
         const json = await res.json();
         setCategories(json.data || []);
       } catch (err) {
@@ -41,34 +31,46 @@ export default function Catalog() {
     fetchCategories();
   }, [API_URL]);
 
-  // Filtra produtos por busca e categoria
-  const filteredProducts = products.filter((p) => {
-    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchesCategory = category
-      ? p.categories?.some((c) => c.name === category)
-      : true;
-    return matchesSearch && matchesCategory;
-  });
+  // Efeito para atualizar os filtros quando a categoria mudar
+  useEffect(() => {
+    // Evita a busca inicial desnecessária se categoryInput já estiver vazio
+    if (categoryInput !== (filters.category || '')) {
+      handleSearch();
+    }
+  }, [categoryInput]);
 
-  // Adiciona produto ao carrinho
+  const handleSearch = () => {
+    setFilters({
+      name: searchInput,
+      category: categoryInput,
+    });
+    setPage(1);
+  };
+
+  // 1. Adicionada função para pesquisar com a tecla "Enter"
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  // 3. Adicionada função para limpar os filtros
+  const handleClearFilters = () => {
+    setSearchInput("");
+    setCategoryInput("");
+    setFilters({});
+    setPage(1);
+  };
+
   const addToCart = (product) => {
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
-    const exists = cart.find((item) => item.id === product.id);
-    if (!exists) {
+    if (!cart.find((item) => item.id === product.id)) {
       cart.push({ ...product, quantity: 1 });
       localStorage.setItem("cart", JSON.stringify(cart));
       setAdded((prev) => ({ ...prev, [product.id]: true }));
       setTimeout(() => {
         setAdded((prev) => ({ ...prev, [product.id]: false }));
       }, 2000);
-    }
-  };
-
-  // Muda a página de forma segura
-  const handlePageChange = (newPage) => {
-    const totalPages = pagination?.totalPages || 1;
-    if (newPage > 0 && newPage <= totalPages) {
-      setPage(newPage);
     }
   };
 
@@ -82,14 +84,12 @@ export default function Catalog() {
       <div className="catalog-filters">
         <input
           type="text"
-          placeholder="🔍 Buscar produto..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar produto..."
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-        >
+        <select value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)}>
           <option value="">Todas as categorias</option>
           {categories.map((cat) => (
             <option key={cat.id} value={cat.name}>
@@ -97,22 +97,20 @@ export default function Catalog() {
             </option>
           ))}
         </select>
+        <button onClick={handleSearch}>Pesquisar</button>
+        <button onClick={handleClearFilters} className="clear-btn">Limpar Filtros</button>
       </div>
 
-      {/* Produtos */}
       {loading ? (
         <p>Carregando produtos...</p>
       ) : (
         <>
           <div className="catalog-grid">
-            {filteredProducts.length > 0 ? (
-              filteredProducts.map((product) => (
+            {products.length > 0 ? (
+              products.map((product) => (
                 <div key={product.id} className="product-card">
-                  <div className="badge">
-                    {product.categories?.[0]?.name || ""}
-                  </div>
                   <img
-                    src={imageUrls[product.id] ?? '/placeholder.svg'}
+                    src={imageUrls[product.id] ?? "/placeholder.svg"}
                     alt={product.name}
                     loading="lazy"
                     onClick={() => navigate(`/produto/${product.slug}`)}
@@ -120,16 +118,10 @@ export default function Catalog() {
                   />
                   <h4>{product.name}</h4>
                   <div className="product-actions">
-                    <button
-                      className="buy-btn"
-                      onClick={() => navigate(`/produto/${product.slug}`)}
-                    >
+                    <button className="buy-btn" onClick={() => navigate(`/produto/${product.slug}`)}>
                       Ver detalhes
                     </button>
-                    <button
-                      className="cart-btn"
-                      onClick={() => addToCart(product)}
-                    >
+                    <button className="cart-btn" onClick={() => addToCart(product)}>
                       {added[product.id] ? (
                         <span><FaCheckCircle /> Adicionado!</span>
                       ) : (
@@ -145,33 +137,31 @@ export default function Catalog() {
           </div>
 
           {/* Paginação */}
-          <div className="pagination">
-            <button
-              disabled={page === 1}
-              onClick={() => setPage((p) => p - 1)}
-              className="page-btn"
-            >
-              <FaCaretLeft style={{ marginRight: '5px' }} /> Anterior
-            </button>
-
-            {Array.from({ length: totalPages }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => setPage(i + 1)}
-                className={`page-btn ${page === i + 1 ? "active" : ""}`}
-              >
-                {i + 1}
+          {products.length > 0 && totalPages > 1 && (
+            <div className="pagination">
+              <button disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="page-btn">
+                <FaCaretLeft style={{ marginRight: "5px" }} /> Anterior
               </button>
-            ))}
 
-            <button
-              disabled={page === totalPages}
-              onClick={() => setPage((p) => p + 1)}
-              className="page-btn"
-            >
-              Próxima <FaCaretRight style={{ marginLeft: '5px' }} />
-            </button>
-          </div>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setPage(i + 1)}
+                  className={`page-btn ${page === i + 1 ? "active" : ""}`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              <button
+                disabled={page === totalPages}
+                onClick={() => setPage((p) => p + 1)}
+                className="page-btn"
+              >
+                Próxima <FaCaretRight style={{ marginLeft: "5px" }} />
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>
