@@ -1,31 +1,65 @@
 .pagination {
     display: flex;
     justify-content: center;
-    list-style: none;
-    padding: 20px 0;
-    margin: 0;
+    align-items: center;
+    gap: 8px;
+    margin-top: 2rem;
+    flex-wrap: wrap;
 }
 
-.page-item {
-    margin: 0 5px;
-}
-
-.page-link {
-    color: #007bff;
-    padding: 8px 16px;
-    text-decoration: none;
-    transition: background-color .3s;
+.page-btn {
     border: 1px solid #ddd;
-    cursor: pointer;
+    background-color: #fff;
+    color: #333;
+    padding: 8px 12px;
     border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }
 
-.page-link:hover {
-    background-color: #ea580c;
+.page-btn:hover:not(:disabled) {
+    background-color: #f0f0f0;
+    border-color: #ccc;
 }
 
-.page-item.active .page-link {
-    background-color: #007bff;
+.page-btn.active {
+    background-color: #3498db;
     color: white;
-    border-color: #007bff;
+    border-color: #3498db;
+    font-weight: bold;
+}
+
+.page-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.ellipsis {
+    padding: 8px 4px;
+    color: #888;
+}
+
+/* Dark Mode Styles */
+.pagination.dark-mode .page-btn {
+    background-color: #2c3e50;
+    border-color: #34495e;
+    color: #ecf0f1;
+}
+
+.pagination.dark-mode .page-btn:hover:not(:disabled) {
+    background-color: #34495e;
+}
+
+.pagination.dark-mode .page-btn.active {
+    background-color: #3498db;
+    border-color: #3498db;
+    color: white;
+}
+
+.pagination.dark-mode .ellipsis {
+    color: #7f8c8d;
 }

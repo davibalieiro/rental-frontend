@@ -3,12 +3,15 @@ import { useNavigate } from "react-router";
 import { useProductsContext } from "~/context/ProductsContext";
 import { useProductImages } from "~/hooks/useProductImages";
 import "./css/Catalogo.css";
-import { FaCaretLeft, FaCaretRight, FaCheckCircle, FaShoppingBag } from "react-icons/fa";
+import { FaCheckCircle, FaShoppingBag } from "react-icons/fa";
+import Pagination from "~/components/Pagination";
+import { useTheme } from "~/context/ThemeContext";
 
 export default function Catalog() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
   const { products, pagination, loading, page, setPage, setFilters, filters } = useProductsContext();
   const [categories, setCategories] = useState([]);
+  const { darkMode } = useTheme();
 
   // Estados locais para controlar os inputs de forma independente
   const [searchInput, setSearchInput] = useState(filters.name || "");
@@ -31,9 +34,7 @@ export default function Catalog() {
     fetchCategories();
   }, [API_URL]);
 
-  // Efeito para atualizar os filtros quando a categoria mudar
   useEffect(() => {
-    // Evita a busca inicial desnecessária se categoryInput já estiver vazio
     if (categoryInput !== (filters.category || '')) {
       handleSearch();
     }
@@ -137,31 +138,12 @@ export default function Catalog() {
           </div>
 
           {/* Paginação */}
-          {products.length > 0 && totalPages > 1 && (
-            <div className="pagination">
-              <button disabled={page === 1} onClick={() => setPage((p) => p - 1)} className="page-btn">
-                <FaCaretLeft style={{ marginRight: "5px" }} /> Anterior
-              </button>
-
-              {Array.from({ length: totalPages }, (_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setPage(i + 1)}
-                  className={`page-btn ${page === i + 1 ? "active" : ""}`}
-                >
-                  {i + 1}
-                </button>
-              ))}
-
-              <button
-                disabled={page === totalPages}
-                onClick={() => setPage((p) => p + 1)}
-                className="page-btn"
-              >
-                Próxima <FaCaretRight style={{ marginLeft: "5px" }} />
-              </button>
-            </div>
-          )}
+          <Pagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={(p) => setPage(p)}
+            darkMode={darkMode}
+          />
         </>
       )}
     </div>
