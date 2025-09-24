@@ -9,7 +9,7 @@ import { useTheme } from "~/context/ThemeContext";
 
 export default function Products() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
-  
+
   const {
     products,
     setProducts,
@@ -21,7 +21,7 @@ export default function Products() {
     setFilters,
   } = useProductsContext();
 
-  const { imageUrls, refetchImages } = useProductImages(products);
+  const { imageUrls } = useProductImages(products);
   const { darkMode } = useTheme();
 
   const [categories, setCategories] = useState([]);
@@ -102,39 +102,30 @@ export default function Products() {
   };
 
   const refreshProducts = () => {
-    // Força uma nova busca mantendo os filtros atuais
     setFilters(prev => ({ ...prev }));
-    refetchImages();
   };
 
-  // IMPLEMENTAÇÃO DAS FUNÇÕES DE API QUE ESTAVAM FALTANDO
-async function deleteProductByIDFront(id) {
-    if (!id || typeof id !== "string") {
-        throw new Error("ID do produto inválido");
-    }
+  async function deleteProductByIDFront(id) {
 
     try {
-        const res = await fetch(`${API_URL}/products/${id.trim()}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${localStorage.getItem("token")}`, // ajusta aqui
-            },
-        });
+      const res = await fetch(`${API_URL}/products/${id}`, {
+        method: "DELETE",
+        credentials: "include"
+      });
 
-        const data = await res.json();
+      const data = await res.json();
+      console.log(data);
+      if (!res.ok) {
+        throw new Error(data.message || "Erro ao deletar produto");
+      }
 
-        if (!res.ok) {
-            throw new Error(data.message || "Erro ao deletar produto");
-        }
-
-        console.log("Produto deletado com sucesso:", data);
-        return data;
+      console.log("Produto deletado com sucesso:", data);
+      return data;
     } catch (err) {
-        console.error("Erro ao deletar produto:", err);
-        throw err; // opcional, pra poder tratar no modal
+      console.error("Erro ao deletar produto:", err);
+      throw err;
     }
-}
+  }
 
   async function updateProductByIdFront(id, data) {
     try {
@@ -144,12 +135,12 @@ async function deleteProductByIDFront(id) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
-      
+
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.message || "Erro ao atualizar produto");
       }
-      
+
       return await res.json();
     } catch (error) {
       console.error("Erro ao atualizar produto:", error);
@@ -167,15 +158,15 @@ async function deleteProductByIDFront(id) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      
+
       if (!res.ok) {
         const errorData = await res.json();
         throw new Error(errorData.message || "Erro ao criar produto");
       }
-      
+
       const json = await res.json();
       const newProduct = json.data;
-      
+
       if (imageFile) {
         const formData = new FormData();
         formData.append("image", imageFile);
@@ -185,14 +176,14 @@ async function deleteProductByIDFront(id) {
           credentials: "include",
         });
       }
-      
-      setForm({ 
-        name: "", 
-        short_description: "", 
-        long_description: "", 
-        dimension: "", 
-        categoryIds: [], 
-        materialIds: [] 
+
+      setForm({
+        name: "",
+        short_description: "",
+        long_description: "",
+        dimension: "",
+        categoryIds: [],
+        materialIds: []
       });
       setImageFile(null);
       refreshProducts();
@@ -237,7 +228,7 @@ async function deleteProductByIDFront(id) {
           categoryIds: selectedProduct.categories?.map((c) => c.id) || [],
           materialIds: selectedProduct.materials?.map((m) => m.id) || [],
         };
-        
+
         await updateProductByIdFront(selectedProduct.id, body);
         showNotification(`Produto "${selectedProduct.name}" atualizado com sucesso!`, "success");
         refreshProducts();
@@ -269,109 +260,109 @@ async function deleteProductByIDFront(id) {
       <form onSubmit={handleSubmit} className={`admin-form ${darkMode ? "dark-mode" : ""}`}>
         <div className="form-group">
           <label>Nome do produto</label>
-          <input 
-            type="text" 
-            value={form.name} 
-            onChange={(e) => setForm({ ...form, name: e.target.value })} 
-            disabled={isSubmitting} 
-            required 
+          <input
+            type="text"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            disabled={isSubmitting}
+            required
           />
         </div>
-        
+
         <div className="form-group">
           <label>Descrição curta</label>
-          <input 
-            type="text" 
-            value={form.short_description} 
-            onChange={(e) => setForm({ ...form, short_description: e.target.value })} 
-            disabled={isSubmitting} 
-            required 
+          <input
+            type="text"
+            value={form.short_description}
+            onChange={(e) => setForm({ ...form, short_description: e.target.value })}
+            disabled={isSubmitting}
+            required
           />
         </div>
-        
+
         <div className="form-group">
           <label>Descrição longa</label>
-          <textarea 
-            value={form.long_description} 
-            onChange={(e) => setForm({ ...form, long_description: e.target.value })} 
-            disabled={isSubmitting} 
-            required 
+          <textarea
+            value={form.long_description}
+            onChange={(e) => setForm({ ...form, long_description: e.target.value })}
+            disabled={isSubmitting}
+            required
           />
         </div>
-        
+
         <div className="form-group">
           <label>Dimensão (ex: 120x60x60)</label>
-          <input 
-            type="text" 
-            value={form.dimension} 
-            onChange={(e) => setForm({ ...form, dimension: e.target.value })} 
-            disabled={isSubmitting} 
-            required 
+          <input
+            type="text"
+            value={form.dimension}
+            onChange={(e) => setForm({ ...form, dimension: e.target.value })}
+            disabled={isSubmitting}
+            required
           />
         </div>
-        
+
         <div className="form-group">
           <label>Categoria(s)</label>
           <div className="checkbox-group">
             {categories.map((c) => (
               <label key={c.id} className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  value={c.id} 
-                  checked={form.categoryIds.includes(c.id)} 
-                  disabled={isSubmitting} 
-                  onChange={(e) => { 
-                    const updated = e.target.checked 
-                      ? [...form.categoryIds, c.id] 
-                      : form.categoryIds.filter((id) => id !== c.id); 
-                    setForm({ ...form, categoryIds: updated }); 
-                  }} 
-                /> 
+                <input
+                  type="checkbox"
+                  value={c.id}
+                  checked={form.categoryIds.includes(c.id)}
+                  disabled={isSubmitting}
+                  onChange={(e) => {
+                    const updated = e.target.checked
+                      ? [...form.categoryIds, c.id]
+                      : form.categoryIds.filter((id) => id !== c.id);
+                    setForm({ ...form, categoryIds: updated });
+                  }}
+                />
                 {c.name}
               </label>
             ))}
           </div>
         </div>
-        
+
         <div className="form-group">
           <label>Material(is)</label>
           <div className="checkbox-group">
             {materials.map((m) => (
               <label key={m.id} className="checkbox-item">
-                <input 
-                  type="checkbox" 
-                  value={m.id} 
-                  checked={form.materialIds.includes(m.id)} 
-                  disabled={isSubmitting} 
-                  onChange={(e) => { 
-                    const updated = e.target.checked 
-                      ? [...form.materialIds, m.id] 
-                      : form.materialIds.filter((id) => id !== m.id); 
-                    setForm({ ...form, materialIds: updated }); 
-                  }} 
-                /> 
+                <input
+                  type="checkbox"
+                  value={m.id}
+                  checked={form.materialIds.includes(m.id)}
+                  disabled={isSubmitting}
+                  onChange={(e) => {
+                    const updated = e.target.checked
+                      ? [...form.materialIds, m.id]
+                      : form.materialIds.filter((id) => id !== m.id);
+                    setForm({ ...form, materialIds: updated });
+                  }}
+                />
                 {m.name}
               </label>
             ))}
           </div>
         </div>
-        
+
         <div className="form-group">
           <label>Imagem do produto</label>
           <div className="file-upload-wrapper">
-            <input 
-              type="file" 
-              id="file-upload" 
-              accept="image/*" 
-              disabled={isSubmitting} 
-              onChange={(e) => setImageFile(e.target.files[0])} 
+            <input
+              type="file"
+              id="file-upload"
+              accept="image/*"
+              disabled={isSubmitting}
+              onChange={(e) => setImageFile(e.target.files[0])}
             />
             <label htmlFor="file-upload" className="file-upload-button">
               {imageFile ? imageFile.name : "Selecionar arquivo"}
             </label>
           </div>
         </div>
-        
+
         <button type="submit" className="btn-primary" disabled={isSubmitting}>
           {isSubmitting ? <FaSpinner className="spinner" /> : <FaPlus />}
           <span className="btn-add-text">
@@ -387,33 +378,33 @@ async function deleteProductByIDFront(id) {
       ) : (
         <>
           <div className={`admin-filters ${darkMode ? "dark-mode" : ""}`}>
-            <input 
-              type="text" 
-              placeholder="Pesquisar por nome..." 
-              value={searchTerm} 
-              onChange={(e) => setSearchTerm(e.target.value)} 
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()} 
-              className="filter-input" 
+            <input
+              type="text"
+              placeholder="Pesquisar por nome..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+              className="filter-input"
             />
-            
-            <select 
-              value={selectedCategory} 
-              onChange={(e) => setSelectedCategory(e.target.value)} 
+
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
               className="filter-select"
             >
               <option value="">Todas as Categorias</option>
-              {categories.map((cat) => 
+              {categories.map((cat) =>
                 <option key={cat.id} value={cat.name}>{cat.name}</option>
               )}
             </select>
-            
-            <select 
-              value={selectedMaterial} 
-              onChange={(e) => setSelectedMaterial(e.target.value)} 
+
+            <select
+              value={selectedMaterial}
+              onChange={(e) => setSelectedMaterial(e.target.value)}
               className="filter-select"
             >
               <option value="">Todos os Materiais</option>
-              {materials.map((mat) => 
+              {materials.map((mat) =>
                 <option key={mat.id} value={mat.name}>{mat.name}</option>
               )}
             </select>
@@ -436,54 +427,54 @@ async function deleteProductByIDFront(id) {
               products.map((p) => (
                 <div className={`card ${darkMode ? "dark-mode" : ""}`} key={p.id}>
                   <div className="card-image">
-                    {imageUrls[p.id] ? 
-                      <img src={imageUrls[p.id]} alt={p.name} /> : 
+                    {imageUrls[p.id] ?
+                      <img src={imageUrls[p.id]} alt={p.name} /> :
                       <FaBox className="placeholder-icon" />
                     }
                     <div className="overlay">
-                      <button 
-                        className="icon-btn edit" 
-                        onClick={() => { 
-                          setSelectedProduct({ ...p }); 
-                          setIsEditOpen(true); 
-                        }} 
+                      <button
+                        className="icon-btn edit"
+                        onClick={() => {
+                          setSelectedProduct({ ...p });
+                          setIsEditOpen(true);
+                        }}
                         disabled={isEditing || isDeleting}
                       >
-                        {isEditing && selectedProduct?.id === p.id ? 
-                          <FaSpinner className="spinner" /> : 
+                        {isEditing && selectedProduct?.id === p.id ?
+                          <FaSpinner className="spinner" /> :
                           <FaEdit />
                         }
                       </button>
-                      
-                      <button 
-                        className="icon-btn delete" 
-                        onClick={() => { 
-                          setSelectedProduct(p); 
-                          setIsDeleteOpen(true); 
-                        }} 
+
+                      <button
+                        className="icon-btn delete"
+                        onClick={() => {
+                          setSelectedProduct(p);
+                          setIsDeleteOpen(true);
+                        }}
                         disabled={isEditing || isDeleting}
                       >
-                        {isDeleting && selectedProduct?.id === p.id ? 
-                          <FaSpinner className="spinner" /> : 
+                        {isDeleting && selectedProduct?.id === p.id ?
+                          <FaSpinner className="spinner" /> :
                           <FaTrash />
                         }
                       </button>
                     </div>
                   </div>
-                  
+
                   <div className={`card-content ${darkMode ? "dark-mode" : ""}`}>
                     <h3>{p.name}</h3>
                     <p>{p.short_description}</p>
                     <p className="dimension-text">
                       <strong>Dimensão:</strong> {p.dimension}
                     </p>
-                    
+
                     <div className="categories">
                       {p.categories?.map((c) => (
                         <span key={c.id} className="category-tag">{c.name}</span>
                       ))}
                     </div>
-                    
+
                     <div className="materials">
                       {p.materials?.map((m) => (
                         <span key={m.id} className="material-tag">{m.name}</span>
@@ -504,11 +495,11 @@ async function deleteProductByIDFront(id) {
         </>
       )}
 
-      <Modal 
-        isOpen={isDeleteOpen} 
-        onResult={handleDeleteConfirm} 
-        title="Deletar Produto" 
-        confirmText={isDeleting ? "Deletando..." : "Deletar"} 
+      <Modal
+        isOpen={isDeleteOpen}
+        onResult={handleDeleteConfirm}
+        title="Deletar Produto"
+        confirmText={isDeleting ? "Deletando..." : "Deletar"}
         cancelText="Cancelar"
       >
         <p>Tem certeza que deseja deletar <strong>{selectedProduct?.name}</strong>?</p>
@@ -519,63 +510,63 @@ async function deleteProductByIDFront(id) {
         )}
       </Modal>
 
-      <Modal 
-        isOpen={isEditOpen} 
-        onResult={handleEditConfirm} 
-        title="Editar Produto" 
-        confirmText={isEditing ? "Salvando..." : "Salvar"} 
+      <Modal
+        isOpen={isEditOpen}
+        onResult={handleEditConfirm}
+        title="Editar Produto"
+        confirmText={isEditing ? "Salvando..." : "Salvar"}
         cancelText="Cancelar"
       >
         {selectedProduct && (
           <>
             <div className="form-group">
               <label>Nome</label>
-              <input 
-                value={selectedProduct.name} 
-                disabled={isEditing} 
-                onChange={(e) => setSelectedProduct({ 
-                  ...selectedProduct, 
-                  name: e.target.value 
-                })} 
+              <input
+                value={selectedProduct.name}
+                disabled={isEditing}
+                onChange={(e) => setSelectedProduct({
+                  ...selectedProduct,
+                  name: e.target.value
+                })}
               />
             </div>
-            
+
             <div className="form-group">
               <label>Descrição Curta</label>
-              <input 
-                value={selectedProduct.short_description} 
-                disabled={isEditing} 
-                onChange={(e) => setSelectedProduct({ 
-                  ...selectedProduct, 
-                  short_description: e.target.value 
-                })} 
+              <input
+                value={selectedProduct.short_description}
+                disabled={isEditing}
+                onChange={(e) => setSelectedProduct({
+                  ...selectedProduct,
+                  short_description: e.target.value
+                })}
               />
             </div>
-            
+
             <div className="form-group">
               <label>Descrição Longa</label>
-              <textarea 
-                value={selectedProduct.long_description} 
-                disabled={isEditing} 
-                onChange={(e) => setSelectedProduct({ 
-                  ...selectedProduct, 
-                  long_description: e.target.value 
-                })} 
+              <textarea
+                value={selectedProduct.long_description}
+                disabled={isEditing}
+                onChange={(e) => setSelectedProduct({
+                  ...selectedProduct,
+                  long_description: e.target.value
+                })}
               />
             </div>
-            
+
             <div className="form-group">
               <label>Dimensão</label>
-              <input 
-                value={selectedProduct.dimension} 
-                disabled={isEditing} 
-                onChange={(e) => setSelectedProduct({ 
-                  ...selectedProduct, 
-                  dimension: e.target.value 
-                })} 
+              <input
+                value={selectedProduct.dimension}
+                disabled={isEditing}
+                onChange={(e) => setSelectedProduct({
+                  ...selectedProduct,
+                  dimension: e.target.value
+                })}
               />
             </div>
-            
+
             {isEditing && (
               <p style={{ marginTop: "15px", color: "#666" }}>
                 <FaSpinner className="spinner" /> Salvando alterações...
