@@ -29,12 +29,49 @@
   color: #f0f0f0;
 }
 
-/* Notificações */
+/* ==========================
+   Estado de Carregamento
+========================== */
+.loading-state {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 40px;
+  font-size: 1.1rem;
+  color: #6c757d;
+  background: #fff;
+  border-radius: 14px;
+  margin: 20px 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.products-page.dark-mode .loading-state {
+  background: #1e1e1e;
+  color: #e0e0e0;
+  border: 1px solid #333;
+}
+
+/* ==========================
+   Notificações
+========================== */
 .notification {
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 20px;
   font-weight: 500;
+  animation: slideInDown 0.3s ease-out;
+}
+
+@keyframes slideInDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .notification.success {
@@ -55,17 +92,22 @@
   border: 1px solid #bee5eb;
 }
 
-/* Estado vazio */
-.empty-state {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 40px;
-  color: #6c757d;
+.products-page.dark-mode .notification.success {
+  background-color: #1e3a1e;
+  color: #4caf50;
+  border: 1px solid #2e7d32;
 }
 
-.empty-state svg {
-  margin-bottom: 16px;
-  opacity: 0.5;
+.products-page.dark-mode .notification.error {
+  background-color: #3a1e1e;
+  color: #f44336;
+  border: 1px solid #d32f2f;
+}
+
+.products-page.dark-mode .notification.info {
+  background-color: #1e2a3a;
+  color: #2196f3;
+  border: 1px solid #1976d2;
 }
 
 /* ==========================
@@ -110,6 +152,7 @@
   background: #fafafa;
   color: #2d3436;
   transition: border 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
 }
 
 .admin-form.dark-mode .form-group input,
@@ -134,7 +177,7 @@
 
 .form-group textarea {
   resize: vertical;
-  min-height: 60px;
+  min-height: 80px;
 }
 
 .checkbox-group {
@@ -149,6 +192,22 @@
   align-items: center;
   gap: 5px;
   font-size: 0.9rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.checkbox-item:hover {
+  background: #f5f5f5;
+}
+
+.admin-form.dark-mode .checkbox-item:hover {
+  background: #333;
+}
+
+.checkbox-item input[type="checkbox"] {
+  margin: 0;
   cursor: pointer;
 }
 
@@ -177,6 +236,8 @@
   cursor: pointer;
   font-weight: 500;
   transition: background 0.3s;
+  border: none;
+  box-sizing: border-box;
 }
 
 .file-upload-button:hover:not(:disabled) {
@@ -200,10 +261,12 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  justify-content: center;
+  min-height: 48px;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background: #0652dd;
+  background: #007a32;
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(0,0,0,0.12);
 }
@@ -215,7 +278,78 @@
 }
 
 .btn-add-text {
-  margin-left: 10px;
+  margin-left: 5px;
+}
+
+/* ==========================
+   Filtros Admin
+========================== */
+.admin-filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  background: #fff;
+  padding: 20px;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.admin-filters.dark-mode {
+  background: #1e1e1e;
+  border: 1px solid #333;
+}
+
+.filter-input,
+.filter-select {
+  padding: 10px 12px;
+  border: 1px solid #dcdde1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: #fafafa;
+  color: #2d3436;
+  transition: border 0.2s, box-shadow 0.2s;
+  min-width: 200px;
+  flex: 1;
+}
+
+.admin-filters.dark-mode .filter-input,
+.admin-filters.dark-mode .filter-select {
+  background: #2b2b2b;
+  color: #e0e0e0;
+  border: 1px solid #444;
+}
+
+.filter-input:focus,
+.filter-select:focus {
+  border: 1px solid #0984e3;
+  box-shadow: 0 0 8px rgba(9,132,227,0.2);
+  outline: none;
+}
+
+.filter-input::placeholder {
+  color: #999;
+}
+
+.admin-filters.dark-mode .filter-input::placeholder {
+  color: #666;
+}
+
+.clear-btn {
+  padding: 10px 16px;
+  background: #6c757d;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s;
+  white-space: nowrap;
+}
+
+.clear-btn:hover {
+  background: #5a6268;
 }
 
 /* Spinner para botões */
@@ -226,6 +360,33 @@
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
+}
+
+/* Estado vazio */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  margin: 20px 0;
+}
+
+.products-page.dark-mode .empty-state {
+  background: #1e1e1e;
+  color: #999;
+  border: 1px solid #333;
+}
+
+.empty-state svg {
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-state p {
+  font-size: 1.1rem;
+  margin: 0;
 }
 
 /* ==========================
@@ -269,6 +430,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .card.dark-mode .card-image {
@@ -319,22 +481,34 @@
   align-items: center;
   justify-content: center;
   font-size: 0.95rem;
-  transition: background 0.3s, transform 0.15s;
+  transition: all 0.3s;
+  width: 36px;
+  height: 36px;
+}
+
+.icon-btn:hover {
+  transform: scale(1.1);
+}
+
+.icon-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .icon-btn.edit {
   background: #2ecc71;
 }
 
-.icon-btn.edit:hover {
-  background: #019875;
+.icon-btn.edit:hover:not(:disabled) {
+  background: #27ae60;
 }
 
 .icon-btn.delete {
   background: #d63031;
 }
 
-.icon-btn.delete:hover {
+.icon-btn.delete:hover:not(:disabled) {
   background: #c0392b;
 }
 
@@ -350,22 +524,28 @@
   margin: 0 0 10px;
   font-size: 1.2rem;
   color: #2d3436;
+  font-weight: 600;
 }
 
 .card-content p {
   margin: 0 0 6px;
   font-size: 0.9rem;
   color: #555;
+  line-height: 1.4;
 }
 
-.card-content.dark-mode h3,
+.card-content.dark-mode h3 {
+  color: #f0f0f0;
+}
+
 .card-content.dark-mode p {
-  color: #e0e0e0;
+  color: #ccc;
 }
 
 .dimension-text {
   font-size: 0.9rem;
   color: #4b5563;
+  margin: 8px 0 !important;
 }
 
 .products-page.dark-mode .dimension-text {
@@ -376,17 +556,29 @@
 .materials {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px;
+  gap: 6px;
   margin-top: 8px;
 }
 
-.category-tag,
-.material-tag {
+.category-tag {
   background: #32cd32;
   color: #fff;
   padding: 4px 10px;
   border-radius: 8px;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.material-tag {
+  background: #0984e3;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 500;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -411,6 +603,10 @@
   transition: all 0.3s;
   min-width: 44px;
   min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
 }
 
 .products-page.dark-mode .page-btn {
@@ -432,6 +628,7 @@
 
 .page-btn:hover:not(:disabled, .active) {
   background: #f1f1f1;
+  transform: translateY(-1px);
 }
 
 .products-page.dark-mode .page-btn:hover:not(:disabled, .active) {
@@ -446,8 +643,23 @@
     padding: 15px;
   }
   
+  .products-title {
+    font-size: 1.5rem;
+  }
+  
+  .admin-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filter-input,
+  .filter-select {
+    min-width: auto;
+    width: 100%;
+  }
+  
   .cards-container {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 16px;
   }
   
@@ -469,5 +681,37 @@
     min-height: 36px;
     padding: 6px 10px;
     font-size: 0.9rem;
+  }
+  
+  .card-image {
+    height: 160px;
+  }
+  
+  .overlay {
+    position: static;
+    opacity: 1;
+    margin-top: 8px;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .products-page {
+    padding: 10px;
+  }
+  
+  .cards-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .admin-form {
+    padding: 12px;
+  }
+  
+  .form-group input,
+  .form-group textarea,
+  .filter-input,
+  .filter-select {
+    font-size: 16px; /* Evita zoom no iOS */
   }
 }
