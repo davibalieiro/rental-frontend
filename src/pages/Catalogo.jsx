@@ -1,5 +1,6 @@
+// src/pages/Catalog.jsx
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useProductsContext } from "~/context/ProductsContext";
 import { useProductImages } from "~/hooks/useProductImages";
 import "./css/Catalogo.css";
@@ -9,11 +10,19 @@ import { useTheme } from "~/context/ThemeContext";
 
 export default function Catalog() {
   const API_URL = import.meta.env.VITE_API_URL_V1;
-  const { products, pagination, loading, page, setPage, setFilters, filters } = useProductsContext();
+  const {
+    products,
+    pagination,
+    loading,
+    page,
+    setPage,
+    setFilters,
+    filters,
+  } = useProductsContext();
   const [categories, setCategories] = useState([]);
   const { darkMode } = useTheme();
 
-  // Estados locais para controlar os inputs de forma independente
+  // estados locais para inputs
   const [searchInput, setSearchInput] = useState(filters.name || "");
   const [categoryInput, setCategoryInput] = useState(filters.category || "");
 
@@ -21,10 +30,25 @@ export default function Catalog() {
   const navigate = useNavigate();
   const { imageUrls } = useProductImages(products);
 
+  const location = useLocation();
+
+  // pega categoria da URL se existir
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const categoryFromUrl = queryParams.get("category");
+    if (categoryFromUrl) {
+      setCategoryInput(categoryFromUrl);
+      setFilters((prev) => ({ ...prev, category: categoryFromUrl }));
+      setPage(1);
+    }
+  }, [location.search, setFilters, setPage]);
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch(`${API_URL}/category/all`, { credentials: "include" });
+        const res = await fetch(`${API_URL}/category/all`, {
+          credentials: "include",
+        });
         const json = await res.json();
         setCategories(json.data || []);
       } catch (err) {
@@ -35,7 +59,7 @@ export default function Catalog() {
   }, [API_URL]);
 
   useEffect(() => {
-    if (categoryInput !== (filters.category || '')) {
+    if (categoryInput !== (filters.category || "")) {
       handleSearch();
     }
   }, [categoryInput]);
@@ -48,14 +72,12 @@ export default function Catalog() {
     setPage(1);
   };
 
-  // 1. Adicionada função para pesquisar com a tecla "Enter"
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleSearch();
     }
   };
 
-  // 3. Adicionada função para limpar os filtros
   const handleClearFilters = () => {
     setSearchInput("");
     setCategoryInput("");
@@ -81,7 +103,7 @@ export default function Catalog() {
     <div className="catalog-container">
       <h1>Catálogo</h1>
 
-      {/* Filtros */}
+      {/* filtros */}
       <div className="catalog-filters">
         <input
           type="text"
@@ -90,7 +112,10 @@ export default function Catalog() {
           onChange={(e) => setSearchInput(e.target.value)}
           onKeyDown={handleKeyDown}
         />
-        <select value={categoryInput} onChange={(e) => setCategoryInput(e.target.value)}>
+        <select
+          value={categoryInput}
+          onChange={(e) => setCategoryInput(e.target.value)}
+        >
           <option value="">Todas as categorias</option>
           {categories.map((cat) => (
             <option key={cat.id} value={cat.name}>
@@ -99,7 +124,9 @@ export default function Catalog() {
           ))}
         </select>
         <button onClick={handleSearch}>Pesquisar</button>
-        <button onClick={handleClearFilters} className="clear-btn">Limpar Filtros</button>
+        <button onClick={handleClearFilters} className="clear-btn">
+          Limpar Filtros
+        </button>
       </div>
 
       {loading ? (
@@ -119,14 +146,24 @@ export default function Catalog() {
                   />
                   <h4>{product.name}</h4>
                   <div className="product-actions">
-                    <button className="buy-btn" onClick={() => navigate(`/produto/${product.slug}`)}>
+                    <button
+                      className="buy-btn"
+                      onClick={() => navigate(`/produto/${product.slug}`)}
+                    >
                       Ver detalhes
                     </button>
-                    <button className="cart-btn" onClick={() => addToCart(product)}>
+                    <button
+                      className="cart-btn"
+                      onClick={() => addToCart(product)}
+                    >
                       {added[product.id] ? (
-                        <span><FaCheckCircle /> Adicionado!</span>
+                        <span>
+                          <FaCheckCircle /> Adicionado!
+                        </span>
                       ) : (
-                        <span><FaShoppingBag /> Adicionar</span>
+                        <span>
+                          <FaShoppingBag /> Adicionar
+                        </span>
                       )}
                     </button>
                   </div>
@@ -137,7 +174,7 @@ export default function Catalog() {
             )}
           </div>
 
-          {/* Paginação */}
+          {/* paginação */}
           <Pagination
             currentPage={page}
             totalPages={totalPages}
