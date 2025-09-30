@@ -57,30 +57,3 @@
   text-align: right;
   font-style: italic;
 }
-
-/* FAQ específico */
-.faq-item {
-  background: #f9f9f9;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 16px;
-  border: 1px solid #eee;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.faq-item:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
-}
-
-.faq-item h2 {
-  margin: 0 0 8px 0;
-  font-size: 1.2rem;
-  color: #222;
-}
-
-.faq-item p {
-  margin: 0;
-  font-size: 1rem;
-  color: #555;
-}

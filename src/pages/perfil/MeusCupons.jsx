@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useCupons } from "../../hooks/useCupons";
 import "./css/MeusCupons.css";
 
-function MeusCupons({ cupons }) {
+export default function MeusCuponsWrapper({ user }) {
+  const { cupons, loadingCupons, error } = useCupons(user);
   const [usedCupons, setUsedCupons] = useState([]);
   const [toast, setToast] = useState(null);
 
@@ -22,9 +24,9 @@ function MeusCupons({ cupons }) {
     }
   };
 
-  if (!cupons || cupons.length === 0) {
-    return <p>Você não possui cupons disponíveis.</p>;
-  }
+  if (loadingCupons) return <p>Carregando cupons...</p>;
+  if (error) return <p>Erro ao carregar cupons: {error}</p>;
+  if (!cupons || cupons.length === 0) return <p>Você não possui cupons disponíveis.</p>;
 
   // Ordenação de cupons ativos: primeiro expiring, depois por data
   const ativos = cupons
@@ -58,6 +60,7 @@ function MeusCupons({ cupons }) {
                 <div
                   key={cupom.id}
                   className={`cupom-card ${expiring ? "expiring" : ""} fade-in`}
+                  onClick={() => usarCupom(cupom)}
                 >
                   {expiring && <span className="badge-alert">⚠️ Expira em breve</span>}
                   <h4>{cupom.code}</h4>
@@ -69,15 +72,33 @@ function MeusCupons({ cupons }) {
                     <strong>Expira em:</strong>{" "}
                     {new Date(cupom.expiresIn).toLocaleDateString("pt-BR")}
                   </p>
-                  </div>
+                </div>
               );
             })}
           </div>
         </>
       )}
 
+      {usados.length > 0 && (
+        <>
+          <h2>Cupons usados</h2>
+          <div className="cupons-container">
+            {usados.map((cupom) => (
+              <div key={cupom.id} className="cupom-card usado fade-in">
+                <h4>{cupom.code}</h4>
+                <p>{cupom.text}</p>
+                <p>
+                  <strong>Benefício:</strong> {cupom.benefit}
+                </p>
+                <p>
+                  <strong>Expira em:</strong>{" "}
+                  {new Date(cupom.expiresIn).toLocaleDateString("pt-BR")}
+                </p>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
-
-export default MeusCupons;
